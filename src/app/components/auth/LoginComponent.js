@@ -3,10 +3,12 @@ import {Redirect} from "react-router-dom";
 
 import {toAbsoluteUrl} from "../../helpers";
 import "../../assets/sass/pages/login/classic/login-3.scss";
+import ApiService from '../../service/ApiService';
 
 class LoginComponent extends Component {
     constructor(props) {
         super(props);
+        this.api = new ApiService();
         this.state = {
             redirectPath : null,
 
@@ -17,6 +19,23 @@ class LoginComponent extends Component {
 
     componentDidMount () {
     
+    }
+
+    onChangeValue = (e) => {
+        this.setState({ [e.target.id]: e.target.value })
+    }
+
+    login = async () => {
+        let param  = {
+            email : this.state.email,
+            password : this.state.password
+        }
+
+        console.log(param);
+
+        let result = await this.api.login(param);
+
+        console.log(result);
     }
 
     render() {
@@ -56,14 +75,14 @@ class LoginComponent extends Component {
                                             <h3>로그인</h3>
                                             <p className="opacity-60 font-weight-bold">코로나 19 물리치고 화이팅 입니다!</p>
                                         </div>
-                                        <form className="form" id="kt_login_signin_form">
+                                        {/* <form className="form" id="kt_login_signin_form"> */}
                                             <div className="form-group">
                                                 <input className="form-control h-auto text-white placeholder-white opacity-70 bg-dark-o-70 rounded-pill border-0 py-4 px-8 mb-5" 
-                                                type="text" placeholder="Email" name="username" autocomplete="off" />
+                                                type="text" onChange={this.onChangeValue} value={this.state.email} placeholder="Email" id="email" />
                                             </div>
                                             <div className="form-group">
                                                 <input className="form-control h-auto text-white placeholder-white opacity-70 bg-dark-o-70 rounded-pill border-0 py-4 px-8 mb-5" 
-                                                type="password" placeholder="Password" name="password" />
+                                                type="password" onChange={this.onChangeValue} value={this.state.password} placeholder="Password" id="password" />
                                             </div>
                                             <div className="form-group d-flex flex-wrap justify-content-between align-items-center px-8">
                                                 <div className="checkbox-inline">
@@ -76,9 +95,10 @@ class LoginComponent extends Component {
                                             </div>
                                             <div className="form-group text-center mt-10">
                                                 <button id="kt_login_signin_submit" 
+                                                onClick={this.login}
                                                 className="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-15 py-3">로그인</button>
                                             </div>
-                                        </form>
+                                        {/* </form> */}
                                         <div className="mt-10">
                                             <span className="opacity-70 mr-4">아직 계정이 없으시나요?</span>
                                             <a onClick={()=>this.setState({redirectPath : "/auth/register"})} 

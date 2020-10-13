@@ -36,36 +36,47 @@ class ApiService {
      * @param {*} param 
      */
     async login(param){
+
+        console.log(param);
+
         return new Promise((resolve, reject) => {
-            firebaseAuth
-                .signInWithEmailAndPassword(param.email, param.password)
-                .then(result => {
-                    console.log(result);
-                    firebaseAuth.onAuthStateChanged(user => {
-                        if (user) {
-                            //파이어베이스 계정 == 센터 대표
-                            //센터 대표 = centerId => center.uid
-                            //센터 직원 = centerId => member.centerId
-                            firebase.firestore().collection('center').doc(user.uid).get().then((snapshot)=>{
-                                let userData = snapshot.data();
-                                let loginUser = {
-                                    uid : userData.uid,
-                                    auth : 'center',
-                                    displayName : userData.displayName,
-                                    email : userData.email,
-                                    name : userData.name,
-                                    centerId : userData.uid,
-                                    centerName : userData.centerName,
-                                    centerCode : userData.centerCode,
-                                    createdAt : new Date(),
-                                }
-                            });
-                        }
+            firebase.firestore().collection('center').where('email', '==', param.email).where('password', '==', param.password).get().then((snapshot)=>{
+                if (snapshot.empty) {
+                    return resolve({
+                        resultCode : '999',
+                        resultMsg : "No matching documents.",
                     })
+                }
+              
+                snapshot.forEach(doc => {
+                    let userData = doc.data();
+
+                    let loginUser = {
+                        uid : userData.uid,
+                        auth : 'center',
+                        displayName : userData.displayName,
+                        email : userData.email,
+                        name : userData.name,
+                        centerId : userData.uid,
+                        centerName : userData.centerName,
+                        centerCode : userData.centerCode,
+                        createdAt : new Date(),
+                    }
+
+                    return resolve({
+                        resultCode : '200',
+                        resultMsg : "Success",
+                        result : loginUser
+                    })
+                });
+                
+                
+            }).catch(error => {
+                return resolve({
+                    resultCode : '999',
+                    resultMsg : error
                 })
-                .catch(error => {
-                    console.log(error)
-                })
+            });
         })
     }
 
@@ -83,6 +94,7 @@ class ApiService {
                 userName : param.userName,
                 centerName : param.centerName,
                 email : param.email,
+                password : param.password,
                 tel : param.tel,
                 centerCode : '',
                 createdAt : new Date(),
