@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Stream matches snapshot 1`] = `
+<div
+  className="OT_widget-container"
+>
+  <div
+    className="pointer nickname"
+  >
+    <span
+      id="nickname"
+    />
+  </div>
+</div>
+`;

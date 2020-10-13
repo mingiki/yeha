@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Overview|Getting started" />
+
+# Getting started
+Eyeson-core-front 개발에 대한 셋팅 및 프로세스 등등...
+전체적인 내용을 정리한 개요입니다.
+
+## Versioning
+v.1.0
+
+## Development Spec
+node v14.4.0
+react v2.14.0 (CRA)
+
+## Install
+
+1. node 설치
+
+2. node module 설치
+
+```
+npm install
+```
+
+깃에서 가져온 소스 루트에서 해당 명령어를 실행해주세요.
+pakage.json 에 설정된 node module을 install 합니다.
+
+3. node 실행
+
+```
+npm start
+```
+
+4. 소스 빌드
+
+```
+npm run build
+```
+
+CRA로 패키지 구성하여 react-script 내부에 설정된 webpack.config 상태로 빌드됩니다.
+타 빌드 툴 사용 시 세팅하여 빌드하시면 됩니다.
+
+dev / stg / prod 각각 서버에 따른 환경설정이 다름으로 빌드할시 npm run build:서버모드 빌드해서 배포해주시기 바랍니다.
+자동 빌드툴을 사용 시 스크립트에 빌드 서버에 대한 서버모드를 명시해서 빌드해주시기바랍니다.
+
+## Architecture
+![텍스트](https://user-images.githubusercontent.com/6078850/88268475-80f48980-cd0d-11ea-9f6c-6fa3a485efbe.png)
+![텍스트](https://user-images.githubusercontent.com/6078850/88268569-a1244880-cd0d-11ea-9fb0-3d74152ae3ce.png)
+
+## Functions
+1. 디바이스 세팅 
+2. 화상 연결
+3. 개인권한 제어
+    - 개인 카메라 , 마이크 조작 가능
+4. 타인권환 제어
+    - 타인 카메라 , 마이크 조작 가능
+5. 채팅 기능
+6. 타인에게 알림 기능
+    - 알림 후 채팅에 상황 메세지 전달
+7. 강퇴 기능
+    - 일부 사용자 방에서 내보내기 기능
+8. 에러 및 유효성 체크
+    - 존재하지 않는 방에 입장할경우
+    - 방 입장 이후 방이 삭제된 경우
+    - 존재하지 않는 유저인 경우
+    - 유효하지 않는 토큰
+    - 만료된 토큰
+    - 중복 로그인
+
+## Description
+
+## Authors
+Daekyo CNS 정보기술 연구소
+
+## License
+DaeKyo CNS 정보기술 연구소

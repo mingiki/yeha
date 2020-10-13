@@ -1,0 +1,29 @@
+{
+    "language" : "English",
+    
+
+    "test.result" : "Result request",
+    "test.result_none" : "Result none",
+    "test.user_token" : "User token",
+    "test.creation_request" : "Creation request",
+    "test.token_valid" : "Token verification",
+
+    "user.notExists" : "User does not exist.",
+
+    "room.notExists" : "This room does not exist.",
+    "room.Deleted" : "The room has been deleted.",
+    "room.nickName" : "Nick Name",
+    "room.mic" : "Mic",
+    "room.video" : "Video",
+    "room.chat" : "Chat",
+    "room.message.placeholder" : "Send a messge",
+
+    "auth.invalid" : "Invalid token.",
+    "auth.expired" : "login session has expired. Please login again.",
+    "auth.duplicated" : "Duplicate login. Your session has been terminated.",
+    
+
+    "entrance" : "Entrance",
+    "hello" : "Hello.",
+    "checking": "checking"
+}
