@@ -51,8 +51,7 @@ class Routes extends Component {
   }
 
   render() {
-    console.log(this.props.auth);
-
+    let param = this.props;
     return this.state.checkToken.resultCode == "999" ? (
       <Suspense>
         <Switch>
@@ -61,7 +60,7 @@ class Routes extends Component {
           }
   
           {/* auth 관련 router  */}
-          <Route path={"/auth"} render={() =><Auth {...this.props} />}  />
+          <Route path={"/auth"} render={() =><Auth {...param} />}  />
   
           <Route component={Error}/>
         </Switch>
@@ -74,9 +73,9 @@ class Routes extends Component {
           }
   
           {/* main 관련 router */}
-          <Route path={"/main"} render={() =><Main {...this.props} />}  />
+          <Route path={"/main"} render={() =><Main {...param} />}  />
           {/* auth 관련 router  */}
-          <Route path={"/auth"} render={() =><Auth {...this.props} />}  />
+          <Route path={"/auth"} render={() =><Auth {...param} />}  />
   
           <Route component={Error}/>
         </Switch>

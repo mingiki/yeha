@@ -132,12 +132,12 @@ class LoginComponent extends Component {
 }
 
 
-// export default LoginComponent;
+export default LoginComponent;
 
-export default connect((state) => ({
-    auth: state.auth,
-}),
-(dispatch) => ({
-    AuthActions: bindActionCreators(AuthModules.actions, dispatch),
-})
-)(LoginComponent);
+// export default connect((state) => ({
+//     auth: state.auth,
+// }),
+// (dispatch) => ({
+//     AuthActions: bindActionCreators(AuthModules.actions, dispatch),
+// })
+// )(LoginComponent);

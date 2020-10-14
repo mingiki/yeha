@@ -7,6 +7,7 @@ import RegisterComponent from '../components/auth/RegisterComponent';
 import ForgatPasswordComponent from '../components/auth/ForgatPasswordComponent';
 
 export default function Auth(props) {
+  let param = props;
   return (
     <>
        <Suspense>
@@ -15,9 +16,9 @@ export default function Auth(props) {
             /* Redirect from root URL to /dashboard. */
             <Redirect exact from="/auth" to="/auth/login" />
           }
-          <Route path={"/auth/login"} render={(props) =><LoginComponent {...props} />}  exact/>
-          <Route path={"/auth/register"} render={(props) =><RegisterComponent {...props} />}  />
-          <Route path={"/auth/forgat"} render={(props) =><ForgatPasswordComponent {...props} />}  />
+          <Route path={"/auth/login"} render={() =><LoginComponent {...param} />}  exact/>
+          <Route path={"/auth/register"} render={() =><RegisterComponent {...param} />}  />
+          <Route path={"/auth/forgat"} render={() =><ForgatPasswordComponent {...param} />}  />
         </Switch>
       </Suspense>
     </>
