@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import {Redirect} from "react-router-dom";
+import { Redirect, Route, HashRouter, Switch ,withRouter, BrowserRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
+import * as AuthModules from "../../store/modules/auth";
 
 import {toAbsoluteUrl} from "../../helpers";
 import "../../assets/sass/pages/login/classic/login-3.scss";
@@ -8,6 +12,8 @@ import ApiService from '../../service/ApiService';
 class LoginComponent extends Component {
     constructor(props) {
         super(props);
+        console.log(props);
+
         this.api = new ApiService();
         this.state = {
             redirectPath : null,
@@ -31,11 +37,17 @@ class LoginComponent extends Component {
             password : this.state.password
         }
 
-        console.log(param);
-
         let result = await this.api.login(param);
+        if (result.resultCode == "200") {
+            console.log("정상로그인");
+            console.log(result);
 
-        console.log(result);
+            this.props.AuthActions.SetToken(result);
+            this.setState({
+                redirectPath : "/"
+            });
+
+        }
     }
 
     render() {
@@ -120,4 +132,12 @@ class LoginComponent extends Component {
 }
 
 
-export default LoginComponent;
+// export default LoginComponent;
+
+export default connect((state) => ({
+    auth: state.auth,
+}),
+(dispatch) => ({
+    AuthActions: bindActionCreators(AuthModules.actions, dispatch),
+})
+)(LoginComponent);

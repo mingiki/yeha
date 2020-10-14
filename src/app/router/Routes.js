@@ -1,37 +1,98 @@
-import React, { Suspense } from "react";
+import React, { Suspense , Component} from "react";
 import { Redirect, Route, HashRouter, Switch ,withRouter, BrowserRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
+import * as AuthModules from "../store/modules/auth";
+import ApiService from '../service/ApiService';
 
 import Auth from "../pages/Auth";
 import Main from "../pages/Main";
 
-export const Routes = withRouter((props) => {
-  return (
-    <Suspense>
-      <Switch>
-        {
-          /* Redirect from root URL to /dashboard. */
-          <Redirect exact from="/" to="/auth" />
+class Routes extends Component {
+  constructor(props) {
+      super(props);
+      console.log(props);
+      this.api = new ApiService();
+      this.state = {
+        checkToken : {
+          resultCode : '999',
+          resultMsg : 'null'
         }
+      };
+  }
 
-        {/* auth 관련 router  */}
-        <Route path={"/auth"} render={(props) =><Auth {...props} />}  />
+  componentDidMount(){
+
+
+    let accessToken = sessionStorage.getItem('acccessToken');
+    console.log("======componentDidMount======");
+    console.log(this.props);
+    console.log(accessToken);
+    console.log("============");
+    this.getCheckToken(accessToken);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log("======componentWillReceiveProps======");
+    console.log(nextProps);
+    console.log("============");
+
+    let accessToken = nextProps.auth.accessToken;
+    if (accessToken) {this.getCheckToken(accessToken);}
+  }
+
+  getCheckToken = async (accessToken) => {
+    let api = new ApiService();
+    let checkToken = await api.checkToken(accessToken);
+    this.setState({
+      checkToken : checkToken
+    })
+  }
+
+  render() {
+    console.log(this.props.auth);
+
+    return this.state.checkToken.resultCode == "999" ? (
+      <Suspense>
+        <Switch>
+          {
+            <Redirect exact from="/" to="/auth" />
+          }
+  
+          {/* auth 관련 router  */}
+          <Route path={"/auth"} render={() =><Auth {...this.props} />}  />
+  
+          <Route component={Error}/>
+        </Switch>
+      </Suspense>
+    ) : (
+      <Suspense>
+        <Switch>
+          {
+            <Redirect exact from="/" to="/main" />
+          }
+  
+          {/* main 관련 router */}
+          <Route path={"/main"} render={() =><Main {...this.props} />}  />
+          {/* auth 관련 router  */}
+          <Route path={"/auth"} render={() =><Auth {...this.props} />}  />
+  
+          <Route component={Error}/>
+        </Switch>
+      </Suspense>
+    )
+  }
+}
+
+export default connect((state) => ({
+  auth: state.auth,
+}),
+  (dispatch) => ({
+      AuthActions: bindActionCreators(AuthModules.actions, dispatch),
+  })
+)(Routes);
 
 
 
-        {/* main 관련 router */}
-        {/* <Route path={"/main/:roomId"} render={(props) =><Main {...props} />}  /> */}
 
-        {/* room 관련 router */}
-        {/* <Route path={"/room"} render={(props) =><Room {...props} />}  />
-        <Route path={"/leave"} render={(props) =><Leave {...props} />}  /> */}
-     
-        {/* test 관련 router */}
-        {/* <Route path={"/test"} render={(props) =><Test {...props} />}  /> */}
-
-        <Route component={Error}/>
-      </Switch>
-    </Suspense>
-  );
-});
-
-export default Routes;

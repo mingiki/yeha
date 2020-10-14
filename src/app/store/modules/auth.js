@@ -4,26 +4,36 @@ import storage from "redux-persist/lib/storage";
 export const actionTypes = {
   SetToken: "[Auth setToken] Action",
   GetToken: "[Auth getToken] Action",
+  SetLoginUser: "[Auth setloginuser] Action",
 };
 
 const initialAuthState = {
-    userToken: undefined
+    accessToken: undefined,
+    loginUser : undefined,
 };
 
 export const reducer = persistReducer(
-    { storage, key: "eyeson-core", whitelist: ["auth"] },
+    { storage, key: "root", whitelist: ["auth"] },
     (state = initialAuthState, action) => {
       switch (action.type) {
         case actionTypes.SetToken: {
-          const { userToken } = action.userToken;
-          return { userToken };
+          
+          console.log(action.accessToken);
+
+          // const { accessToken } = action.accessToken;
+          return action.accessToken;
+        }  
+
+        case actionTypes.SetLoginUser: {
+          
+          console.log(action.loginUser);
+
+          // const { accessToken } = action.accessToken;
+          return action.loginUser;
         }  
 
         case actionTypes.GetToken: {
-          console.log("리듀서 값 가져오기");
-          console.log(state);
-
-          return state.userToken;
+          return state.accessToken;
         }
 
         default:
@@ -33,6 +43,7 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
-  SetToken: userToken => ({ type: actionTypes.SetToken, userToken: { userToken } }),
-  GetToken: () => ({ type: actionTypes.GetToken })
+  SetToken: accessToken => ({ type: actionTypes.SetToken, accessToken: { accessToken } }),
+  GetToken: () => ({ type: actionTypes.GetToken }),
+  SetLoginUser: loginUser => ({ type: actionTypes.SetToken, loginUser: { loginUser } }),
 };

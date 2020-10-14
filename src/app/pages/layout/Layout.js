@@ -1,22 +1,34 @@
-import React from "react";
-import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import { shallowEqual, useSelector } from "react-redux";
-import { useLastLocation } from "react-router-last-location";
+import React, { Component } from 'react';
+import {Redirect} from "react-router-dom";
 
-import Header from "./Header";
-// import Footer from "./Footer";
 import Routes from "../../router/Routes";
+import ApiService from '../../service/ApiService';
 
-function Layout() {
+class Layout extends Component {
+    constructor(props) {
+        super(props);
+        this.api = new ApiService();
+        this.state = {
+        
+        };
+    }
 
-   return (
-    <>
+    componentDidMount () {
+    
+    }
 
-      {/* <Header /> */}
-        <Routes />
-    </>
-  );
-} 
+  
+
+    render() {
+        return (
+            <>  
+             
+            </>         
+        );
+    }
+
+
+}
 
 
 export default Layout;

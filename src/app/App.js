@@ -6,6 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { LastLocationProvider } from "react-router-last-location";
 import { IntlProvider , addLocaleData } from "react-intl";
 import { Helmet } from "react-helmet";
+import Routes from "./router/Routes"
 
 import en from "./config/lang/en.json";
 import ko from "./config/lang/ko.json";
@@ -51,7 +52,7 @@ class App extends React.Component {
                   <LastLocationProvider>
                     <IntlProvider locale={language} messages={message[language]}>                      
                       <Switch>
-                        <Layout/>
+                        <Routes/>
                       </Switch>    
                   </IntlProvider>
                 </LastLocationProvider>

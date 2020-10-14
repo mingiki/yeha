@@ -37,8 +37,6 @@ class ApiService {
      */
     async login(param){
 
-        console.log(param);
-
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('center').where('email', '==', param.email).where('password', '==', param.password).get().then((snapshot)=>{
                 if (snapshot.empty) {
@@ -47,7 +45,7 @@ class ApiService {
                         resultMsg : "No matching documents.",
                     })
                 }
-              
+                
                 snapshot.forEach(doc => {
                     let userData = doc.data();
 
@@ -63,13 +61,25 @@ class ApiService {
                         createdAt : new Date(),
                     }
 
-                    return resolve({
-                        resultCode : '200',
-                        resultMsg : "Success",
-                        result : loginUser
+                    let updateAccessToken = this.autoId();
+                    firebase.firestore().collection('token').doc(userData.uid)
+                    .update({
+                        accessToken : updateAccessToken,
+                        updateAt : new Date(),
+                    }).then(()=>{
+                        sessionStorage.setItem("accessToken" , updateAccessToken);
+                        return resolve({
+                            resultCode : '200',
+                            resultMsg : "Success",
+                            result : loginUser
+                        })
+                    }).catch(error => {
+                        return resolve({
+                            resultCode : '999',
+                            resultMsg : error
+                        })
                     })
                 });
-                
                 
             }).catch(error => {
                 return resolve({
@@ -86,8 +96,9 @@ class ApiService {
      */
     async createCenter(param){
         return new Promise((resolve, reject) => {
+            
+            //센터 생성
             const newUid = this.autoId();
-
             firebase.firestore().collection('center').doc(newUid)
             .set({
                 uid : newUid,
@@ -99,9 +110,23 @@ class ApiService {
                 centerCode : '',
                 createdAt : new Date(),
             }).then(()=>{
-                return resolve({
-                    resultCode : '200',
-                    resultMsg : "Success"
+
+                //로그인처리를 위한 토큰 생성
+                firebase.firestore().collection('token').doc(newUid)
+                .set({
+                    uid : newUid,
+                    accessToken : this.autoId(),
+                    createdAt : new Date(),
+                }).then(()=>{
+                    return resolve({
+                        resultCode : '200',
+                        resultMsg : "Success"
+                    })
+                }).catch(error => {
+                    return resolve({
+                        resultCode : '999',
+                        resultMsg : error
+                    })
                 })
             }).catch(error => {
                 return resolve({
@@ -112,6 +137,39 @@ class ApiService {
         })
     }
   
+    /**
+     * 로그인 여부 체크
+     */
+    async checkToken(){
+        return new Promise((resolve, reject) => {
+            const accessToken = sessionStorage.getItem("accessToken");
+            firebase.firestore().collection('token').where("accessToken" , "==", accessToken).get().then((snapshot)=>{
+
+                if (snapshot.empty) {
+                    return resolve({
+                        resultCode : '999',
+                        resultMsg : "No matching documents.",
+                    })
+                }
+
+                snapshot.forEach(doc => {
+                    let toeken = doc.data();
+                    return resolve({
+                        resultCode : '200',
+                        resultMsg : "Success",
+                        result : toeken,
+                    })
+                });
+                
+            }).catch(error => {
+                return resolve({
+                    resultCode : '999',
+                    resultMsg : error
+                })
+            })
+        })
+    }
+    
 
 
 
