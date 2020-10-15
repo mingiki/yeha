@@ -39,31 +39,21 @@ class LoginComponent extends Component {
 
         let result = await this.api.login(param);
         if (result.resultCode == "200") {
-            console.log("정상로그인");
             console.log(result);
+            this.props.AuthActions.SetLoginUser(result.resultData.loginUser);
+            this.props.AuthActions.SetToken(result.resultData.accessToken);
 
-            this.props.AuthActions.SetToken(result);
-            this.setState({
-                redirectPath : "/"
-            });
+            let tokenResult = await this.api.checkToken(result.resultData.accessToken);
+            
+            console.log(tokenResult);
 
+            this.props.AuthActions.SetTokenResult(tokenResult);
         }
     }
 
     render() {
         return (
             <>  
-                {
-                    this.state.redirectPath ? 
-                    <>
-                            <Redirect    
-                                to={{
-                                    pathname: this.state.redirectPath
-                                }}
-                            />
-                    </> : <></>
-                }
-
                 <div className="d-flex flex-column flex-root">
                     {/*begin::Login*/}
                     <div
@@ -107,8 +97,8 @@ class LoginComponent extends Component {
                                             </div>
                                             <div className="form-group text-center mt-10">
                                                 <button id="kt_login_signin_submit" 
-                                                onClick={this.login}
-                                                className="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-15 py-3">로그인</button>
+                                                    onClick={this.login}
+                                                    className="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-15 py-3">로그인</button>
                                             </div>
                                         {/* </form> */}
                                         <div className="mt-10">

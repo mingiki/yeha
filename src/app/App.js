@@ -3,6 +3,8 @@ import { Redirect, Route, Switch, withRouter } from "react-router-dom";
 import { Provider , connect } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./store/configureStore";
+
 import { LastLocationProvider } from "react-router-last-location";
 import { IntlProvider , addLocaleData } from "react-intl";
 import { Helmet } from "react-helmet";
@@ -43,17 +45,18 @@ let mode = process.env.REACT_APP_MODE;
 // }
 
 class App extends React.Component {
+ 
   render() {
     return <>
-        <Provider store={this.props.store}>
-            <PersistGate persistor={this.props.persistor}>
+        <Provider store={store}>
+            <PersistGate persistor={persistor}>
               <React.Suspense>
                 <BrowserRouter basename={this.props.basename}>
                   <LastLocationProvider>
                     <IntlProvider locale={language} messages={message[language]}>                      
-                      <Switch>
+                      {/* <Switch> */}
                         <Routes/>
-                      </Switch>    
+                      {/* </Switch>     */}
                   </IntlProvider>
                 </LastLocationProvider>
               </BrowserRouter>

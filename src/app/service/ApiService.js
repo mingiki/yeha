@@ -48,30 +48,33 @@ class ApiService {
                 
                 snapshot.forEach(doc => {
                     let userData = doc.data();
+                    let updateAccessToken = this.autoId();
 
                     let loginUser = {
                         uid : userData.uid,
                         auth : 'center',
-                        displayName : userData.displayName,
                         email : userData.email,
-                        name : userData.name,
+                        userName : userData.userName,
+                        tel : userData.tel,
                         centerId : userData.uid,
                         centerName : userData.centerName,
                         centerCode : userData.centerCode,
-                        createdAt : new Date(),
+                        createdAt : userData.createdAt,
                     }
 
-                    let updateAccessToken = this.autoId();
                     firebase.firestore().collection('token').doc(userData.uid)
                     .update({
                         accessToken : updateAccessToken,
                         updateAt : new Date(),
                     }).then(()=>{
-                        sessionStorage.setItem("accessToken" , updateAccessToken);
+                        // sessionStorage.setItem("accessToken" , updateAccessToken);
                         return resolve({
                             resultCode : '200',
                             resultMsg : "Success",
-                            result : loginUser
+                            resultData : {
+                                loginUser : loginUser,
+                                accessToken : updateAccessToken
+                            }
                         })
                     }).catch(error => {
                         return resolve({
@@ -140,10 +143,9 @@ class ApiService {
     /**
      * 로그인 여부 체크
      */
-    async checkToken(){
+    async checkToken(accessToken){
         return new Promise((resolve, reject) => {
-            const accessToken = sessionStorage.getItem("accessToken");
-            firebase.firestore().collection('token').where("accessToken" , "==", accessToken).get().then((snapshot)=>{
+            firebase.firestore().collection('token').where("accessToken" , "==", accessToken || null).get().then((snapshot)=>{
 
                 if (snapshot.empty) {
                     return resolve({
@@ -157,7 +159,7 @@ class ApiService {
                     return resolve({
                         resultCode : '200',
                         resultMsg : "Success",
-                        result : toeken,
+                        resultData : toeken,
                     })
                 });
                 

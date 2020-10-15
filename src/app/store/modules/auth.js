@@ -5,36 +5,38 @@ export const actionTypes = {
   SetToken: "[Auth setToken] Action",
   GetToken: "[Auth getToken] Action",
   SetLoginUser: "[Auth setloginuser] Action",
+  SetTokenResult: "[Auth SetTokenResult] Action",
 };
 
 const initialAuthState = {
     accessToken: undefined,
     loginUser : undefined,
+    tokenResult: {
+      resultCode : '999',
+      resultMsg : 'null',
+      resultData : null
+    }
 };
 
 export const reducer = persistReducer(
-    { storage, key: "root", whitelist: ["auth"] },
+    { key: "auth", storage, whitelist: ["auth"] },
     (state = initialAuthState, action) => {
       switch (action.type) {
         case actionTypes.SetToken: {
-          
-          console.log(action.accessToken);
-
-          // const { accessToken } = action.accessToken;
-          return action.accessToken;
-        }  
-
-        case actionTypes.SetLoginUser: {
-          
-          console.log(action.loginUser);
-
-          // const { accessToken } = action.accessToken;
-          return action.loginUser;
+          return { ...state, accessToken : action.accessToken};
         }  
 
         case actionTypes.GetToken: {
           return state.accessToken;
         }
+        
+        case actionTypes.SetLoginUser: {
+          return { ...state, loginUser : action.loginUser};
+        }  
+
+        case actionTypes.SetTokenResult: {
+          return { ...state, tokenResult : action.tokenResult};
+        }   
 
         default:
           return state;
@@ -43,7 +45,8 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
-  SetToken: accessToken => ({ type: actionTypes.SetToken, accessToken: { accessToken } }),
+  SetToken: accessToken => ({ type: actionTypes.SetToken, accessToken}),
   GetToken: () => ({ type: actionTypes.GetToken }),
-  SetLoginUser: loginUser => ({ type: actionTypes.SetToken, loginUser: { loginUser } }),
+  SetLoginUser: loginUser => ({ type: actionTypes.SetLoginUser, loginUser }),
+  SetTokenResult: tokenResult => ({ type: actionTypes.SetTokenResult, tokenResult }),
 };

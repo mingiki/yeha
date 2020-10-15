@@ -2,7 +2,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import store, { persistor } from "./app/store/store";
+
 
 // import "./app/assets/plugin/flaticon2/flaticon.css";
 
@@ -18,8 +18,6 @@ const { PUBLIC_URL } = process.env;
 
 ReactDOM.render(
     <App
-      store={store}
-      persistor={persistor}
       basename={PUBLIC_URL}
     />,
     document.getElementById("root")
