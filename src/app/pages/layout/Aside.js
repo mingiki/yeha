@@ -1,5 +1,5 @@
 import React, { Suspense , Component} from "react";
-import { Link, Redirect, Route, HashRouter, Switch ,withRouter, BrowserRouter} from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import SVG from "react-inlinesvg";
 import {toAbsoluteUrl} from "../../helpers";
@@ -8,10 +8,96 @@ class Aside extends Component {
     constructor(props) {
         super(props);
         this.state = {
+          menus : [
+            {title : "대쉬보드" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/Design/Layers.svg")} /> , 
+            link : "/" , permissions: ["center", "instructor"], sub : null},
+            {title : "수업" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/Code/Time-schedule.svg")} /> , 
+            link : "/class" , permissions: ["center", "instructor"], sub : [
+              {title : "스케줄", link : "/class/schedule" , permissions: ["center", "instructor"] },
+              {title : "시간표", link : "/class/timetable" , permissions: ["center", "instructor"] },
+            ]},
+            {title : "회원" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/General/User.svg")} /> , 
+            link : "/user" , permissions: ["center", "instructor"], sub : [
+              {title : "목록", link : "/user/list" , permissions: ["center", "instructor"] },
+              {title : "등록", link : "/user/register" , permissions: ["center", "instructor"] },
+            ]},
+            {title : "정산" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/Shopping/Dollar.svg")} /> ,
+            link : "" , permissions: ["center", "instructor"], sub : [
+              {title : "급여", link : "" , permissions: ["center", "instructor"] },
+              {title : "매출", link : "" , permissions: ["center", "instructor"] },
+              {title : "통계", link : "" , permissions: ["center", "instructor"] },              
+            ]},         
+            {title : "공지사항" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/General/Notifications1.svg")} /> , 
+            link : "/notification" , permissions: ["center", "instructor"], sub : null},
+            {title : "환경설정" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/General/Settings-2.svg")} /> , 
+            link : "/setting" , permissions: ["center", "instructor"], sub : [
+              {title : "회원권", link : "/setting/membership" , permissions: ["center", "instructor"] },
+              {title : "수업관리", link : "/setting/class" , permissions: ["center", "instructor"] },   
+              {title : "직원관리", link : "/setting/instructor" , permissions: ["center", "instructor"] },
+              {title : "권한관리", link : "/setting/group" , permissions: ["center", "instructor"] },
+              {title : "히스토리", link : "/setting/history" , permissions: ["center", "instructor"] },
+            ]},
+          ]
         };
     }
 
     componentDidMount () {
+    }
+
+    _randerMainMenu = () =>{
+      console.log(this.state.menus)
+      return this.state.menus.map((item)=>{
+        if (!item.sub) {
+          return <>
+             <li className="menu-item menu-item-active" aria-haspopup="true">
+                <NavLink className="menu-link" to={item.link}>
+                  <span className="svg-icon menu-icon">
+                    {item.icon}
+                  </span>
+                  <span className="menu-text">{item.title}</span>
+                </NavLink>
+              </li>
+          </>
+        } else {
+          return <>
+            <li className="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+              <a href="javascript:;" className="menu-link menu-toggle">
+                <span className="svg-icon menu-icon">
+                  {item.icon}
+                </span>
+                <span className="menu-text">{item.title}</span>
+                <i className="menu-arrow"/>
+              </a>
+              <div className="menu-submenu">
+                <i className="menu-arrow"/>
+                <ul className="menu-subnav">
+                  <li className="menu-item menu-item-parent" aria-haspopup="true">
+                    <span className="menu-link">
+                      <span className="menu-text">{item.title}</span>
+                    </span>
+                  </li>
+                  {
+                    item.sub.map((subItem)=>{
+                      return <>
+                         <li
+                            className="menu-item"
+                            aria-haspopup="true">
+                          <NavLink className="menu-link" to={subItem.link}>
+                            <i className="menu-bullet menu-bullet-dot">
+                              <span/>
+                            </i>
+                            <span className="menu-text">{subItem.title}</span>
+                          </NavLink>
+                        </li>	
+                      </>
+                    })
+                  }
+                </ul>					
+              </div>
+            </li>
+          </>
+        }
+      })
     }
 
     render() {
@@ -44,20 +130,9 @@ class Aside extends Component {
                       <div id="kt_aside_menu" className="aside-menu my-4" data-menu-vertical="1" data-menu-scroll="1" data-menu-dropdown-timeout="500">
                         {/*begin::Menu Nav*/}
                         <ul className="menu-nav">
-                          <li className="menu-item menu-item-active" aria-haspopup="true">
-                            <a href="index.html" className="menu-link">
-                              <span className="svg-icon menu-icon">
-                                {/*begin::Svg Icon | path:assets/media/svg/icons/Design/Layers.svg*/}
-                                <SVG src={toAbsoluteUrl("/media/svg/icons/Design/Layers.svg")} />
-                                {/*end::Svg Icon*/}
-                              </span>
-                              <span className="menu-text">Dashboard</span>
-                            </a>
-                          </li>
-                          <li className="menu-section">
-                            <h4 className="menu-text">Custom</h4>
-                            <i className="menu-icon ki ki-bold-more-hor icon-md"></i>
-                          </li>
+
+                          {this._randerMainMenu()}
+
                         </ul>
                       </div>
                       {/*end::Menu Container*/}

@@ -20,7 +20,7 @@ class HeaderMobile extends Component {
             <div id="kt_header_mobile" className="header-mobile align-items-center header-mobile-fixed">
               {/*begin::Logo*/}
               <a href="index.html">
-                <img alt="Logo" src={toAbsoluteUrl("media/logos/logo-light.png")} />
+                <img alt="Logo" src={toAbsoluteUrl("/media/logos/logo-light.png")} />
               </a>
               {/*end::Logo*/}
               {/*begin::Toolbar*/}

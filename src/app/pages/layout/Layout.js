@@ -14,6 +14,7 @@ import Footer from "../../pages/layout/Footer";
 import HeaderMobile from "../../pages/layout/HeaderMobile";
 
 import Main from "../../pages/Main";
+import Setting from "../../pages/Setting";
 
 
 class Layout extends Component {
@@ -62,7 +63,8 @@ class Layout extends Component {
                                 <Redirect exact from="/" to="/main" />
                               }
                               <Route path={"/main"} render={() =><Main {...this.props}/>}  />
-
+                              <Route path={"/setting"} render={() =><Setting {...this.props}/>}  />
+                              
                               {/* <Route component={Error}/> */}
                               <Redirect from="*" to="/main" />
                             </Switch>
