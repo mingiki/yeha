@@ -49,16 +49,24 @@ class ForgatPasswordComponent extends Component {
                                     {/*<!--begin::Login forgot password form--> */}
                                     <div className="login-forgot" style={{display : "block"}}>
                                         <div className="mb-20">
-                                            <h3>Forgotten Password ?</h3>
-                                            <p className="opacity-60">Enter your email to reset your password</p>
+                                            <h3>비밀번호를 잊어버리셨나요?</h3>
+                                            <p className="opacity-60">가입한 이메일 주소를 입력해주시기 바랍니다.</p>
                                         </div>
                                         <form className="form" id="kt_login_forgot_form">
                                             <div className="form-group mb-10">
                                                 <input className="form-control h-auto text-white placeholder-white opacity-70 bg-dark-o-70 rounded-pill border-0 py-4 px-8" type="text" placeholder="Email" name="email" autocomplete="off" />
                                             </div>
                                             <div className="form-group">
-                                                <button id="kt_login_forgot_submit" className="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-15 py-3 m-2">Request</button>
-                                                <button id="kt_login_forgot_cancel" className="btn btn-pill btn-outline-white font-weight-bold opacity-70 px-15 py-3 m-2">Cancel</button>
+                                                <button id="kt_login_forgot_submit" 
+                                                    onClick={()=>()=>this.setState({redirectPath : "/auth/register"})}
+                                                    className="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-15 py-3 m-2">
+                                                    찾기
+                                                </button>
+                                                <button id="kt_login_forgot_cancel" 
+                                                    onClick={()=>this.setState({redirectPath : "/auth/Login"})}            
+                                                    className="btn btn-pill btn-outline-white font-weight-bold opacity-70 px-15 py-3 m-2">
+                                                    취소
+                                                </button>
                                             </div>
                                         </form>
                                     </div>
