@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {Redirect} from "react-router-dom";
+
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
     PaginationProvider,
@@ -22,7 +24,7 @@ import {
 
 import { Pagination } from "../../../partials/controls";
 
-class MembershipComponent extends Component {
+class GroupListComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -272,11 +274,18 @@ class MembershipComponent extends Component {
                     _createdDate: "12/12/2017",
                     _updatedDate: "02/22/2013"
                   },
-            ]
+            ],
+            redirectPath : null
         };
     }
 
     componentDidMount () {
+    }
+
+    redirect = (path) => {
+      this.setState({
+        redirectPath : path
+      })
     }
 
     render() {
@@ -295,9 +304,26 @@ class MembershipComponent extends Component {
 
         return (
             <>  
+              {
+                    this.state.redirectPath ? 
+                    <>
+                            <Redirect    
+                                to={{
+                                    pathname: this.state.redirectPath
+                                }}
+                            />
+                    </> : <></>
+                }
                 <Card>
-                    <CardHeader title="Customers list">
+                    <CardHeader title="그룹 목록">
                         <CardHeaderToolbar>
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={()=> this.redirect("/setting/group/add")}
+                            >
+                                등록
+                            </button>
                         </CardHeaderToolbar>
                     </CardHeader>
                     <CardBody>
@@ -343,5 +369,5 @@ class MembershipComponent extends Component {
 
 }
 
-export default MembershipComponent;
+export default GroupListComponent;
 

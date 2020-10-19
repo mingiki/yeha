@@ -54,6 +54,16 @@ class LoginComponent extends Component {
     render() {
         return (
             <>  
+                {
+                    this.state.redirectPath ? 
+                    <>
+                            <Redirect    
+                                to={{
+                                    pathname: this.state.redirectPath
+                                }}
+                            />
+                    </> : <></>
+                }
                 <div className="d-flex flex-column flex-root">
                     {/*begin::Login*/}
                     <div
