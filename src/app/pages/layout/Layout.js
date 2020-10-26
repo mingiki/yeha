@@ -4,18 +4,20 @@ import { Link, Redirect, Route, HashRouter, Switch ,withRouter, BrowserRouter} f
 import {LayoutInit} from "./LayoutInit";
 import SVG from "react-inlinesvg";
 import {toAbsoluteUrl} from "../../helpers";
+import { ToastContainer } from 'react-toastify';
 
 import Routes from "../../router/Routes";
 import ApiService from '../../service/ApiService';
 
 import Aside from "../../pages/layout/Aside";
 import Header from "../../pages/layout/Header";
+import SubHeader from "../../pages/layout/SubHeader";
 import Footer from "../../pages/layout/Footer";
 import HeaderMobile from "../../pages/layout/HeaderMobile";
 
 import Main from "../../pages/Main";
+import Class from "../../pages/Class";
 import Setting from "../../pages/Setting";
-
 
 class Layout extends Component {
     constructor(props) {
@@ -51,7 +53,10 @@ class Layout extends Component {
 
 
                     {/*begin::Content*/}
-                    <div className="content d-flex flex-column flex-column-fluid" id="kt_content">						
+                    <div className="content d-flex flex-column flex-column-fluid" id="kt_content">					
+                     
+                      <SubHeader />
+
                       {/*begin::Entry*/}
                       <div className="d-flex flex-column-fluid">
                         {/*begin::Container*/}
@@ -63,6 +68,7 @@ class Layout extends Component {
                                 <Redirect exact from="/" to="/main" />
                               }
                               <Route path={"/main"} render={() =><Main {...this.props}/>}  />
+                              <Route path={"/class"} render={() =><Class {...this.props}/>}  />
                               <Route path={"/setting"} render={() =><Setting {...this.props}/>}  />
                               
                               {/* <Route component={Error}/> */}
@@ -70,6 +76,7 @@ class Layout extends Component {
                             </Switch>
                           </Suspense>
 
+                          <ToastContainer />      
                         </div>
                         {/*end::Container*/}
                       </div>

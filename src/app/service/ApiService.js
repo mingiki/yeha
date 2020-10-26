@@ -4,6 +4,8 @@ import * as firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/database"
 
+import moment from 'moment';
+
 import { config } from "../config/firebaseConfig"
 
 // Init firebase if not already initialized
@@ -171,9 +173,80 @@ class ApiService {
             })
         })
     }
+
+
+    /**
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     *                                     [ Setting - Group ]
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     */ 
+    
+    /**
+     *  그룹 추가
+     */
+    async settingGroupAdd(param){
+        return new Promise((resolve, reject) => {
+            const newUid = this.autoId();
+            firebase.firestore().collection('group').doc(newUid).set({
+                uid : newUid,
+                centerId : param.loginUser.centerId,
+                name : param.name,
+                menus : param.menus,
+                createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
+                createder : param.loginUser.userName
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     * 그룹 삭제
+     * @param {*} param 
+     */
+    async settingGroupDelete(param){
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('group').doc(param.uid).delete()
+            .then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  그룹 목록
+     */
+    async settingGroupList(param){
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('group').get().then((querySnapshot)=>{
+                let authList = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(authList));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
     
 
+    getSuccess(data) {
+        return {
+            resultCode : '200',
+            resultMsg : "Success",
+            resultData : data,
+        }
+    }
 
+    getError(error) {
+        return {
+            resultCode : '999',
+            resultMsg : error
+        }
+    }
 
 
     autoId(){

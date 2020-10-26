@@ -4,6 +4,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
 import * as AuthModules from "../store/modules/auth";
+
+//setting
+import * as GroupModules from "../store/modules/group";
+
 import ApiService from '../service/ApiService';
 
 import Auth from "../pages/Auth";
@@ -65,9 +69,11 @@ class Routes extends Component {
 
 export default connect((state) => ({
   auth: state.auth,
+  // group: state.group,
 }),
   (dispatch) => ({
       AuthActions: bindActionCreators(AuthModules.actions, dispatch),
+      // GroupActions: bindActionCreators(GroupModules.actions, dispatch),
   })
 )(Routes);
 

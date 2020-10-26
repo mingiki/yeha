@@ -9,6 +9,8 @@ import "react-app-polyfill/stable";
 import "../src/app/assets/plugins/keenthemes-icons/font/ki.css";
 import "socicon/css/socicon.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import 'react-toastify/dist/ReactToastify.css';
+
 import "../src/app/assets/plugins/flaticon/flaticon.css";
 import "../src/app/assets/plugins/flaticon2/flaticon.css";
 // Datepicker

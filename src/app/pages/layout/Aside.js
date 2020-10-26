@@ -34,7 +34,7 @@ class Aside extends Component {
               {title : "회원권", link : "/setting/membership" , permissions: ["center", "instructor"] },
               {title : "수업관리", link : "/setting/class" , permissions: ["center", "instructor"] },   
               {title : "직원관리", link : "/setting/instructor" , permissions: ["center", "instructor"] },
-              {title : "권한관리", link : "/setting/group" , permissions: ["center", "instructor"] },
+              {title : "그룹관리", link : "/setting/group" , permissions: ["center", "instructor"] },
               {title : "히스토리", link : "/setting/history" , permissions: ["center", "instructor"] },
             ]},
           ]

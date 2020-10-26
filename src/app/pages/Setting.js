@@ -27,6 +27,7 @@ export default function Auth(props) {
 
           <Route path={"/setting/history"} render={() =><HistoryComponent {...param} />}  />
 
+          <Redirect from="*" to="/setting/membership" />
         </Switch>
       </Suspense>
     </>

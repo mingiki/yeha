@@ -37,16 +37,60 @@ class RegisterComponent extends Component {
             userName : this.state.userName,
             tel : this.state.tel
         }
-        console.log(param);
 
         let result = await this.api.createCenter(param);
-
-        console.log("내려옵니다.");
 
         if (result.resultCode == "200") {
             this.setState({
                 redirectPath : '/auth/login'
             })
+        }
+    }
+
+    valid = () => {
+        const email = this.state.email;
+        const password = this.state.password;
+        const centerName = this.state.centerName;
+        const userName = this.state.userName;
+        const tel = this.state.tel;
+
+        let result = false;
+        let emailStr = "";
+        let passwordStr = "";
+        let nameStr = "";
+
+        const regExp1 = /[0-9]/;
+        const regExp2 = /[a-zA-Z]/;
+
+        //이메일 null 체크
+        if (email == "" || email == undefined || email == null) {
+            result = false;
+            emailStr = "이메일을 입력하세요.";
+    
+        //이메일 정규식 체크
+        } else if (/.+@.+\.[A-Za-z]+$/.test(email) == false) {
+            result = false;
+            emailStr = "이메일을 정확히 입력해주세요.";
+
+        //패스워드 null 체크
+        } else if (password == "" || password == undefined || password == null) {
+            result = false;
+            passwordStr= "패스워드를 입력하세요.";
+        
+        //패스워드 길이값 체크
+        } else if (password.length < 6) {
+            result = false;
+            passwordStr= "패스워드는 6자리 이상입니다.";
+
+        //패스워드 조합 체크
+        } else if (!regExp1.test(password) || !regExp2.test(password)) {
+            result = false;
+            passwordStr= "패스워드는 영문, 숫자 포함입니다.";
+
+        //가입사 null 체크
+        } else if (centerName == "" || centerName == undefined || centerName == null) {
+            result = false;
+            nameStr = "센터명을 입력하세요.";
         }
     }
 
