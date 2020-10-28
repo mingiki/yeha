@@ -2,18 +2,18 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 export const actionTypes = {
-  SetMainData: "[Group SetMainData] Action",
-  SetSelectData: "[Group SetSelectData] Action",
+  SetMainData: "[Instructor SetMainData] Action",
+  SetSelectData: "[Instructor SetSelectData] Action",
 };
 
-const initialGroupState = {
+const initialInstructorState = {
     mainData : null,
     selectData : null,
 };
 
 export const reducer = persistReducer(
-    { key: "group", storage, whitelist: [] },
-    (state = initialGroupState, action) => {
+    { key: "instructor", storage, whitelist: [] },
+    (state = initialInstructorState, action) => {
       switch (action.type) {
         case actionTypes.SetMainData: {
           return { ...state, mainData : action.mainData};

@@ -11,7 +11,7 @@ import {
 
 import ApiService from '../../../service/ApiService';
 
-class instructorViewComponent extends Component {
+class InstructorViewComponent extends Component {
     constructor(props) {
         super(props);
         console.log(props);
@@ -24,20 +24,20 @@ class instructorViewComponent extends Component {
 
     componentDidMount () {
         // 자원 최소화
-        // this.settinginstructorSelect();
+        // this.settingGroupSelect();
     }
 
-    // settinginstructorSelect = async () => {
+    // settingGroupSelect = async () => {
     //     console.log(this.id);
         
     //     const param = {
     //         uid : this.id
     //     }
-    //     let result = await this.api.settinginstructorSelect(param);
+    //     let result = await this.api.settingGroupSelect(param);
     //     console.log(result);
     // }
 
-    deleteinstructor = async (uid) => {
+    deleteGroup = async (uid) => {
         Swal.fire({
             title: '삭제하시겠습니까?',
             text: '삭제 시 원복할 수 없습니다.',
@@ -50,7 +50,7 @@ class instructorViewComponent extends Component {
                 let param = {
                     uid : uid
                 }
-                let result = await this.api.settinginstructorDelete(param);
+                let result = await this.api.settingGroupDelete(param);
         
                 if (result.resultCode == "200") {
                     toast.info("그룹이 삭제되었습니다.", {
@@ -64,7 +64,7 @@ class instructorViewComponent extends Component {
                     })
         
                     this.setState({
-                        redirectPath : "setting/instructor"
+                        redirectPath : "setting/group"
                     })
                 }
             } 
@@ -74,7 +74,7 @@ class instructorViewComponent extends Component {
     }
 
     render() {  
-        const instructor = this.props.instructor.selectData;
+        const group = this.props.group.selectData;
 
         return (
             <>  
@@ -92,16 +92,16 @@ class instructorViewComponent extends Component {
                     <div class="card-header">
                         <div class="card-title">
                             <span class="card-icon">
-                                <i class="flaticon2-instructor text-primary"></i>
+                                <i class="flaticon2-group text-primary"></i>
                             </span> 
                             <h3 class="card-label">
-                                {instructor.name}
+                                {group.name}
                             </h3>
                         </div>
                         <div class="card-toolbar">
                             <button
                                 type="button"
-                                onClick={()=> {this.setState({redirectPath : "/setting/instructor"})}}
+                                onClick={()=> {this.setState({redirectPath : "/setting/group"})}}
                                 className="btn btn-light"
                             >
                                 <i className="fa fa-arrow-left"></i>
@@ -111,7 +111,7 @@ class instructorViewComponent extends Component {
                             <button 
                                 type="button"
                                 className="btn btn-light ml-2"
-                                onClick={()=> {this.setState({redirectPath : `/setting/instructor/edit/${instructor.id}`})}}
+                                onClick={()=> {this.setState({redirectPath : `/setting/group/edit/${group.id}`})}}
                             >
                                 <i className="fa fa-redo"></i>
                                 수정
@@ -120,7 +120,7 @@ class instructorViewComponent extends Component {
                             <button
                                 type="button"
                                 className="btn btn-primary ml-2"
-                                onClick={()=> {this.deleteinstructor(instructor.id)}}
+                                onClick={()=> {this.deleteGroup(group.id)}}
                             >
                                 <i className="fa fa-trash"></i>
                                 삭제
@@ -143,7 +143,7 @@ class instructorViewComponent extends Component {
                                         </thead>
                                         <tbody>
                                             {
-                                            instructor.menus.map((menu)=>{
+                                            group.menus.map((menu)=>{
                                                 return <tr>
                                                     <th scope="row" style={{textAlign: "center" , verticalAlign: "middle"}}>
                                                         <CustomInput inline 
@@ -158,10 +158,10 @@ class instructorViewComponent extends Component {
                                                             menu.sub ? <>
                                                                 <div className="table">
                                                                     <table className="custom-table table">
-                                                                        <colinstructor>
+                                                                        <colgroup>
                                                                             <col width="30%" />
                                                                             <col width="70%" />
-                                                                        </colinstructor>
+                                                                        </colgroup>
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>메뉴명</th>
@@ -218,8 +218,8 @@ class instructorViewComponent extends Component {
                                 </h6>
                                 <div className="d-flex align-items-center">
                                     <div className="d-flex flex-column font-weight-bold">
-                                    <span className="text-dark mb-1 font-size-lg">{instructor.createder}</span>
-                                    <span className="text-muted">{instructor.createdAt}</span>
+                                    <span className="text-dark mb-1 font-size-lg">{group.createder}</span>
+                                    <span className="text-muted">{group.createdAt}</span>
                                     </div>
                                 </div>
                             </Col>
@@ -229,8 +229,8 @@ class instructorViewComponent extends Component {
                                 </h6>
                                 <div className="d-flex align-items-center">
                                     <div className="d-flex flex-column font-weight-bold">
-                                    <span className="text-dark mb-1 font-size-lg">{instructor.createder}</span>
-                                    <span className="text-muted">{instructor.createdAt}</span>
+                                    <span className="text-dark mb-1 font-size-lg">{group.createder}</span>
+                                    <span className="text-muted">{group.createdAt}</span>
                                     </div>
                                 </div>
                             </Col>
@@ -245,5 +245,5 @@ class instructorViewComponent extends Component {
 
 }
 
-export default instructorViewComponent;
+export default InstructorViewComponent;
 

@@ -1,37 +1,14 @@
 import React, { Suspense , Component} from "react";
-import { Redirect, Route, HashRouter, Switch ,withRouter, BrowserRouter} from "react-router-dom";
+import { Redirect, Route, Switch ,withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-//setting
 import * as GroupModules from "../../../store/modules/group";
 
 import GroupListComponent from "./GroupListComponent";
 import GroupViewComponent from "./GroupViewComponent";
 import GroupEditComponent from "./GroupEditComponent";
 import GroupAddComponent from "./GroupAddComponent";
-
-// export function GroupComponent(props) {
-//   let param = props;
-//   return (
-//     <>
-//        <Suspense>
-//         <Switch>
-//           <Route exact path={`${props.match.path}`} render={() => <GroupListComponent {...param} />} />
-//           <Route path={`${props.match.path}/view`} render={() => <GroupViewComponent {...param} />}  />
-//           <Route path={`${props.match.path}/edit`} render={() => <GroupEditComponent {...param} />}  />
-//           <Route path={`${props.match.path}/add`} render={() => <GroupAddComponent {...param} />}  />
-
-//           <Redirect from="*" to={`${props.match.path}`} />
-//         </Switch>
-//       </Suspense>
-//     </>
-//   );
-// }
-
-// export default withRouter(GroupComponent);
-
-
 
 class GroupComponent extends Component {
   constructor(props) {
@@ -41,17 +18,22 @@ class GroupComponent extends Component {
   }
 
   render() {
-    let param = this.props;
-
+    const param = {
+      auth : this.props.auth,
+      group : this.props.group,
+      AuthActions : this.props.AuthActions,
+      GroupActions : this.props.GroupActions
+    };
+    
     return <>
       <Suspense>
         <Switch>
-          <Route exact path={`${this.props.match.path}`} render={() => <GroupListComponent {...param} />} />
-          <Route path={`${this.props.match.path}/view`} render={() => <GroupViewComponent {...param} />}  />
-          <Route path={`${this.props.match.path}/edit`} render={() => <GroupEditComponent {...param} />}  />
-          <Route path={`${this.props.match.path}/add`} render={() => <GroupAddComponent {...param} />}  />
+          <Route exact path={`${this.props.match.url}`} render={(props) => <GroupListComponent {...props} {...param}/>} />
+          <Route path={`${this.props.match.url}/view/:id`} render={(props) => <GroupViewComponent {...props} {...param} />}  />
+          <Route path={`${this.props.match.url}/edit/:id`} render={(props) => <GroupEditComponent {...props} {...param}/>}  />
+          <Route path={`${this.props.match.url}/add`} render={(props) => <GroupAddComponent {...props}  {...param} />}  />
 
-          <Redirect from="*" to={`${this.props.match.path}`} />
+          <Redirect from="*" to={`${this.props.match.url}`} />
         </Switch>
       </Suspense>
     </>

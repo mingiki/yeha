@@ -69,12 +69,10 @@ class Routes extends Component {
 
 export default connect((state) => ({
   auth: state.auth,
-  // group: state.group,
 }),
-  (dispatch) => ({
-      AuthActions: bindActionCreators(AuthModules.actions, dispatch),
-      // GroupActions: bindActionCreators(GroupModules.actions, dispatch),
-  })
+(dispatch) => ({
+  AuthActions: bindActionCreators(AuthModules.actions, dispatch),
+})
 )(Routes);
 
 

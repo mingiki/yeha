@@ -19,7 +19,7 @@ import {
 
 import ApiService from "../../../service/ApiService";
 
-class GroupListComponent extends Component {
+class InstructorListComponent extends Component {
     constructor(props) {
         super(props);
         this.api = new ApiService();
@@ -29,29 +29,29 @@ class GroupListComponent extends Component {
     }
 
     componentDidMount = async ()  => {
-      this.initGroup();
+      this.initInstructor();
     }
 
-    initGroup = async () => {
+    initInstructor = async () => {
       let param = {
         centerId : this.props.auth.loginUser.centerId
       }
-      let result = await this.api.settingGroupList(param);
+      let result = await this.api.settingInstructorList(param);
 
       if (result.resultCode == "200") {
-        this.props.GroupActions.SetMainData(result.resultData);
+        this.props.InstructorActions.SetMainData(result.resultData);
       }
     }
 
     redirect = (path , data) => {
-      this.props.GroupActions.SetSelectData(data);
+      this.props.InstructorActions.SetSelectData(data);
       this.setState({
         redirectPath : path
       })
     }
 
     render() {
-        const entities = this.props.group.mainData;
+        const entities = this.props.instructor.mainData;
         const numberOfRows = entities ? Math.ceil(entities.length / 4) : 0
         
         return (
@@ -73,7 +73,7 @@ class GroupListComponent extends Component {
                       type="button"
                       className="btn btn-primary"
                       style={{float: "right"}}
-                      onClick={()=> this.redirect("/setting/group/add")}>
+                      onClick={()=> this.redirect("/setting/instructor/add")}>
                         등록
                     </button>
                 </div>
@@ -81,24 +81,24 @@ class GroupListComponent extends Component {
                 {Array(numberOfRows).fill().map((_, rowIndex) => (
                   <Row key={rowIndex}>
                   {
-                    entities.slice(rowIndex * 4, (rowIndex * 4) + 4).map((group,i) => (
+                    entities.slice(rowIndex * 4, (rowIndex * 4) + 4).map((instructor,i) => (
                       <Col lg="3" md="4" sm="12" key={i}>
-                        <div class="card card-custom gutter-b card-list" onClick={()=>this.redirect(`/setting/group/view/${group.id}`, group)}>
+                        <div class="card card-custom gutter-b card-list" onClick={()=>this.redirect(`/setting/instructor/view/${instructor.id}`, instructor)}>
                           <div class="card-header">
                             <div class="card-title">
                               <span class="card-icon">
-                                <i class="flaticon2-group text-primary"></i>
+                                <i class="flaticon2-instructor text-primary"></i>
                               </span> 
                               <h3 class="card-label">
-                                {group.name}
+                                {instructor.name}
                               </h3>
                             </div>
                           </div>
                           <div class="card-footer" style={{padding : "1rem 2.25rem"}}>
                             <div className="d-flex align-items-center">
                               <div className="d-flex flex-column font-weight-bold">
-                                <span className="text-dark mb-1 font-size-lg">{group.createder}</span>
-                                <span className="text-muted">{group.createdAt}</span>
+                                <span className="text-dark mb-1 font-size-lg">{instructor.createder}</span>
+                                <span className="text-muted">{instructor.createdAt}</span>
                               </div>
                             </div>
                           </div>
@@ -116,5 +116,5 @@ class GroupListComponent extends Component {
 
 }
 
-export default GroupListComponent;
+export default InstructorListComponent;
 

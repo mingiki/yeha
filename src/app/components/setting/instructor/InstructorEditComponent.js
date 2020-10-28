@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import {Redirect} from "react-router-dom";
 import update from 'react-addons-update'
-import { ToastContainer, toast } from 'react-toastify';
-import DualListBox from 'react-dual-listbox';
 
+import { toast } from 'react-toastify';
 import {
     Input,
     CustomInput,
@@ -17,55 +16,44 @@ import {
     CardBody,
     CardHeader,
     CardHeaderToolbar,
-} from "../../../partials/controls";
-import ApiService from '../../../service/ApiService';
+  } from "../../../partials/controls";
 
-class GroupAddComponent extends Component {
+class InstructorEditComponent extends Component {
     constructor(props) {
         super(props);
-        this.api = new ApiService();
-        this.state = {           
+
+        this.instructor = this.props.instructor.selectData;
+
+        this.state = {         
             redirectPath : null,
-            menus : [
-                {menuId : "class" , menuName : "수업" , isOpen: false , sub : [
-                  {menuId : "schedule" ,menuName : "스케줄", isOpen: false, },
-                  {menuId : "timetable" ,menuName : "시간표", isOpen: false, },
-                ]},
-                {menuId : "user" , menuName : "회원" , isOpen: false , sub : [
-                  {menuId : "list" ,menuName : "목록", isOpen: false, },
-                  {menuId : "register" ,menuName : "등록", isOpen: false, },
-                ]},
-                {menuId : "calculation" ,menuName : "정산" ,  isOpen: false , sub : [
-                  {menuId : "sale" ,menuName : "급여", isOpen: false, },
-                  {menuId : "pay" ,menuName : "매출", isOpen: false, },
-                  {menuId : "statistics" ,menuName : "통계", isOpen: false,},              
-                ]},         
-                {menuId : "notification" ,menuName : "공지사항" , isOpen: false, sub : null},
-                {menuId : "setting" ,menuName : "환경설정" , isOpen: false, sub : [
-                  {menuId : "membership" ,menuName : "회원권", isOpen: false },
-                  {menuId : "classSetting" ,menuName : "수업설정", isOpen: false },   
-                  {menuId : "instructor" ,menuName : "직원관리", isOpen: false },
-                  {menuId : "group" ,menuName : "그룹관리", isOpen: false },
-                  {menuId : "history" ,menuName : "히스토리", isOpen: false },
-                ]},
-            ],
+            menus : this.instructor.menus,
             invalid: {
                 name : false
             },
             formValue: {
-                name : ''
-            }      
+                name : this.instructor.name
+            }        
         };
     }
 
-   
-
     componentDidMount () {
+
     }
 
-    redirect = (path) => {
+    onChangeName = (e) =>{
         this.setState({
-            redirectPath : path
+          formValue: update(
+            this.state.formValue,
+            {
+              name: { $set: e.target.value },
+            }
+          ),
+          invalid: update(
+            this.state.invalid,
+            {
+              name: { $set: false },
+            }
+          )
         })
     }
 
@@ -110,25 +98,52 @@ class GroupAddComponent extends Component {
           menus : updateMenus
         })
     }
-    
-    onChangeName = (e) =>{
+
+    onChangeMenuAction = (event) => {
+        let isChecked = event.target.checked;
+        let menuId = event.target.id;
+
+        let updateMenus = this.state.menus.map( menu =>{
+            if (menu.menuId + "Add" == menuId) {
+                menu.actionAuth.add = isChecked;
+            } else if (menu.menuId + "Edit" == menuId) {
+                menu.actionAuth.edit = isChecked;
+            } else if (menu.menuId + "Delete" == menuId) {
+                menu.actionAuth.delete = isChecked;
+            }
+            return menu;
+        });
+
         this.setState({
-          formValue: update(
-            this.state.formValue,
-            {
-              name: { $set: e.target.value },
-            }
-          ),
-          invalid: update(
-            this.state.invalid,
-            {
-              name: { $set: false },
-            }
-          )
+            menus : updateMenus
         })
     }
-    
-    settingGroupAdd = async () => {
+
+    onChangeMenuSubAction = (event) => {
+        let isChecked = event.target.checked;
+        let menuId = event.target.id;
+
+        let updateMenus = this.state.menus.map( menu =>{
+            if (menu.sub) {
+                menu.sub.map(sub => {
+                    if (sub.menuId + "Add" == menuId) {
+                        sub.actionAuth.add = isChecked;
+                    } else if (sub.menuId + "Edit" == menuId) {
+                        sub.actionAuth.edit = isChecked;
+                    } else if (sub.menuId + "Delete" == menuId) {
+                        sub.actionAuth.delete = isChecked;
+                    }
+                })
+            }
+          return menu;
+        });
+
+        this.setState({
+            menus : updateMenus
+        })
+    }
+
+    settinginstructorEdit = async () => {
         let name = this.state.formValue.name;
         if (name == null || name == '' || name == undefined) {
           this.setState({
@@ -141,43 +156,17 @@ class GroupAddComponent extends Component {
           })
           document.getElementById("name").focus();
         } else {
-          let addMenus = this.state.menus.map(menu => {
-            if (menu.sub) {
-                menu.sub.map(sub => {
-                    let addChecked = document.getElementById(sub.menuId+"Add").checked;
-                    let editChecked = document.getElementById(sub.menuId+"Edit").checked;
-                    let deleteChecked = document.getElementById(sub.menuId+"Delete").checked;
-          
-                    sub.actionAuth = {
-                      add : addChecked,
-                      edit : editChecked,
-                      delete : deleteChecked
-                    };
-                })
-            } else {
-                let addChecked = document.getElementById(menu.menuId+"Add").checked;
-                let editChecked = document.getElementById(menu.menuId+"Edit").checked;
-                let deleteChecked = document.getElementById(menu.menuId+"Delete").checked;
-      
-                menu.actionAuth = {
-                  add : addChecked,
-                  edit : editChecked,
-                  delete : deleteChecked
-                };
-            }
-    
-            return menu;
-          })
     
           let param = {
               name : name,
-              menus : addMenus,
+              uid : this.instructor.id,
+              menus : this.state.menus,
               loginUser : this.props.auth.loginUser
           }
-          let result = await this.api.settingGroupAdd(param);
+          let result = await this.api.settinginstructorEdit(param);
 
           if (result.resultCode == "200") {
-            toast.info("그룹등록이 완료되었습니다.", {
+            toast.info("그룹수정이 완료되었습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -187,12 +176,15 @@ class GroupAddComponent extends Component {
                 progress: undefined,
             })
 
+            //수정데이터 init
+            this.props.instructorActions.SetSelectData(result.resultData);
+
             this.setState({
-                redirectPath : "setting/group"
+                redirectPath : "setting/instructor/view"
             })
 
           } else {
-            toast.error("그룹등록이 실패하였습니다.", {
+            toast.error("그룹수정이 실패하였습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -205,11 +197,12 @@ class GroupAddComponent extends Component {
 
         }
     }
-        
+
     render() {  
+        
         return (
             <>  
-                {
+              {
                     this.state.redirectPath ? 
                     <>
                             <Redirect    
@@ -220,11 +213,11 @@ class GroupAddComponent extends Component {
                     </> : <></>
                 }
                 <Card>
-                    <CardHeader title="그룹 등록">
+                    <CardHeader title="그룹 수정">
                         <CardHeaderToolbar>
                             <button
                                 type="button"
-                                onClick={()=> {this.setState({redirectPath : "/setting/group"})}}
+                                onClick={()=> {this.setState({redirectPath : `/setting/instructor/view/${this.instructor.id}`})}}
                                 className="btn btn-light"
                             >
                                 <i className="fa fa-arrow-left"></i>
@@ -239,7 +232,7 @@ class GroupAddComponent extends Component {
                             <button
                                 type="submit"
                                 className="btn btn-primary ml-2"
-                                onClick={this.settingGroupAdd}
+                                onClick={this.settinginstructorAdd}
                             >
                                 <i className="fa fa-save"></i>
                                 저장
@@ -296,10 +289,10 @@ class GroupAddComponent extends Component {
                                                             menu.sub ? <>
                                                                 <Table 
                                                                     responsive >
-                                                                    <colgroup>
+                                                                    <colinstructor>
                                                                         <col width="30%" />
                                                                         <col width="70%" />
-                                                                    </colgroup>
+                                                                    </colinstructor>
                                                                     <thead>
                                                                         <tr>
                                                                             <th>메뉴명</th>
@@ -321,9 +314,9 @@ class GroupAddComponent extends Component {
                                                                                         </th>
                                                                                         <td>                                                                                              
                                                                                             <>
-                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Add"} key={sub.menuId + "Add"} disabled={!sub.isOpen} label="등록" />
-                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Edit"} key={sub.menuId + "Edit"} disabled={!sub.isOpen} label="수정" />
-                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Delete"} key={sub.menuId + "Delete"} disabled={!sub.isOpen} label="삭제" />
+                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Add"} key={sub.menuId + "Add"} onChange={this.onChangeMenuSubAction} disabled={!sub.isOpen} checked={sub.actionAuth.add} label="등록" />
+                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Edit"} key={sub.menuId + "Edit"} onChange={this.onChangeMenuSubAction} disabled={!sub.isOpen} checked={sub.actionAuth.edit} label="수정" />
+                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Delete"} key={sub.menuId + "Delete"} onChange={this.onChangeMenuSubAction} disabled={!sub.isOpen} checked={sub.actionAuth.delete} label="삭제" />
                                                                                             </>
                                                                                         </td>
                                                                                     </tr>
@@ -332,9 +325,9 @@ class GroupAddComponent extends Component {
                                                                     </tbody>
                                                                 </Table>
                                                             </> : <>
-                                                                <CustomInput inline type="checkbox" id={menu.menuId + "Add"} key={menu.menuId + "Add"} disabled={!menu.isOpen} label="등록" />
-                                                                <CustomInput inline type="checkbox" id={menu.menuId + "Edit"} key={menu.menuId + "Edit"} disabled={!menu.isOpen} label="수정" />
-                                                                <CustomInput inline type="checkbox" id={menu.menuId + "Delete"} key={menu.menuId + "Delete"} disabled={!menu.isOpen} label="삭제" />
+                                                                <CustomInput inline type="checkbox" id={menu.menuId + "Add"} key={menu.menuId + "Add"} onChange={this.onChangeMenuAction} disabled={!menu.isOpen} checked={menu.actionAuth.add} label="등록" />
+                                                                <CustomInput inline type="checkbox" id={menu.menuId + "Edit"} key={menu.menuId + "Edit"} onChange={this.onChangeMenuAction} disabled={!menu.isOpen} checked={menu.actionAuth.edit} label="수정" />
+                                                                <CustomInput inline type="checkbox" id={menu.menuId + "Delete"} key={menu.menuId + "Delete"} onChange={this.onChangeMenuAction} disabled={!menu.isOpen} checked={menu.actionAuth.delete} label="삭제" />
                                                             </>
                                                         }
                                                     </td>
@@ -375,5 +368,5 @@ class GroupAddComponent extends Component {
 
 }
 
-export default GroupAddComponent;
+export default InstructorEditComponent;
 

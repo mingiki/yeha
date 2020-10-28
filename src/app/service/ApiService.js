@@ -53,18 +53,18 @@ class ApiService {
                     let updateAccessToken = this.autoId();
 
                     let loginUser = {
-                        uid : userData.uid,
+                        id : userData.id,
                         auth : 'center',
                         email : userData.email,
                         userName : userData.userName,
                         tel : userData.tel,
-                        centerId : userData.uid,
+                        centerId : userData.id,
                         centerName : userData.centerName,
                         centerCode : userData.centerCode,
                         createdAt : userData.createdAt,
                     }
 
-                    firebase.firestore().collection('token').doc(userData.uid)
+                    firebase.firestore().collection('token').doc(userData.id)
                     .update({
                         accessToken : updateAccessToken,
                         updateAt : new Date(),
@@ -103,10 +103,10 @@ class ApiService {
         return new Promise((resolve, reject) => {
             
             //센터 생성
-            const newUid = this.autoId();
-            firebase.firestore().collection('center').doc(newUid)
+            const newId = this.autoId();
+            firebase.firestore().collection('center').doc(newId)
             .set({
-                uid : newUid,
+                id : newId,
                 userName : param.userName,
                 centerName : param.centerName,
                 email : param.email,
@@ -117,9 +117,9 @@ class ApiService {
             }).then(()=>{
 
                 //로그인처리를 위한 토큰 생성
-                firebase.firestore().collection('token').doc(newUid)
+                firebase.firestore().collection('token').doc(newId)
                 .set({
-                    uid : newUid,
+                    id : newId,
                     accessToken : this.autoId(),
                     createdAt : new Date(),
                 }).then(()=>{
@@ -186,9 +186,9 @@ class ApiService {
      */
     async settingGroupAdd(param){
         return new Promise((resolve, reject) => {
-            const newUid = this.autoId();
-            firebase.firestore().collection('group').doc(newUid).set({
-                uid : newUid,
+            const newId = this.autoId();
+            firebase.firestore().collection('group').doc(newId).set({
+                id : newId,
                 centerId : param.loginUser.centerId,
                 name : param.name,
                 menus : param.menus,
@@ -203,12 +203,31 @@ class ApiService {
     }
 
     /**
+     *  그룹 수정
+     */
+    async settingGroupEdit(param){
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('group').doc(param.id).update({
+                name : param.name,
+                menus : param.menus,
+                updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
+                updatedId : param.loginUser.id,
+                updateder : param.loginUser.userName
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+    
+    /**
      * 그룹 삭제
      * @param {*} param 
      */
     async settingGroupDelete(param){
         return new Promise((resolve, reject) => {
-            firebase.firestore().collection('group').doc(param.uid).delete()
+            firebase.firestore().collection('group').doc(param.id).delete()
             .then(()=>{
                 return resolve(this.getSuccess());
             }).catch((error)=>{
@@ -222,16 +241,124 @@ class ApiService {
      */
     async settingGroupList(param){
         return new Promise((resolve, reject) => {
-            firebase.firestore().collection('group').get().then((querySnapshot)=>{
-                let authList = querySnapshot.docs.map(doc => doc.data());
-                return resolve(this.getSuccess(authList));
+            firebase.firestore().collection('group').where('centerId', '==', param.centerId).get().then((querySnapshot)=>{
+                let groupList = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(groupList));
             }).catch((error)=>{
                 return reject(this.getError(error));
             })
         });
     }
 
-    
+    /**
+     *  그룹 조회
+     */
+    async settingGroupSelect(param){
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('group').doc(param.id).get().then((querySnapshot)=>{
+                let group = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(group));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     *                                     [ Setting - Instructor ]
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     */ 
+
+    /**
+     *  직원 추가
+     */
+    async settingInstructorAdd(param){
+        return new Promise((resolve, reject) => {
+            const newId = this.autoId();
+            firebase.firestore().collection('instructor').doc(newId).set({
+                id : newId,
+                centerId : param.loginUser.centerId,
+                name : param.name,
+                menus : param.menus,
+                createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
+                createder : param.loginUser.userName
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  직원 수정
+     */
+    async settingInstructorEdit(param){
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('instructor').doc(param.id).update({
+                name : param.name,
+                menus : param.menus,
+                updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
+                updatedId : param.loginUser.id,
+                updateder : param.loginUser.userName
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     * 직원 삭제
+     * @param {*} param 
+     */
+    async settingInstructorDelete(param){
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('instructor').doc(param.id).delete()
+            .then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  직원 목록
+     */
+    async settingInstructorList(param){
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('instructor').where('centerId', '==', param.centerId).get().then((querySnapshot)=>{
+                let instructorList = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(instructorList));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  직원 조회
+     */
+    async settingInstructorSelect(param){
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('instructor').doc(param.id).get().then((querySnapshot)=>{
+                let instructor = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(instructor));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+
+    /**
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     *                                     [ COMMON ]
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     */ 
 
     getSuccess(data) {
         return {

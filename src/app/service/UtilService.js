@@ -3,6 +3,10 @@ import axios from 'axios';
 
 import {isMobile, browserName, browserVersion, osName} from "react-device-detect";
 
+import datepicker from "datepicker-bootstrap";
+import jQuery from "jquery";
+window.$ = window.jQuery = jQuery;
+
 /**
  * UTIL SERVICE
  * 
@@ -117,56 +121,13 @@ class UtilService {
      * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      */ 
 
-   /**
-    * 유효성 검사 실패 Convert
-    * @param {*} user 
-    * @param {*} room 
-    * @param {*} tokenValid 
-    * @param {*} tokenFailCode 
-    * @param {*} validType 
-    */
-   getValidResultCode (user, room, tokenValid , tokenFailCode, validType) {
-        
-        //처음 설정 화면에서는 사용자 , 방 , 토큰 유효성 검사
-        if (validType == "config") {
-            if (tokenValid) {
-                if (user) {
-                    return "user.notExists"
-                } else if (room) {
-                    return "room.notExists"
-                }   
-            } else {
-                if (tokenFailCode == "9994") {
-                    return "auth.expired"
-                } else {
-                    return "auth.invalid"
-                }
-            }
-        
-        //주기적인 토큰 검사는 사용자, 방이 유효한 상태에서 토큰 만료만 검사 (api 통신 3=> 1번으로 감소)
-        } else if (validType == "valid") {
-            if (tokenFailCode == "9994") {
-                return "auth.expired"
-            } else {
-                return "auth.invalid"
-            }
-        }
-        
+    setDatePicker(id){
+        jQuery('#'+id).datepicker({
+            todayHighlight: true,
+            orientation: "bottom left",
+            // templates: arrows
+        });
     }
-    
-    getOVClientData(clientDataArray) {
-
-        if (clientDataArray) {
-            if (clientDataArray.length > 0) {
-                return JSON.parse(clientDataArray[1]); 
-            }
-        }
-
-        return clientDataArray;
-    }
-
-
-    
 
  }
 

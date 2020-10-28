@@ -5,9 +5,11 @@ import * as auth from "./modules/auth";
 
 //setting
 import * as group from "./modules/group";
+import * as instructor from "./modules/instructor";
 
 export const rootReducer = combineReducers({
   auth : auth.reducer,
-  group : group.reducer
+  group : group.reducer,
+  instructor : instructor.reducer
 });
 

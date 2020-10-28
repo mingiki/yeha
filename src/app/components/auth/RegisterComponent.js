@@ -146,8 +146,8 @@ class RegisterComponent extends Component {
                                                 onChange={this.onChangeValue} />
                                             </div>  
 
-                                            <div className="separator separator-solid" style={{marginBottom: "20px" , borderColor: "rgba(24, 28, 50, 0.28)"}}></div>
-
+                                            <div className="separator separator-dashed my-8" />
+                                            
                                             <div className="form-group">
                                                 <input className="form-control h-auto text-white placeholder-white opacity-70 bg-dark-o-70 rounded-pill border-0 py-4 px-8" 
                                                 type="text" placeholder="상호명" id="centerName" 
