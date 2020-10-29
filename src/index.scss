@@ -103,16 +103,48 @@
   }
 }
 
+/**
+  * react-datepicker custom
+  */
+.react-datepicker {
+  margin: 0.125rem 0 0 !important;
+  font-size: 1rem !important;
+  color: #3F4254 !important;
+  text-align: left !important;
+  list-style: none !important;
+  background-color: #ffffff !important;
+  background-clip: padding-box !important;
+  border: 0 solid rgba(0, 0, 0, 0.15) !important;
+  border-radius: 0.42rem !important;
+  -webkit-box-shadow: 0px 0px 50px 0px rgba(82, 63, 105, 0.15) !important;
+  box-shadow: 0px 0px 50px 0px rgba(82, 63, 105, 0.15) !important;
+}
+
+.react-datepicker__triangle {
+  display: none !important;
+}
+
+.react-datepicker__header {
+  background-color: #ffff !important;
+}
+
+.react-datepicker__header {
+  border-color: none !important;
+  border: none !important;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
 
 .custom-table .table th, .custom-table .table td {
   border : 0px 0px 0px 0px solid #EBEDF3 !important;
 }
 
-
 .cursor-default {
   cursor: default !important;
 }
-
 
 .card-list:hover {
   box-shadow: 0 40px 40px rgba(0,0,0,.16);

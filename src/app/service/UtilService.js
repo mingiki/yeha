@@ -3,10 +3,6 @@ import axios from 'axios';
 
 import {isMobile, browserName, browserVersion, osName} from "react-device-detect";
 
-import datepicker from "datepicker-bootstrap";
-import jQuery from "jquery";
-window.$ = window.jQuery = jQuery;
-
 /**
  * UTIL SERVICE
  * 
@@ -121,13 +117,6 @@ class UtilService {
      * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      */ 
 
-    setDatePicker(id){
-        jQuery('#'+id).datepicker({
-            todayHighlight: true,
-            orientation: "bottom left",
-            // templates: arrows
-        });
-    }
 
  }
 

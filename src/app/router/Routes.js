@@ -52,7 +52,7 @@ class Routes extends Component {
                 </Switch>
               </Suspense>
     } else {
-      return<> 
+      return <> 
             <Switch>
               <Layout {...this.props} />
             </Switch>
