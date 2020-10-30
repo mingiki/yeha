@@ -49,8 +49,8 @@ class Aside extends Component {
       return this.state.menus.map((item)=>{
         if (!item.sub) {
           return <>
-             <li className="menu-item menu-item-active" aria-haspopup="true">
-                <NavLink className="menu-link" to={item.link}>
+             <li className="menu-item menu-item-active" aria-haspopup="true" key={item.title}>
+                <NavLink className="menu-link" to={item.link} key={item.title}>
                   <span className="svg-icon menu-icon">
                     {item.icon}
                   </span>
@@ -60,7 +60,7 @@ class Aside extends Component {
           </>
         } else {
           return <>
-            <li className="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+            <li className="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover" key={item.title}>
               <a href="javascript:;" className="menu-link menu-toggle">
                 <span className="svg-icon menu-icon">
                   {item.icon}
@@ -80,9 +80,10 @@ class Aside extends Component {
                     item.sub.map((subItem)=>{
                       return <>
                          <li
+                            key={subItem.title}
                             className="menu-item"
                             aria-haspopup="true">
-                          <NavLink className="menu-link" to={subItem.link}>
+                          <NavLink className="menu-link" to={subItem.link} key={item.title}>
                             <i className="menu-bullet menu-bullet-dot">
                               <span/>
                             </i>
