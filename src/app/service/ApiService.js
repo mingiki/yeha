@@ -38,7 +38,7 @@ class ApiService {
      * @param {*} param 
      */
     async login(param){
-
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('center').where('email', '==', param.email).where('password', '==', param.password).get().then((snapshot)=>{
                 if (snapshot.empty) {
@@ -100,6 +100,7 @@ class ApiService {
      * @param {*} param 
      */
     async createCenter(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             
             //센터 생성
@@ -146,6 +147,7 @@ class ApiService {
      * 로그인 여부 체크
      */
     async checkToken(accessToken){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('token').where("accessToken" , "==", accessToken || null).get().then((snapshot)=>{
 
@@ -185,6 +187,7 @@ class ApiService {
      *  그룹 추가
      */
     async settingGroupAdd(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             const newId = this.autoId();
             firebase.firestore().collection('group').doc(newId).set({
@@ -206,6 +209,7 @@ class ApiService {
      *  그룹 수정
      */
     async settingGroupEdit(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('group').doc(param.id).update({
                 name : param.name,
@@ -226,6 +230,7 @@ class ApiService {
      * @param {*} param 
      */
     async settingGroupDelete(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('group').doc(param.id).delete()
             .then(()=>{
@@ -240,6 +245,7 @@ class ApiService {
      *  그룹 목록
      */
     async settingGroupList(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('group').where('centerId', '==', param.centerId).get().then((querySnapshot)=>{
                 let groupList = querySnapshot.docs.map(doc => doc.data());
@@ -254,6 +260,7 @@ class ApiService {
      *  그룹 조회
      */
     async settingGroupSelect(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('group').doc(param.id).get().then((querySnapshot)=>{
                 let group = querySnapshot.docs.map(doc => doc.data());
@@ -274,15 +281,12 @@ class ApiService {
      *  직원 추가
      */
     async settingInstructorAdd(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             const newId = this.autoId();
             firebase.firestore().collection('instructor').doc(newId).set({
+                ...param,
                 id : newId,
-                centerId : param.loginUser.centerId,
-                name : param.name,
-                menus : param.menus,
-                createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
-                createder : param.loginUser.userName
             }).then(()=>{
                 return resolve(this.getSuccess());
             }).catch((error)=>{
@@ -295,13 +299,10 @@ class ApiService {
      *  직원 수정
      */
     async settingInstructorEdit(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('instructor').doc(param.id).update({
-                name : param.name,
-                menus : param.menus,
-                updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
-                updatedId : param.loginUser.id,
-                updateder : param.loginUser.userName
+                ...param
             }).then(()=>{
                 return resolve(this.getSuccess());
             }).catch((error)=>{
@@ -315,6 +316,7 @@ class ApiService {
      * @param {*} param 
      */
     async settingInstructorDelete(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('instructor').doc(param.id).delete()
             .then(()=>{
@@ -329,6 +331,7 @@ class ApiService {
      *  직원 목록
      */
     async settingInstructorList(param){
+        console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('instructor').where('centerId', '==', param.centerId).get().then((querySnapshot)=>{
                 let instructorList = querySnapshot.docs.map(doc => doc.data());
@@ -343,6 +346,7 @@ class ApiService {
      *  직원 조회
      */
     async settingInstructorSelect(param){
+         console.log("호출합니다.");
         return new Promise((resolve, reject) => {
             firebase.firestore().collection('instructor').doc(param.id).get().then((querySnapshot)=>{
                 let instructor = querySnapshot.docs.map(doc => doc.data());

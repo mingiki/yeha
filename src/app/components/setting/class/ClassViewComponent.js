@@ -8,16 +8,16 @@ import { CustomInput, Row, Col } from "reactstrap"
 
 import ApiService from "../../../service/ApiService";
 
-export const InstructorViewComponent = (props) => {
+export const ClassViewComponent = (props) => {
     const api = new ApiService();
     const [redirectPath, setRedirectPath] = useState(null);
-    const instructor = props.instructor.selectData;
+    const Class = props.Class.selectData;
 
     /**
      * 강사 삭제
      * @param {*} values 
      */
-    const deleteInstructor = async (id) => {
+    const deleteClass = async (id) => {
         Swal.fire({
             title: '삭제하시겠습니까?',
             text: '삭제 시 원복할 수 없습니다.',
@@ -30,7 +30,7 @@ export const InstructorViewComponent = (props) => {
                 let param = {
                     id : id
                 }
-                let result = await api.settingInstructorDelete(param);
+                let result = await api.settingClassDelete(param);
         
                 if (result.resultCode == "200") {
                     toast.info("직원이 삭제되었습니다.", {
@@ -43,7 +43,7 @@ export const InstructorViewComponent = (props) => {
                         progress: undefined,
                     })
         
-                    setRedirectPath("/setting/instructor")
+                    setRedirectPath("/setting/Class")
                 }
             } 
           })
@@ -69,13 +69,13 @@ export const InstructorViewComponent = (props) => {
                             <i className="flaticon2-group text-primary"></i>
                         </span> 
                         <h3 className="card-label">
-                            {instructor.name}
+                            {Class.name}
                         </h3>
                     </div>
                     <div className="card-toolbar">
                         <button
                             type="button"
-                            onClick={()=> {setRedirectPath("/setting/instructor")}}
+                            onClick={()=> {setRedirectPath("/setting/Class")}}
                             className="btn btn-light"
                         >
                             <i className="fa fa-arrow-left"></i>
@@ -85,7 +85,7 @@ export const InstructorViewComponent = (props) => {
                         <button 
                             type="button"
                             className="btn btn-light ml-2"
-                            onClick={()=> {setRedirectPath(`/setting/instructor/edit/${instructor.id}`)}}
+                            onClick={()=> {setRedirectPath(`/setting/Class/edit/${Class.id}`)}}
                         >
                             <i className="fa fa-redo"></i>
                             수정
@@ -94,7 +94,7 @@ export const InstructorViewComponent = (props) => {
                         <button
                             type="button"
                             className="btn btn-primary ml-2"
-                            onClick={()=> {deleteInstructor(instructor.id)}}
+                            onClick={()=> {deleteClass(Class.id)}}
                         >
                             <i className="fa fa-trash"></i>
                             삭제
@@ -119,7 +119,7 @@ export const InstructorViewComponent = (props) => {
                                 </div>
                                 <div className="symbol symbol-75 symbol-circle symbol-primary">
                                   <span className="symbol-label font-size-h3 font-weight-boldest">
-                                    {instructor.name}
+                                    {Class.name}
                                   </span>
                                 </div>
                               </div>
@@ -128,27 +128,27 @@ export const InstructorViewComponent = (props) => {
                             <div>
                                 <div className="d-flex justify-content-between align-items-center my-2">
                                     <span className="text-dark-75 font-weight-bolder mr-2">입사일:</span>
-                                    <span className="text-muted font-weight-bold">{instructor.enterDate}</span>
+                                    <span className="text-muted font-weight-bold">{Class.enterDate}</span>
                                 </div>  
                                 <div className="d-flex justify-content-between align-items-center my-2">
                                     <span className="text-dark-75 font-weight-bolder mr-2">퇴사일:</span>
-                                    <span className="text-muted font-weight-bold">{instructor.leaveDate}</span>
+                                    <span className="text-muted font-weight-bold">{Class.leaveDate}</span>
                                 </div>    
                                 <div className="d-flex justify-content-between align-items-center my-2">
                                     <span className="text-dark-75 font-weight-bolder mr-2">이메일:</span>
-                                    <span className="text-muted font-weight-bold">{instructor.email}</span>
+                                    <span className="text-muted font-weight-bold">{Class.email}</span>
                                 </div>
                                 <div className="d-flex justify-content-between align-items-cente my-2">
                                     <span className="text-dark-75 font-weight-bolder mr-2">연락처:</span>
-                                    <span className="text-muted font-weight-bold">{instructor.phone}</span>
+                                    <span className="text-muted font-weight-bold">{Class.phone}</span>
                                 </div>
                                 <div className="d-flex justify-content-between align-items-center my-2">
                                     <span className="text-dark-75 font-weight-bolder mr-2">생일:</span>
-                                    <span className="text-muted font-weight-bold">{instructor.birthDay}</span>
+                                    <span className="text-muted font-weight-bold">{Class.birthDay}</span>
                                 </div>
                                 <div className="d-flex justify-content-between align-items-cente my-2r">
                                     <span className="text-dark-75 font-weight-bolder mr-2">주소:</span>
-                                    <span className="text-muted font-weight-bold">{instructor.address}</span>
+                                    <span className="text-muted font-weight-bold">{Class.address}</span>
                                 </div>
                             </div>
                         </Col>
@@ -156,12 +156,12 @@ export const InstructorViewComponent = (props) => {
                             <label className="font-size-h6 font-weight-bolder text-dark">그룹</label>
                             <div className="d-flex align-items-center">
                                 <div className="d-flex flex-column font-weight-bold">
-                                    <span className="text-dark mb-1 font-size-lg">{instructor.group.name}</span>
+                                    <span className="text-dark mb-1 font-size-lg">{Class.group.name}</span>
                                 </div>
                             </div>
 
                             <label className="font-size-h6 font-weight-bolder text-dark">그룹 기능권한</label>
-                            {instructor.group != null ? <>
+                            {Class.group != null ? <>
                                 <div className="table">
                                     <table className="custom-table table" style={{border: "1px solid #EBEDF3"}}>
                                         <thead>
@@ -172,7 +172,7 @@ export const InstructorViewComponent = (props) => {
                                         </thead>
                                         <tbody>
                                             {
-                                            instructor.group.menus.map((menu)=>{
+                                            Class.group.menus.map((menu)=>{
                                                 return <tr>
                                                     <th scope="row" style={{textAlign: "center" , verticalAlign: "middle"}}>
                                                         <CustomInput inline 
@@ -250,8 +250,8 @@ export const InstructorViewComponent = (props) => {
                             <label className="font-size-h6 font-weight-bolder text-dark">등록</label>
                             <div className="d-flex align-items-center">
                                 <div className="d-flex flex-column font-weight-bold">
-                                    <span className="text-dark mb-1 font-size-lg">{instructor.createder}</span>
-                                    <span className="text-muted">{instructor.createdAt}</span>
+                                    <span className="text-dark mb-1 font-size-lg">{Class.createder}</span>
+                                    <span className="text-muted">{Class.createdAt}</span>
                                 </div>
                             </div>
                         </Col>
@@ -259,8 +259,8 @@ export const InstructorViewComponent = (props) => {
                             <label className="font-size-h6 font-weight-bolder text-dark">수정</label>
                             <div className="d-flex align-items-center">
                                 <div className="d-flex flex-column font-weight-bold">
-                                <span className="text-dark mb-1 font-size-lg">{instructor.updateder}</span>
-                                <span className="text-muted">{instructor.updatedAt}</span>
+                                <span className="text-dark mb-1 font-size-lg">{Class.updateder}</span>
+                                <span className="text-muted">{Class.updatedAt}</span>
                                 </div>
                             </div>
                         </Col>
@@ -273,4 +273,4 @@ export const InstructorViewComponent = (props) => {
 };
 
 
-export default InstructorViewComponent;
+export default ClassViewComponent;

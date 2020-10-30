@@ -19,7 +19,7 @@ import {
 
 import ApiService from "../../../service/ApiService";
 
-class InstructorListComponent extends Component {
+class ClassListComponent extends Component {
     constructor(props) {
         super(props);
         this.api = new ApiService();
@@ -29,29 +29,29 @@ class InstructorListComponent extends Component {
     }
 
     componentDidMount = async ()  => {
-      this.initInstructor();
+      this.initClass();
     }
 
-    initInstructor = async () => {
+    initClass = async () => {
       let param = {
         centerId : this.props.auth.loginUser.centerId
       }
-      let result = await this.api.settingInstructorList(param);
+      // let result = await this.api.settingClassList(param);
 
-      if (result.resultCode == "200") {
-        this.props.InstructorActions.SetMainData(result.resultData);
-      }
+      // if (result.resultCode == "200") {
+      //   this.props.ClassActions.SetMainData(result.resultData);
+      // }
     }
 
     redirect = (path , data) => {
-      this.props.InstructorActions.SetSelectData(data);
+      this.props.ClassActions.SetSelectData(data);
       this.setState({
         redirectPath : path
       })
     }
 
     render() {
-        const entities = this.props.instructor.mainData;
+        const entities = this.props.class.mainData;
         const numberOfRows = entities ? Math.ceil(entities.length / 4) : 0
         
         return (
@@ -73,7 +73,7 @@ class InstructorListComponent extends Component {
                       type="button"
                       className="btn btn-primary"
                       style={{float: "right"}}
-                      onClick={()=> this.redirect("/setting/instructor/add")}>
+                      onClick={()=> this.redirect("/setting/Class/add")}>
                         <i className="flaticon-add"></i>
                         등록
                     </button>
@@ -82,15 +82,15 @@ class InstructorListComponent extends Component {
                 {Array(numberOfRows).fill().map((_, rowIndex) => (
                   <Row key={rowIndex}>
                   {
-                    entities.slice(rowIndex * 4, (rowIndex * 4) + 4).map((instructor,i) => (
+                    entities.slice(rowIndex * 4, (rowIndex * 4) + 4).map((Class,i) => (
                       <Col lg="3" md="4" sm="12" key={i}>
 
-                        <div className="card card-custom gutter-b card-stretch card-list" onClick={()=>this.redirect(`/setting/instructor/view/${instructor.id}`, instructor)}>
+                        <div className="card card-custom gutter-b card-stretch card-list" onClick={()=>this.redirect(`/setting/Class/view/${Class.id}`, Class)}>
                           <div className="card-body pt-4">
 
                             <div className="d-flex justify-content-end">
                               <span className="label label-inline label-lg label-light-primary btn-sm font-weight-bold">
-                                {instructor.status}
+                                {Class.status}
                               </span>
                             </div>
 
@@ -101,28 +101,28 @@ class InstructorListComponent extends Component {
                                 </div>
                                 <div className="symbol symbol-lg-75 symbol-circle symbol-primary">
                                   <span className="symbol-label font-size-h3 font-weight-boldest">
-                                    {instructor.name}
+                                    {Class.name}
                                   </span>
                                 </div>
                               </div>
                               <div className="d-flex flex-column">
-                                <span className="text-dark font-weight-bold font-size-h4 mb-0">{instructor.name}</span>
-                                <span className="text-muted font-weight-bold">{instructor.group.name}</span>
+                                <span className="text-dark font-weight-bold font-size-h4 mb-0">{Class.name}</span>
+                                <span className="text-muted font-weight-bold">{Class.group.name}</span>
                               </div>
                             </div>
                            
                             <div>
                               <div className="d-flex justify-content-between align-items-center">
                                 <span className="text-dark-75 font-weight-bolder mr-2">이메일:</span>
-                                <span className="text-muted font-weight-bold">{instructor.email}</span>
+                                <span className="text-muted font-weight-bold">{Class.email}</span>
                               </div>
                               <div className="d-flex justify-content-between align-items-cente my-2">
                                 <span className="text-dark-75 font-weight-bolder mr-2">연락처:</span>
-                                <span className="text-muted font-weight-bold">{instructor.phone}</span>
+                                <span className="text-muted font-weight-bold">{Class.phone}</span>
                               </div>
                               <div className="d-flex justify-content-between align-items-center">
                                 <span className="text-dark-75 font-weight-bolder mr-2">입사일:</span>
-                                <span className="text-muted font-weight-bold">{instructor.enterDate}</span>
+                                <span className="text-muted font-weight-bold">{Class.enterDate}</span>
                               </div>
                             </div>
                           </div>
@@ -142,5 +142,5 @@ class InstructorListComponent extends Component {
 
 }
 
-export default InstructorListComponent;
+export default ClassListComponent;
 

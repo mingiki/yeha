@@ -14,7 +14,7 @@ import ApiService from "../../../service/ApiService";
 
 registerLocale('ko', ko);
 
-export const InstructorAddComponent = (props) => {
+export const ClassAddComponent = (props) => {
     const api = new ApiService();
     const { handleSubmit, register, errors , control } = useForm();
     const [inputs, setInputs] = useState({
@@ -71,7 +71,7 @@ export const InstructorAddComponent = (props) => {
             createder : props.auth.loginUser.userName
         }
         
-        let result = await api.settingInstructorAdd(param);
+        let result = await api.settingClassAdd(param);
 
         if (result.resultCode == "200") {
             toast.info("강사등록이 완료되었습니다.", {
@@ -84,7 +84,7 @@ export const InstructorAddComponent = (props) => {
                 progress: undefined,
             })
 
-            setRedirectPath("setting/instructor");
+            setRedirectPath("setting/Class");
 
         } else {
             toast.error("강사수정이 실패하였습니다.", {
@@ -127,7 +127,7 @@ export const InstructorAddComponent = (props) => {
                         <div className="card-toolbar">
                             <button
                                 type="button"
-                                onClick={()=> {setRedirectPath("/setting/instructor")}}
+                                onClick={()=> {setRedirectPath("/setting/Class")}}
                                 className="btn btn-light"
                             >
                                 <i className="flaticon2-cross"></i>
@@ -402,4 +402,4 @@ export const InstructorAddComponent = (props) => {
 };
 
 
-export default InstructorAddComponent;
+export default ClassAddComponent;

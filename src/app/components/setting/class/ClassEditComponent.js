@@ -14,17 +14,11 @@ import ApiService from "../../../service/ApiService";
 
 registerLocale('ko', ko);
 
-export const InstructorAddComponent = (props) => {
+export const ClassEditComponent = (props) => {
     const api = new ApiService();
+    const Class = props.Class.selectData;
+
     const { handleSubmit, register, errors , control } = useForm();
-    const [inputs, setInputs] = useState({
-        password: "yeha1234",
-        birthDay: new Date(),
-        enterDate: new Date(),
-    })
-    const {
-        password, birthDay, enterDate
-    } = inputs;
 
     const [redirectPath, setRedirectPath] = useState(null);
     const [groups, setGroups] = useState([]);
@@ -33,6 +27,15 @@ export const InstructorAddComponent = (props) => {
     useEffect(() => {
         const settingGroupList = async () => {
             const result = await api.settingGroupList({centerId : props.auth.loginUser.centerId});
+
+            let selectGroup = null;
+            result.resultData.map((group)=>{
+                if (group.id == Class.group.id) {
+                    selectGroup = group;
+                }
+            })
+
+            setSelectGroups(selectGroup);
             setGroups(result.resultData);
         }
 
@@ -65,16 +68,16 @@ export const InstructorAddComponent = (props) => {
             ...values,
             status : "working",
             group : selectGroup,
-            centerId : props.auth.loginUser.centerId,
-            createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
-            createdId : props.auth.loginUser.id,
-            createder : props.auth.loginUser.userName
+            id: Class.id,
+            updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
+            updatedId : props.auth.loginUser.id,
+            updateder : props.auth.loginUser.userName
         }
         
-        let result = await api.settingInstructorAdd(param);
+        let result = await api.settingClassEdit(param);
 
         if (result.resultCode == "200") {
-            toast.info("강사등록이 완료되었습니다.", {
+            toast.info("직원수정이 완료되었습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -84,10 +87,10 @@ export const InstructorAddComponent = (props) => {
                 progress: undefined,
             })
 
-            setRedirectPath("setting/instructor");
+            setRedirectPath(`/setting/Class/view/${Class.id}`);
 
         } else {
-            toast.error("강사수정이 실패하였습니다.", {
+            toast.error("직원수정이 실패하였습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -127,7 +130,7 @@ export const InstructorAddComponent = (props) => {
                         <div className="card-toolbar">
                             <button
                                 type="button"
-                                onClick={()=> {setRedirectPath("/setting/instructor")}}
+                                onClick={()=> {setRedirectPath("/setting/Class")}}
                                 className="btn btn-light"
                             >
                                 <i className="flaticon2-cross"></i>
@@ -176,6 +179,7 @@ export const InstructorAddComponent = (props) => {
                                         <div className="input-group input-group-lg input-group-solid">
                                             <input type="text" className="form-control form-control-lg form-control-solid" 
                                                 name="email"
+                                                defaultValue={Class.email}
                                                 ref={register({
                                                     required: "Required",
                                                     pattern: {
@@ -205,6 +209,7 @@ export const InstructorAddComponent = (props) => {
                                         <label className="font-size-h6 font-weight-bolder text-dark">이름</label>
                                         <input className="form-control form-control-lg form-control-solid" type="text" 
                                             name="name"
+                                            defaultValue={Class.name}
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -215,6 +220,7 @@ export const InstructorAddComponent = (props) => {
                                         <div className="input-group input-group-lg input-group-solid">
                                             <input type="text" className="form-control form-control-lg form-control-solid" 
                                                 name="phone"
+                                                defaultValue={Class.phone}
                                                 ref={register({
                                                     required: "Required",
                                                 })}
@@ -231,7 +237,7 @@ export const InstructorAddComponent = (props) => {
                                             <Controller
                                                 control={control}
                                                 name="birthDay"
-                                                defaultValue={birthDay}
+                                                defaultValue={Class.birthDay}
                                                 render={({ onChange, onBlur, value}) => (
                                                     <>
                                                     <TextField
@@ -251,7 +257,7 @@ export const InstructorAddComponent = (props) => {
                                             <Controller
                                                 control={control}
                                                 name="enterDate"
-                                                defaultValue={enterDate}
+                                                defaultValue={Class.enterDate}
                                                 render={({ onChange, onBlur, value}) => (
                                                     <TextField
                                                         type="date"
@@ -271,6 +277,7 @@ export const InstructorAddComponent = (props) => {
                                         <div className="input-group input-group-lg input-group-solid">
                                             <input type="text" className="form-control form-control-lg form-control-solid" 
                                                 name="address"
+                                                defaultValue={Class.address}
                                                 ref={register({
                                                     required: "Required",
                                                 })}
@@ -296,7 +303,7 @@ export const InstructorAddComponent = (props) => {
                                                 {
                                                     groups.map((group)=>{
                                                         return <>
-                                                            <option value={group.id}>{group.name}</option>
+                                                            <option value={group.id} selected={group.id == Class.group.id}>{group.name}</option>
                                                         </>
                                                     })
                                                 }
@@ -402,4 +409,4 @@ export const InstructorAddComponent = (props) => {
 };
 
 
-export default InstructorAddComponent;
+export default ClassEditComponent;

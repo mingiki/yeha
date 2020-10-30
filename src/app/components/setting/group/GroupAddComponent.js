@@ -249,7 +249,7 @@ class GroupAddComponent extends Component {
                     <CardBody>
                         <Row>
                             <Col lg={4}>
-                                <label class="font-size-h6 font-weight-bolder text-dark">그룹명</label>
+                                <label className="font-size-h6 font-weight-bolder text-dark">그룹명</label>
                                 <Input type="name" id="name" placeholder="그룹 명을 입력해주세요." 
                                     invalid={this.state.invalid.name} 
                                     onChange={this.onChangeName}
@@ -266,7 +266,7 @@ class GroupAddComponent extends Component {
 
                         <Row>
                             <Col lg={12}>
-                                <label class="font-size-h6 font-weight-bolder text-dark">그룹 기능권한</label>
+                                <label className="font-size-h6 font-weight-bolder text-dark">그룹 기능권한</label>
                                 <div className="table">
                                     <table className="custom-table table" style={{border: "1px solid #EBEDF3"}}>
                                         <thead>

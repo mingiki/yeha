@@ -43,11 +43,11 @@ class LoginComponent extends Component {
             this.props.AuthActions.SetLoginUser(result.resultData.loginUser);
             this.props.AuthActions.SetToken(result.resultData.accessToken);
 
-            let tokenResult = await this.api.checkToken(result.resultData.accessToken);
+            // let tokenResult = await this.api.checkToken(result.resultData.accessToken);
             
-            console.log(tokenResult);
+            // console.log(tokenResult);
 
-            this.props.AuthActions.SetTokenResult(tokenResult);
+            // this.props.AuthActions.SetTokenResult(tokenResult);
         }
     }
 

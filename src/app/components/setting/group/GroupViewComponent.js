@@ -37,7 +37,7 @@ class GroupViewComponent extends Component {
     //     console.log(result);
     // }
 
-    deleteGroup = async (uid) => {
+    deleteGroup = async (id) => {
         Swal.fire({
             title: '삭제하시겠습니까?',
             text: '삭제 시 원복할 수 없습니다.',
@@ -48,7 +48,7 @@ class GroupViewComponent extends Component {
           }).then(async (result) => {
             if (result.value) {
                 let param = {
-                    uid : uid
+                    id : id
                 }
                 let result = await this.api.settingGroupDelete(param);
         
@@ -68,9 +68,7 @@ class GroupViewComponent extends Component {
                     })
                 }
             } 
-          })
-          
-      
+        })
     }
 
     render() {  
@@ -88,17 +86,17 @@ class GroupViewComponent extends Component {
                             />
                     </> : <></>
                 }
-                <div class="card card-custom gutter-b">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <span class="card-icon">
-                                <i class="flaticon2-group text-primary"></i>
+                <div className="card card-custom gutter-b">
+                    <div className="card-header">
+                        <div className="card-title">
+                            <span className="card-icon">
+                                <i className="flaticon2-group text-primary"></i>
                             </span> 
-                            <h3 class="card-label">
+                            <h3 className="card-label">
                                 {group.name}
                             </h3>
                         </div>
-                        <div class="card-toolbar">
+                        <div className="card-toolbar">
                             <button
                                 type="button"
                                 onClick={()=> {this.setState({redirectPath : "/setting/group"})}}
@@ -130,7 +128,7 @@ class GroupViewComponent extends Component {
                     <div className="card-body">
                         <Row>
                             <Col lg={12}>
-                                <label class="font-size-h6 font-weight-bolder text-dark">그룹 기능권한</label>
+                                <label className="font-size-h6 font-weight-bolder text-dark">그룹 기능권한</label>
                                 <div className="table">
                                     <table className="custom-table table" style={{border: "1px solid #EBEDF3"}}>
                                         <thead>
@@ -211,7 +209,7 @@ class GroupViewComponent extends Component {
 
                         <Row>
                             <Col lg={6}>
-                                <label class="font-size-h6 font-weight-bolder text-dark">등록</label>
+                                <label className="font-size-h6 font-weight-bolder text-dark">등록</label>
                                 <div className="d-flex align-items-center">
                                     <div className="d-flex flex-column font-weight-bold">
                                     <span className="text-dark mb-1 font-size-lg">{group.createder}</span>
@@ -220,7 +218,7 @@ class GroupViewComponent extends Component {
                                 </div>
                             </Col>
                             <Col lg={6}>
-                                <label class="font-size-h6 font-weight-bolder text-dark">수정</label>
+                                <label className="font-size-h6 font-weight-bolder text-dark">수정</label>
                                 <div className="d-flex align-items-center">
                                     <div className="d-flex flex-column font-weight-bold">
                                     <span className="text-dark mb-1 font-size-lg">{group.createder}</span>

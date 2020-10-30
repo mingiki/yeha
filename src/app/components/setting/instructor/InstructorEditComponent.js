@@ -1,372 +1,412 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from "react";
 import {Redirect} from "react-router-dom";
-import update from 'react-addons-update'
+import { useForm , Controller } from "react-hook-form";
 
+import TextField from '@material-ui/core/TextField';
 import { toast } from 'react-toastify';
-import {
-    Input,
-    CustomInput,
-    Table,
-    Row,
-    Col
-} from "reactstrap"
+import { registerLocale } from "react-datepicker";
+import { CustomInput, Row, Col } from "reactstrap"
 
-import {
-    Card,
-    CardBody,
-    CardHeader,
-    CardHeaderToolbar,
-  } from "../../../partials/controls";
+import ko from 'date-fns/locale/ko';
+import moment from 'moment';
 
-class InstructorEditComponent extends Component {
-    constructor(props) {
-        super(props);
+import ApiService from "../../../service/ApiService";
 
-        this.instructor = this.props.instructor.selectData;
+registerLocale('ko', ko);
 
-        this.state = {         
-            redirectPath : null,
-            menus : this.instructor.menus,
-            invalid: {
-                name : false
-            },
-            formValue: {
-                name : this.instructor.name
-            }        
-        };
-    }
+export const InstructorEditComponent = (props) => {
+    const api = new ApiService();
+    const instructor = props.instructor.selectData;
 
-    componentDidMount () {
+    const { handleSubmit, register, errors , control } = useForm();
 
-    }
+    const [redirectPath, setRedirectPath] = useState(null);
+    const [groups, setGroups] = useState([]);
+    const [selectGroup, setSelectGroups] = useState(null);
 
-    onChangeName = (e) =>{
-        this.setState({
-          formValue: update(
-            this.state.formValue,
-            {
-              name: { $set: e.target.value },
-            }
-          ),
-          invalid: update(
-            this.state.invalid,
-            {
-              name: { $set: false },
-            }
-          )
-        })
-    }
+    useEffect(() => {
+        const settingGroupList = async () => {
+            const result = await api.settingGroupList({centerId : props.auth.loginUser.centerId});
 
-    onChangeMenu = (event) => {
-        let isChecked = event.target.checked;
-        let menuId = event.target.id;
-    
-        let updateMenus = this.state.menus.map( menu =>{
-          if (menu.menuId == menuId) {
-            menu.isOpen = isChecked;
-            if (menu.sub) {
-                menu.sub.map(sub => {
-                    sub.isOpen = isChecked;
-                })
-            }
-          }
-
-          return menu;
-        });
-    
-        this.setState({
-          menus : updateMenus
-        })
-    }
-
-    onChangeMenuSub = (event) => {
-        let isChecked = event.target.checked;
-        let menuId = event.target.id;
-    
-        let updateMenus = this.state.menus.map( menu =>{
-            if (menu.sub) {
-                menu.sub.map(sub => {
-                    if (sub.menuId == menuId) {
-                        sub.isOpen = isChecked;
-                    }
-                })
-            }
-          return menu;
-        });
-    
-        this.setState({
-          menus : updateMenus
-        })
-    }
-
-    onChangeMenuAction = (event) => {
-        let isChecked = event.target.checked;
-        let menuId = event.target.id;
-
-        let updateMenus = this.state.menus.map( menu =>{
-            if (menu.menuId + "Add" == menuId) {
-                menu.actionAuth.add = isChecked;
-            } else if (menu.menuId + "Edit" == menuId) {
-                menu.actionAuth.edit = isChecked;
-            } else if (menu.menuId + "Delete" == menuId) {
-                menu.actionAuth.delete = isChecked;
-            }
-            return menu;
-        });
-
-        this.setState({
-            menus : updateMenus
-        })
-    }
-
-    onChangeMenuSubAction = (event) => {
-        let isChecked = event.target.checked;
-        let menuId = event.target.id;
-
-        let updateMenus = this.state.menus.map( menu =>{
-            if (menu.sub) {
-                menu.sub.map(sub => {
-                    if (sub.menuId + "Add" == menuId) {
-                        sub.actionAuth.add = isChecked;
-                    } else if (sub.menuId + "Edit" == menuId) {
-                        sub.actionAuth.edit = isChecked;
-                    } else if (sub.menuId + "Delete" == menuId) {
-                        sub.actionAuth.delete = isChecked;
-                    }
-                })
-            }
-          return menu;
-        });
-
-        this.setState({
-            menus : updateMenus
-        })
-    }
-
-    settinginstructorEdit = async () => {
-        let name = this.state.formValue.name;
-        if (name == null || name == '' || name == undefined) {
-          this.setState({
-            invalid: update(
-              this.state.invalid,
-              {
-                name: { $set: true },
-              }
-            )
-          })
-          document.getElementById("name").focus();
-        } else {
-    
-          let param = {
-              name : name,
-              uid : this.instructor.id,
-              menus : this.state.menus,
-              loginUser : this.props.auth.loginUser
-          }
-          let result = await this.api.settinginstructorEdit(param);
-
-          if (result.resultCode == "200") {
-            toast.info("그룹수정이 완료되었습니다.", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            })
-
-            //수정데이터 init
-            this.props.instructorActions.SetSelectData(result.resultData);
-
-            this.setState({
-                redirectPath : "setting/instructor/view"
-            })
-
-          } else {
-            toast.error("그룹수정이 실패하였습니다.", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            })
-          }
-
-        }
-    }
-
-    render() {  
-        
-        return (
-            <>  
-              {
-                    this.state.redirectPath ? 
-                    <>
-                            <Redirect    
-                                to={{
-                                    pathname: this.state.redirectPath
-                                }}
-                            />
-                    </> : <></>
+            let selectGroup = null;
+            result.resultData.map((group)=>{
+                if (group.id == instructor.group.id) {
+                    selectGroup = group;
                 }
-                <Card>
-                    <CardHeader title="그룹 수정">
-                        <CardHeaderToolbar>
+            })
+
+            setSelectGroups(selectGroup);
+            setGroups(result.resultData);
+        }
+
+        settingGroupList();
+    }, []);
+        
+    const onChangeGroup = (e) =>{
+        const groupId = e.target.value;
+        let selectGroup = null;
+
+        groups.map((group) => {
+            if (group.id == groupId) {
+                selectGroup = group;
+            }
+        })
+
+        setSelectGroups(selectGroup);
+    }
+    /**
+     * 강사 저장
+     * @param {*} values 
+     */
+    const onSubmit = async (values) => {
+        let birthDay = moment(values.birthDay).format('YYYY-MM-DD');
+        let enterDate = moment(values.enterDate).format('YYYY-MM-DD');
+        values.birthDay = birthDay;
+        values.enterDate = enterDate;
+      
+        let param = {
+            ...values,
+            status : "working",
+            group : selectGroup,
+            id: instructor.id,
+            updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
+            updatedId : props.auth.loginUser.id,
+            updateder : props.auth.loginUser.userName
+        }
+        
+        let result = await api.settingInstructorEdit(param);
+
+        if (result.resultCode == "200") {
+            toast.info("직원수정이 완료되었습니다.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            })
+
+            setRedirectPath(`/setting/instructor/view/${instructor.id}`);
+
+        } else {
+            toast.error("직원수정이 실패하였습니다.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            })
+        }
+
+    };
+
+    return (
+        <>
+            {
+                redirectPath ? 
+                <>
+                        <Redirect    
+                            to={{
+                                pathname: redirectPath
+                            }}
+                        />
+                </> : <></>
+            }
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="card card-custom">
+                    <div className="card-header">
+                        <div className="card-title">
+                            <span className="card-icon">
+                                <i className="flaticon2-group text-primary"></i>
+                            </span> 
+                            <h3 className="card-label">
+                                직원 등록
+                            </h3>
+                        </div>
+                        <div className="card-toolbar">
                             <button
                                 type="button"
-                                onClick={()=> {this.setState({redirectPath : `/setting/instructor/view/${this.instructor.id}`})}}
+                                onClick={()=> {setRedirectPath("/setting/instructor")}}
                                 className="btn btn-light"
                             >
-                                <i className="fa fa-arrow-left"></i>
+                                <i className="flaticon2-cross"></i>
                                 취소
                             </button>
                             {`  `}
                             <button className="btn btn-light ml-2">
-                                <i className="fa fa-redo"></i>
+                                <i className="flaticon2-refresh-button"></i>
                                 초기화
                             </button>
                             {`  `}
                             <button
                                 type="submit"
                                 className="btn btn-primary ml-2"
-                                onClick={this.settinginstructorAdd}
                             >
-                                <i className="fa fa-save"></i>
+                                <i className="far fa-save"></i>
                                 저장
                             </button>
-                        </CardHeaderToolbar>
-                    </CardHeader>
-                    <CardBody>
+                        </div>
+                    </div>
+                    <div className="card-body">
                         <Row>
-                            <Col lg={4}>
-                                <h6 class="card-title font-weight-bold text-dark">
-                                    ● 그룹명
-                                </h6>
-                                <Input type="name" id="name" placeholder="그룹 명을 입력해주세요." 
-                                    invalid={this.state.invalid.name} 
-                                    onChange={this.onChangeName}
-                                    maxLength="20"
-                                    defaultValue={this.state.formValue.name} />
-                            </Col>
-                            <Col lg={4}>
-                            </Col>
-                            <Col lg={4}>
-                            </Col>
-                        </Row>
+                            <Col lg={6}>
+                                <div className="form-group row">
+                                    <div className="col-xl-12">
+                                        <div className="image-input image-input-outline" id="kt_user_edit_avatar" style={{backgroundImage: "url(assets/media/users/blank.png)"}}>
+                                            <label className="font-size-h6 font-weight-bolder text-dark">사진</label>
+                                            <div className="image-input-wrapper" style={{backgroundImage : "none"}}></div>
+                                            <label className="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                                                <i className="fa fa-pen icon-sm text-muted"></i>
+                                                <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg" />
+                                                <input type="hidden" name="profile_avatar_remove" value="0" />
+                                            </label>
+                                            <span className="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                                                <i className="ki ki-bold-close icon-xs text-muted"></i>
+                                            </span>
+                                            <span className="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
+                                                <i className="ki ki-bold-close icon-xs text-muted"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <div className="col-xl-4 col-lg-4 col-md-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">이메일</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <input type="text" className="form-control form-control-lg form-control-solid" 
+                                                name="email"
+                                                defaultValue={instructor.email}
+                                                ref={register({
+                                                    required: "Required",
+                                                    pattern: {
+                                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                                        message: "이메일 형식이 아닙니다."
+                                                    }
+                                                })}
+                                                placeholder="이메일을 입력해주세요." />
+                                        </div>
+                                        <span className="form-text text-muted">로그인 아이디로 사용됩니다.</span>
+                                    </div>
+                                    <div className="col-xl-4 col-lg-4 col-md-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">비밀번호</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <input type="text" className="form-control form-control-lg form-control-solid" 
+                                                name="password"
+                                                ref={register({
+                                                    required: "Required",
+                                                })}
+                                                defaultValue="yeha1234" readOnly={true} />
+                                        </div>
+                                        <span className="form-text text-muted">첫 로그인 시 사용되는 초기 비밀번호입니다.</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <div className="col-xl-4 col-lg-4 col-md-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">이름</label>
+                                        <input className="form-control form-control-lg form-control-solid" type="text" 
+                                            name="name"
+                                            defaultValue={instructor.name}
+                                            ref={register({
+                                                required: "Required",
+                                            })}
+                                            placeholder="이름을 입력해주세요."/>
+                                    </div>
+                                    <div className="col-xl-4 col-lg-4 col-md-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">연락처</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <input type="text" className="form-control form-control-lg form-control-solid" 
+                                                name="phone"
+                                                defaultValue={instructor.phone}
+                                                ref={register({
+                                                    required: "Required",
+                                                })}
+                                                placeholder="연락처를 입력해주세요." />
+                                        </div>
+                                        <span className="form-text text-muted">XXX-XXXX-XXXX 형식에 맞게 입력해주세요.</span>
+                                    </div>
+                                </div>
 
-                        <div className="separator separator-solid" style={{margin: "20px 0px" , borderColor: "#EBEDF3"}} />
+                                <div className="form-group row">
+                                    <div className="col-xl-4 col-lg-4 col-md-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">생일</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <Controller
+                                                control={control}
+                                                name="birthDay"
+                                                defaultValue={instructor.birthDay}
+                                                render={({ onChange, onBlur, value}) => (
+                                                    <>
+                                                    <TextField
+                                                        type="date"
+                                                        defaultValue={moment(value).format('YYYY-MM-DD')}
+                                                        InputProps={{ disableUnderline: true }}
+                                                        className="form-control form-control-lg form-control-solid"
+                                                    />
+                                                    </>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-xl-4 col-lg-4 col-md-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">입사일</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <Controller
+                                                control={control}
+                                                name="enterDate"
+                                                defaultValue={instructor.enterDate}
+                                                render={({ onChange, onBlur, value}) => (
+                                                    <TextField
+                                                        type="date"
+                                                        defaultValue={moment(value).format('YYYY-MM-DD')}
+                                                        InputProps={{ disableUnderline: true }}
+                                                        className="form-control form-control-lg form-control-solid"
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <Row>
-                            <Col lg={12}>
-                                <h6 class="card-title font-weight-bold text-dark">
-                                    ● 그룹 기능권한
-                                </h6>
-                                <div className="table">
-                                    <table className="custom-table table" style={{border: "1px solid #EBEDF3"}}>
-                                        <thead>
-                                            <tr style={{ backgroundColor : "#7E8299" , color : "#ffff" , textAlign : "center"}}>
-                                                <th>메뉴명</th>
-                                                <th>권한</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                            this.state.menus.map((menu)=>{
-                                                return <tr>
-                                                    <th scope="row" style={{textAlign: "center" , verticalAlign: "middle"}}>
-                                                        <CustomInput inline 
-                                                        type="checkbox" 
-                                                        id={menu.menuId} 
-                                                        label={menu.menuName}
-                                                        checked={menu.isOpen}
-                                                        onChange={this.onChangeMenu} />
-                                                    </th>
-                                                    <td>
-                                                        {
-                                                            menu.sub ? <>
-                                                                <Table 
-                                                                    responsive >
-                                                                    <colinstructor>
-                                                                        <col width="30%" />
-                                                                        <col width="70%" />
-                                                                    </colinstructor>
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>메뉴명</th>
-                                                                            <th>권한</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                            {
-                                                                                menu.sub.map((sub) => {
-                                                                                    return <tr>
-                                                                                        <th scope="row">
-                                                                                            <CustomInput inline 
-                                                                                                type="checkbox" 
-                                                                                                id={sub.menuId} 
-                                                                                                label={sub.menuName}
-                                                                                                disabled={!menu.isOpen}
-                                                                                                checked={sub.isOpen}
-                                                                                                onChange={this.onChangeMenuSub} />
-                                                                                        </th>
-                                                                                        <td>                                                                                              
-                                                                                            <>
-                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Add"} key={sub.menuId + "Add"} onChange={this.onChangeMenuSubAction} disabled={!sub.isOpen} checked={sub.actionAuth.add} label="등록" />
-                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Edit"} key={sub.menuId + "Edit"} onChange={this.onChangeMenuSubAction} disabled={!sub.isOpen} checked={sub.actionAuth.edit} label="수정" />
-                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Delete"} key={sub.menuId + "Delete"} onChange={this.onChangeMenuSubAction} disabled={!sub.isOpen} checked={sub.actionAuth.delete} label="삭제" />
-                                                                                            </>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                })
-                                                                            }
-                                                                    </tbody>
-                                                                </Table>
-                                                            </> : <>
-                                                                <CustomInput inline type="checkbox" id={menu.menuId + "Add"} key={menu.menuId + "Add"} onChange={this.onChangeMenuAction} disabled={!menu.isOpen} checked={menu.actionAuth.add} label="등록" />
-                                                                <CustomInput inline type="checkbox" id={menu.menuId + "Edit"} key={menu.menuId + "Edit"} onChange={this.onChangeMenuAction} disabled={!menu.isOpen} checked={menu.actionAuth.edit} label="수정" />
-                                                                <CustomInput inline type="checkbox" id={menu.menuId + "Delete"} key={menu.menuId + "Delete"} onChange={this.onChangeMenuAction} disabled={!menu.isOpen} checked={menu.actionAuth.delete} label="삭제" />
-                                                            </>
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            })
-                                            }
-                                        </tbody>
-                                    </table>
+                                <div className="form-group row">
+                                    <div className="col-xl-12 col-lg-12">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">주소</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <input type="text" className="form-control form-control-lg form-control-solid" 
+                                                name="address"
+                                                defaultValue={instructor.address}
+                                                ref={register({
+                                                    required: "Required",
+                                                })}
+                                                placeholder="주소를 입력해주세요." 
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </Col>
-                        </Row>
-
-                        {/* <Row>
-                            <Col lg={16}>
-                                <select id="kt_dual_listbox_1" className="dual-listbox" multiple>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                    <option value="4">Four</option>
-                                    <option value="5">Five</option>
-                                    <option value="6">Six</option>
-                                    <option value="7">Seven</option>
-                                    <option value="8">Eight</option>
-                                    <option value="9">Nine</option>
-                                    <option value="10">Ten</option>
-                                </select>
+                            <Col lg={6}>
+                                <div className="form-group row">
+                                    <div className="col-xl-4 col-lg-4">
+                                    <label className="font-size-h6 font-weight-bolder text-dark">그룹</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <select className="form-control form-control-lg form-control-solid" 
+                                                name="group"
+                                                onChange={onChangeGroup}    
+                                                ref={register({
+                                                    required: "Required",
+                                                })}
+                                                placeholder="그룹을 선택해주세요." >
+                                                <option value=''>그룹을 선택해주세요.</option>
+                                                {
+                                                    groups.map((group)=>{
+                                                        return <>
+                                                            <option value={group.id} selected={group.id == instructor.group.id}>{group.name}</option>
+                                                        </>
+                                                    })
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <Row>
+                                    <Col lg={12}>
+                                        <label className="font-size-h6 font-weight-bolder text-dark">그룹 기능권한</label>
+                                        {selectGroup != null ? <>
+                                            <div className="table">
+                                                <table className="custom-table table" style={{border: "1px solid #EBEDF3"}}>
+                                                    <thead>
+                                                        <tr style={{ backgroundColor : "#7E8299" , color : "#ffff" , textAlign : "center"}}>
+                                                            <th>메뉴명</th>
+                                                            <th>권한</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                        selectGroup.menus.map((menu)=>{
+                                                            return <tr>
+                                                                <th scope="row" style={{textAlign: "center" , verticalAlign: "middle"}}>
+                                                                    <CustomInput inline 
+                                                                    type="checkbox" 
+                                                                    id={menu.menuId} 
+                                                                    label={menu.menuName}
+                                                                    readOnly={true}
+                                                                    checked={menu.isOpen}/>
+                                                                </th>
+                                                                <td>
+                                                                    {
+                                                                        menu.sub ? <>
+                                                                            <div className="table">
+                                                                                <table className="custom-table table">
+                                                                                    <colgroup>
+                                                                                        <col width="30%" />
+                                                                                        <col width="70%" />
+                                                                                    </colgroup>
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>메뉴명</th>
+                                                                                            <th>권한</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                            {
+                                                                                                menu.sub.map((sub) => {
+                                                                                                    return <tr>
+                                                                                                        <th scope="row">
+                                                                                                            <CustomInput inline 
+                                                                                                                type="checkbox" 
+                                                                                                                id={sub.menuId} 
+                                                                                                                label={sub.menuName}
+                                                                                                                readOnly={true}
+                                                                                                                checked={sub.isOpen} />
+                                                                                                        </th>
+                                                                                                        <td>                                                                                              
+                                                                                                            <>
+                                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Add"} key={sub.menuId + "Add"} readOnly={true} checked={sub.actionAuth.add} label="등록" />
+                                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Edit"} key={sub.menuId + "Edit"} readOnly={true} checked={sub.actionAuth.edit} label="수정" />
+                                                                                                                <CustomInput inline type="checkbox" id={sub.menuId + "Delete"} key={sub.menuId + "Delete"} readOnly={true} checked={sub.actionAuth.delete} label="삭제" />
+                                                                                                            </>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                })
+                                                                                            }
+                                                                                    </tbody>
+                                                                                </table>                
+                                                                            </div>
+                                                                        </> : <>
+                                                                            <CustomInput inline type="checkbox" id={menu.menuId + "Add"} key={menu.menuId + "Add"} readOnly={true} checked={menu.actionAuth.add} label="등록" />
+                                                                            <CustomInput inline type="checkbox" id={menu.menuId + "Edit"} key={menu.menuId + "Edit"} readOnly={true} checked={menu.actionAuth.edit} label="수정" />
+                                                                            <CustomInput inline type="checkbox" id={menu.menuId + "Delete"} key={menu.menuId + "Delete"} readOnly={true} checked={menu.actionAuth.delete} label="삭제" />
+                                                                        </>
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        })
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </> : <>
+                                            <br/>
+                                            <span>선택한 그룹이 없습니다.</span>
+                                        </>}
+                                        
+                                    </Col>
+                                </Row>                 
 
                             </Col>
-                        </Row> */}
+                        </Row>
                         
-                    </CardBody>
-                </Card>
-                
-            </>         
-        );
-    }
+                    </div>
+                        
+                </div> 
+            </form>
 
+        </>
+    );
+};
 
-}
 
 export default InstructorEditComponent;
-

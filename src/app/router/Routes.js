@@ -24,10 +24,14 @@ class Routes extends Component {
   }
 
   componentDidMount = async () =>{
-    let accessToken = this.props.auth.accessToken
-    if (accessToken) {
-      await this.getCheckToken(accessToken);
-    } 
+    // let accessToken = this.props.auth.accessToken
+    // let tokenResult = this.props.auth.tokenResult;
+    // if (tokenResult.resultCode == "999") {
+
+    // }
+    // if (accessToken) {
+    //   await this.getCheckToken(accessToken);
+    // } 
   }
 
   getCheckToken = async (accessToken) => {
@@ -37,7 +41,7 @@ class Routes extends Component {
   }
   
   _routerRander = () => {
-    if (this.props.auth.tokenResult.resultCode == "999") {
+    if (this.props.auth.loginUser == null) {
       return  <Suspense>
                 <Switch>
                   {

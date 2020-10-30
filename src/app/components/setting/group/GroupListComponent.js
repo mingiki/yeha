@@ -83,18 +83,18 @@ class GroupListComponent extends Component {
                   {
                     entities.slice(rowIndex * 4, (rowIndex * 4) + 4).map((group,i) => (
                       <Col lg="3" md="4" sm="12" key={i}>
-                        <div class="card card-custom gutter-b card-list" onClick={()=>this.redirect(`/setting/group/view/${group.id}`, group)}>
-                          <div class="card-header">
-                            <div class="card-title">
-                              <span class="card-icon">
-                                <i class="flaticon2-group text-primary"></i>
+                        <div className="card card-custom gutter-b card-list" onClick={()=>this.redirect(`/setting/group/view/${group.id}`, group)}>
+                          <div className="card-header">
+                            <div className="card-title">
+                              <span className="card-icon">
+                                <i className="flaticon2-group text-primary"></i>
                               </span> 
-                              <h3 class="card-label">
+                              <h3 className="card-label">
                                 {group.name}
                               </h3>
                             </div>
                           </div>
-                          <div class="card-footer" style={{padding : "1rem 2.25rem"}}>
+                          <div className="card-footer" style={{padding : "1rem 2.25rem"}}>
                             <div className="d-flex align-items-center">
                               <div className="d-flex flex-column font-weight-bold">
                                 <span className="text-dark mb-1 font-size-lg">{group.createder}</span>
