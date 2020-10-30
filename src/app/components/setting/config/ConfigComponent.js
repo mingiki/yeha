@@ -14,7 +14,7 @@ import ApiService from "../../../service/ApiService";
 
 registerLocale('ko', ko);
 
-export const ClassComponent = (props) => {
+export const ConfigComponent = (props) => {
     const api = new ApiService();
 
     const { handleSubmit, register, errors , control } = useForm();
@@ -53,16 +53,12 @@ export const ClassComponent = (props) => {
 
         setSelectGroups(selectGroup);
     }
+
     /**
-     * 강사 저장
+     * 운영관리 저장
      * @param {*} values 
      */
     const onSubmit = async (values) => {
-        let birthDay = moment(values.birthDay).format('YYYY-MM-DD');
-        let enterDate = moment(values.enterDate).format('YYYY-MM-DD');
-        values.birthDay = birthDay;
-        values.enterDate = enterDate;
-      
         let param = {
             ...values,
             status : "working",
@@ -78,7 +74,7 @@ export const ClassComponent = (props) => {
         // let result = await api.settingClassEdit(param);
 
         if (result.resultCode == "200") {
-            toast.info("직원수정이 완료되었습니다.", {
+            toast.info("운영이 저장 완료되었습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -91,7 +87,7 @@ export const ClassComponent = (props) => {
             // setRedirectPath(`/setting/Class/view/${Class.id}`);
 
         } else {
-            toast.error("직원수정이 실패하였습니다.", {
+            toast.error("운영이 저장 실패하였습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -125,7 +121,7 @@ export const ClassComponent = (props) => {
                                 <i className="flaticon2-group text-primary"></i>
                             </span> 
                             <h3 className="card-label">
-                                수업 규칙
+                                운영 관리
                             </h3>
                         </div>
                         <div className="card-toolbar">
@@ -288,6 +284,29 @@ export const ClassComponent = (props) => {
                             </Col>
                         </Row>
                         
+                        <div className="separator separator-dashed my-8" />
+
+                        <Row>
+                            <Col lg={6}>
+                                <label className="font-size-h6 font-weight-bolder text-dark">등록</label>
+                                <div className="d-flex align-items-center">
+                                    <div className="d-flex flex-column font-weight-bold">
+                                    {/* <span className="text-dark mb-1 font-size-lg">{group.createder}</span> */}
+                                    {/* <span className="text-muted">{group.createdAt}</span> */}
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col lg={6}>
+                                <label className="font-size-h6 font-weight-bolder text-dark">수정</label>
+                                <div className="d-flex align-items-center">
+                                    <div className="d-flex flex-column font-weight-bold">
+                                    {/* <span className="text-dark mb-1 font-size-lg">{group.createder}</span> */}
+                                    {/* <span className="text-muted">{group.createdAt}</span> */}
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                        
                     </div>
                         
                 </div> 
@@ -298,4 +317,4 @@ export const ClassComponent = (props) => {
 };
 
 
-export default ClassComponent;
+export default ConfigComponent;

@@ -7,7 +7,7 @@ import {rootReducer} from './rootDuck'
 const persistConfig = {
   key: 'root',
   storage, 
-  whitelist: ['auth','group','instructor', 'class']
+  whitelist: ['auth','group','instructor', 'config']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

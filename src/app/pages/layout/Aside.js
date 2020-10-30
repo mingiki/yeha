@@ -32,7 +32,7 @@ class Aside extends Component {
             {title : "환경설정" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/General/Settings-2.svg")} /> , 
             link : "/setting" , permissions: ["center", "instructor"], sub : [
               {title : "회원권", link : "/setting/membership" , permissions: ["center", "instructor"] },
-              {title : "수업관리", link : "/setting/class" , permissions: ["center", "instructor"] },   
+              {title : "운영관리", link : "/setting/config" , permissions: ["center", "instructor"] },   
               {title : "직원관리", link : "/setting/instructor" , permissions: ["center", "instructor"] },
               {title : "그룹관리", link : "/setting/group" , permissions: ["center", "instructor"] },
               {title : "히스토리", link : "/setting/history" , permissions: ["center", "instructor"] },

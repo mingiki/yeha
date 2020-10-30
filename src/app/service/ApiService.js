@@ -357,6 +357,43 @@ class ApiService {
         });
     }
 
+    /**
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     *                                     [ Setting - Config ]
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     */ 
+
+    /**
+     *  운영 관리 수정
+     */
+    async settingConfigEdit(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('config').doc(param.id).update({
+                ...param
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+     
+    /**
+     *  운영 관리 조회
+     */
+    async settingConfigSelect(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('config').where('centerId', '==', param.centerId).get().then((querySnapshot)=>{
+                let config = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(config));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+   }
 
     /**
      * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

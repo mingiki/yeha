@@ -2,7 +2,7 @@ import React , { Suspense } from "react";
 import { Redirect, Route, HashRouter, Switch ,withRouter, BrowserRouter} from "react-router-dom";
 
 import MembershipComponent from '../components/setting/membership/MembershipComponent';
-import ClassComponent from '../components/setting/class/ClassComponent';
+import ConfigComponent from '../components/setting/config/ConfigComponent';
 import InstructorComponent from '../components/setting/instructor/InstructorComponent';
 
 import GroupComponent from '../components/setting/group/GroupComponent';
@@ -20,7 +20,7 @@ export default function Auth(props) {
             <Redirect exact from="/setting" to="/setting/membership" />
           }
           <Route path={"/setting/membership"} render={() =><MembershipComponent {...param} />}  exact/>
-          <Route path={"/setting/class"} render={() =><ClassComponent {...param} />}  />
+          <Route path={"/setting/config"} render={() =><ConfigComponent {...param} />}  />
           <Route path={"/setting/instructor"} render={() =><InstructorComponent {...param} />}  />
 
           <Route path={"/setting/group"} render={() =><GroupComponent {...param} />}  />

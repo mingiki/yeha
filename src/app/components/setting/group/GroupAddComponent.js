@@ -43,7 +43,7 @@ class GroupAddComponent extends Component {
                 {menuId : "notification" ,menuName : "공지사항" , isOpen: false, sub : null},
                 {menuId : "setting" ,menuName : "환경설정" , isOpen: false, sub : [
                   {menuId : "membership" ,menuName : "회원권", isOpen: false },
-                  {menuId : "classSetting" ,menuName : "수업설정", isOpen: false },   
+                  {menuId : "config" ,menuName : "운영관리", isOpen: false },   
                   {menuId : "instructor" ,menuName : "직원관리", isOpen: false },
                   {menuId : "group" ,menuName : "그룹관리", isOpen: false },
                   {menuId : "history" ,menuName : "히스토리", isOpen: false },
