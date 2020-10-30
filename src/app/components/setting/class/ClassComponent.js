@@ -130,20 +130,6 @@ export const ClassComponent = (props) => {
                         </div>
                         <div className="card-toolbar">
                             <button
-                                type="button"
-                                onClick={()=> {setRedirectPath("/setting/Class")}}
-                                className="btn btn-light"
-                            >
-                                <i className="flaticon2-cross"></i>
-                                취소
-                            </button>
-                            {`  `}
-                            <button className="btn btn-light ml-2">
-                                <i className="flaticon2-refresh-button"></i>
-                                초기화
-                            </button>
-                            {`  `}
-                            <button
                                 type="submit"
                                 className="btn btn-primary ml-2"
                             >
@@ -155,121 +141,148 @@ export const ClassComponent = (props) => {
                     <div className="card-body">
                         <Row>
                             <Col lg={6}>
+                            <label className="font-size-h6 font-weight-bolder text-dark">예약 가능 시간</label>
+                                <span className="form-text text-muted">로그인 아이디로 사용됩니다.</span>
                                 <div className="form-group row">
-                                    <div className="col-xl-4 col-lg-4 col-md-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">이메일</label>
-                                        <div className="input-group input-group-lg input-group-solid">
-                                            <input type="text" className="form-control form-control-lg form-control-solid" 
-                                                name="email"
-                                                ref={register({
-                                                    required: "Required",
-                                                    pattern: {
-                                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                                        message: "이메일 형식이 아닙니다."
-                                                    }
-                                                })}
-                                                placeholder="이메일을 입력해주세요." />
-                                        </div>
-                                        <span className="form-text text-muted">로그인 아이디로 사용됩니다.</span>
-                                    </div>
-                                    <div className="col-xl-4 col-lg-4 col-md-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">비밀번호</label>
-                                        <div className="input-group input-group-lg input-group-solid">
-                                            <input type="text" className="form-control form-control-lg form-control-solid" 
-                                                name="password"
-                                                ref={register({
-                                                    required: "Required",
-                                                })}
-                                                defaultValue="yeha1234" 
-                                                readOnly={true} />
-                                        </div>
-                                        <span className="form-text text-muted">첫 로그인 시 사용되는 초기 비밀번호입니다.</span>
-                                    </div>
+                                  <div className="col-xl-3 col-lg-3 col-md-8 col-sm-6">
+                                    <input type="number" className="form-control form-control-lg form-control-solid" 
+                                      name="password"
+                                      ref={register({
+                                          required: "Required",
+                                      })}
+                                      defaultValue={1}/>
+                                  </div>
+                                  <div className="col-xl-2 col-lg-2 col-md-4 col-sm-6">
+                                    <select className="form-control form-control-lg form-control-solid" 
+                                          name="group"
+                                          ref={register({
+                                              required: "Required",
+                                          })}>
+                                          <option value='minute'>분</option>
+                                          <option value='hour'>시간</option>
+                                          <option value='day'>일</option>
+                                      </select>
+                                  </div>
+                                </div>
+
+                                <label className="font-size-h6 font-weight-bolder text-dark">예약 수정 가능 시간</label>
+                                <span className="form-text text-muted">로그인 아이디로 사용됩니다.</span>
+                                <div className="form-group row">
+                                  <div className="col-xl-3 col-lg-4">
+                                    <input type="number" className="form-control form-control-lg form-control-solid" 
+                                      name="password"
+                                      ref={register({
+                                          required: "Required",
+                                      })}
+                                      defaultValue={1}/>
+                                  </div>
+                                  <div className="col-xl-2 col-lg-4">
+                                    <select className="form-control form-control-lg form-control-solid" 
+                                          name="group"
+                                          ref={register({
+                                              required: "Required",
+                                          })}>
+                                          <option value='minute'>분</option>
+                                          <option value='hour'>시간</option>
+                                          <option value='day'>일</option>
+                                      </select>
+                                  </div>
+                                </div>
+
+                                <label className="font-size-h6 font-weight-bolder text-dark">예약 취소 가능 시간</label>
+                                <span className="form-text text-muted">로그인 아이디로 사용됩니다.</span>
+                                <div className="form-group row">
+                                  <div className="col-xl-3 col-lg-4">
+                                    <input type="number" className="form-control form-control-lg form-control-solid" 
+                                      name="password"
+                                      ref={register({
+                                          required: "Required",
+                                      })}
+                                      defaultValue={1}/>
+                                  </div>
+                                  <div className="col-xl-2 col-lg-4">
+                                      <select className="form-control form-control-lg form-control-solid" 
+                                          name="group"
+                                          ref={register({
+                                              required: "Required",
+                                          })}>
+                                          <option value='minute'>분</option>
+                                          <option value='hour'>시간</option>
+                                          <option value='day'>일</option>
+                                      </select>
+                                  </div>
                                 </div>
                             </Col>
                             <Col lg={6}>
+                                <label className="font-size-h6 font-weight-bolder text-dark">출석 가능 시간</label>
+                                <span className="form-text text-muted">로그인 아이디로 사용됩니다.</span>
                                 <div className="form-group row">
-                                  <div className="col-xl-5 col-lg-4">
-                                    <label className="font-size-h6 font-weight-bolder text-dark">예약 가능 시간</label>
-                                    <input type="text" className="form-control form-control-lg form-control-solid" 
+                                  <div className="col-xl-3 col-lg-4">
+                                    <input type="number" className="form-control form-control-lg form-control-solid" 
                                       name="password"
                                       ref={register({
                                           required: "Required",
                                       })}
-                                      defaultValue="yeha1234" 
-                                      readOnly={true} />
+                                      defaultValue={1}/>
                                   </div>
-                                  <div className="col-xl-5 col-lg-4">
+                                  <div className="col-xl-2 col-lg-4">
+                                     <select className="form-control form-control-lg form-control-solid" 
+                                          name="group"
+                                          ref={register({
+                                              required: "Required",
+                                          })}>
+                                          <option value='minute'>분</option>
+                                          <option value='hour'>시간</option>
+                                          <option value='day'>일</option>
+                                      </select>
                                   </div>
                                 </div>
+
+                                <label className="font-size-h6 font-weight-bolder text-dark">지각 처리 시간</label>
+                                <span className="form-text text-muted">로그인 아이디로 사용됩니다.</span>
                                 <div className="form-group row">
-                                  <div className="col-xl-5 col-lg-4">
-                                    <label className="font-size-h6 font-weight-bolder text-dark">예약 수정 가능 시간</label>
-                                    <input type="text" className="form-control form-control-lg form-control-solid" 
+                                  <div className="col-xl-3 col-lg-4">                                    
+                                    <input type="number" className="form-control form-control-lg form-control-solid" 
                                       name="password"
                                       ref={register({
                                           required: "Required",
                                       })}
-                                      defaultValue="yeha1234" 
-                                      readOnly={true} />
+                                      defaultValue={1}/>
                                   </div>
-                                  <div className="col-xl-5 col-lg-4">
+                                  <div className="col-xl-2 col-lg-4">
+                                    <select className="form-control form-control-lg form-control-solid" 
+                                          name="group"
+                                          ref={register({
+                                              required: "Required",
+                                          })}>
+                                          <option value='minute'>분</option>
+                                          <option value='hour'>시간</option>
+                                          <option value='day'>일</option>
+                                      </select>
                                   </div>
                                 </div>
+
+                                <label className="font-size-h6 font-weight-bolder text-dark">만기 알림 시간</label>
+                                <span className="form-text text-muted">로그인 아이디로 사용됩니다.</span>
                                 <div className="form-group row">
-                                  <div className="col-xl-5 col-lg-4">
-                                    <label className="font-size-h6 font-weight-bolder text-dark">예약 취소 가능 시간</label>
-                                    <input type="text" className="form-control form-control-lg form-control-solid" 
+                                  <div className="col-xl-3 col-lg-4">
+                                    <input type="number" className="form-control form-control-lg form-control-solid" 
                                       name="password"
                                       ref={register({
                                           required: "Required",
                                       })}
-                                      defaultValue="yeha1234" 
-                                      readOnly={true} />
+                                      defaultValue={1}/>
                                   </div>
-                                  <div className="col-xl-5 col-lg-4">
-                                  </div>
-                                </div>
-                                <div className="form-group row">
-                                  <div className="col-xl-5 col-lg-4">
-                                    <label className="font-size-h6 font-weight-bolder text-dark">출석 가능 시간</label>
-                                    <input type="text" className="form-control form-control-lg form-control-solid" 
-                                      name="password"
-                                      ref={register({
-                                          required: "Required",
-                                      })}
-                                      defaultValue="yeha1234" 
-                                      readOnly={true} />
-                                  </div>
-                                  <div className="col-xl-5 col-lg-4">
-                                  </div>
-                                </div>
-                                <div className="form-group row">
-                                  <div className="col-xl-5 col-lg-4">
-                                    <label className="font-size-h6 font-weight-bolder text-dark">지각 처리 시간</label>
-                                    <input type="text" className="form-control form-control-lg form-control-solid" 
-                                      name="password"
-                                      ref={register({
-                                          required: "Required",
-                                      })}
-                                      defaultValue="yeha1234" 
-                                      readOnly={true} />
-                                  </div>
-                                  <div className="col-xl-5 col-lg-4">
-                                  </div>
-                                </div>
-                                <div className="form-group row">
-                                  <div className="col-xl-5 col-lg-4">
-                                    <label className="font-size-h6 font-weight-bolder text-dark">만기 알림 시간</label>
-                                    <input type="text" className="form-control form-control-lg form-control-solid" 
-                                      name="password"
-                                      ref={register({
-                                          required: "Required",
-                                      })}
-                                      defaultValue="yeha1234" 
-                                      readOnly={true} />
-                                  </div>
-                                  <div className="col-xl-5 col-lg-4">
+                                  <div className="col-xl-2 col-lg-4">
+                                    <select className="form-control form-control-lg form-control-solid" 
+                                          name="group"
+                                          ref={register({
+                                              required: "Required",
+                                          })}>
+                                          <option value='minute'>분</option>
+                                          <option value='hour'>시간</option>
+                                          <option value='day'>일</option>
+                                      </select>
                                   </div>
                                 </div>
                             </Col>
