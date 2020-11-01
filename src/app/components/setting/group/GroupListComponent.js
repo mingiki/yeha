@@ -38,6 +38,8 @@ class GroupListComponent extends Component {
       }
       let result = await this.api.settingGroupList(param);
 
+      console.log(result);
+
       if (result.resultCode == "200") {
         this.props.GroupActions.SetMainData(result.resultData);
       }

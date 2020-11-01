@@ -79,18 +79,12 @@ class ApiService {
                             }
                         })
                     }).catch(error => {
-                        return resolve({
-                            resultCode : '999',
-                            resultMsg : error
-                        })
+                        return resolve(this.getError(error))
                     })
                 });
                 
             }).catch(error => {
-                return resolve({
-                    resultCode : '999',
-                    resultMsg : error
-                })
+                return resolve(this.getError(error))
             });
         })
     }
@@ -114,7 +108,7 @@ class ApiService {
                 password : param.password,
                 tel : param.tel,
                 centerCode : '',
-                createdAt : new Date(),
+                createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
             }).then(()=>{
 
                 //로그인처리를 위한 토큰 생성
@@ -122,23 +116,42 @@ class ApiService {
                 .set({
                     id : newId,
                     accessToken : this.autoId(),
-                    createdAt : new Date(),
+                    createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
                 }).then(()=>{
-                    return resolve({
-                        resultCode : '200',
-                        resultMsg : "Success"
-                    })
+                    return resolve(this.getSuccess())
                 }).catch(error => {
-                    return resolve({
-                        resultCode : '999',
-                        resultMsg : error
-                    })
+                    return resolve(this.getError(error))
                 })
+
+                //예약 운영정책 기본 데이터 생성
+                const configNewId = this.autoId();
+                firebase.firestore().collection('config').doc(configNewId)
+                .set({
+                    id : configNewId,
+                    centerId : newId,
+                    reservPublicTime : 1,
+                    reservPublicUnit : 'hour',
+                    reservModifyTime : 1,
+                    reservModifyUnit : 'hour',
+                    reservCancleTime : 1,
+                    reservCancleUnit : 'day',
+                    attendancePublicTime : 30,
+                    attendancePublicUnit : 'minute',
+                    tardyAfterTime : 30,
+                    tardyAfterUnit : 'minute',
+                    maturityTime : 3,
+                    maturityUnit : 'day',
+                    createder : param.userName,
+                    createdId : newId,
+                    createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
+                }).then(()=>{
+                    return resolve(this.getSuccess())
+                }).catch(error => {
+                    return resolve(this.getError(error))
+                })
+
             }).catch(error => {
-                return resolve({
-                    resultCode : '999',
-                    resultMsg : error
-                })
+                return resolve(this.getError(error))
             })
         })
     }

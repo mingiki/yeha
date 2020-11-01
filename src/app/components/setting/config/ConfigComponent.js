@@ -20,58 +20,33 @@ export const ConfigComponent = (props) => {
     const { handleSubmit, register, errors , control } = useForm();
 
     const [redirectPath, setRedirectPath] = useState(null);
-    const [groups, setGroups] = useState([]);
-    const [selectGroup, setSelectGroups] = useState(null);
+    const [config, setConfig] = useState({});
 
     useEffect(() => {
-        // const settingGroupList = async () => {
-        //     const result = await api.settingGroupList({centerId : props.auth.loginUser.centerId});
+        const settingConfigSelect = async () => {
+            const result = await api.settingConfigSelect({centerId : props.auth.loginUser.centerId});
+            setConfig(result.resultData[0]);
+        }
 
-        //     let selectGroup = null;
-        //     result.resultData.map((group)=>{
-        //         if (group.id == Class.group.id) {
-        //             selectGroup = group;
-        //         }
-        //     })
-
-        //     setSelectGroups(selectGroup);
-        //     setGroups(result.resultData);
-        // }
-
-        // settingGroupList();
-    }, []);
+        settingConfigSelect();
+    }, {});
         
-    const onChangeGroup = (e) =>{
-        const groupId = e.target.value;
-        let selectGroup = null;
-
-        groups.map((group) => {
-            if (group.id == groupId) {
-                selectGroup = group;
-            }
-        })
-
-        setSelectGroups(selectGroup);
-    }
 
     /**
      * 운영관리 저장
      * @param {*} values 
      */
     const onSubmit = async (values) => {
+        console.log(values);
         let param = {
             ...values,
-            status : "working",
-            group : selectGroup,
-            // id: Class.id,
+            id: config.id,
             updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
             updatedId : props.auth.loginUser.id,
             updateder : props.auth.loginUser.userName
         }
         
-        let result = "";
-
-        // let result = await api.settingClassEdit(param);
+        let result = await api.settingConfigEdit(param);
 
         if (result.resultCode == "200") {
             toast.info("운영이 저장 완료되었습니다.", {
@@ -84,7 +59,7 @@ export const ConfigComponent = (props) => {
                 progress: undefined,
             })
 
-            // setRedirectPath(`/setting/Class/view/${Class.id}`);
+            this.settingConfigSelect();
 
         } else {
             toast.error("운영이 저장 실패하였습니다.", {
@@ -142,21 +117,21 @@ export const ConfigComponent = (props) => {
                                 <div className="form-group row">
                                   <div className="col-xl-3 col-lg-3 col-md-8 col-sm-6">
                                     <input type="number" className="form-control form-control-lg form-control-solid" 
-                                      name="password"
+                                      name="reservPublicTime"
                                       ref={register({
                                           required: "Required",
                                       })}
-                                      defaultValue={1}/>
+                                      defaultValue={config.reservPublicTime}/>
                                   </div>
                                   <div className="col-xl-2 col-lg-2 col-md-4 col-sm-6">
                                     <select className="form-control form-control-lg form-control-solid" 
-                                          name="group"
+                                          name="reservPublicUnit"
                                           ref={register({
                                               required: "Required",
                                           })}>
-                                          <option value='minute'>분</option>
-                                          <option value='hour'>시간</option>
-                                          <option value='day'>일</option>
+                                          <option selected={config.reservPublicUnit == 'minute'} value='minute'>분</option>
+                                          <option selected={config.reservPublicUnit == 'hour'} value='hour'>시간</option>
+                                          <option selected={config.reservPublicUnit == 'day'} value='day'>일</option>
                                       </select>
                                   </div>
                                 </div>
@@ -166,21 +141,21 @@ export const ConfigComponent = (props) => {
                                 <div className="form-group row">
                                   <div className="col-xl-3 col-lg-4">
                                     <input type="number" className="form-control form-control-lg form-control-solid" 
-                                      name="password"
+                                      name="reservModifyTime"
                                       ref={register({
                                           required: "Required",
                                       })}
-                                      defaultValue={1}/>
+                                      defaultValue={config.reservModifyTime}/>
                                   </div>
                                   <div className="col-xl-2 col-lg-4">
                                     <select className="form-control form-control-lg form-control-solid" 
-                                          name="group"
+                                          name="reservModifyUnit"
                                           ref={register({
                                               required: "Required",
                                           })}>
-                                          <option value='minute'>분</option>
-                                          <option value='hour'>시간</option>
-                                          <option value='day'>일</option>
+                                          <option selected={config.reservModifyUnit == 'minute'} value='minute'>분</option>
+                                          <option selected={config.reservModifyUnit == 'hour'} value='hour'>시간</option>
+                                          <option selected={config.reservModifyUnit == 'day'} value='day'>일</option>
                                       </select>
                                   </div>
                                 </div>
@@ -190,21 +165,21 @@ export const ConfigComponent = (props) => {
                                 <div className="form-group row">
                                   <div className="col-xl-3 col-lg-4">
                                     <input type="number" className="form-control form-control-lg form-control-solid" 
-                                      name="password"
+                                      name="reservCancleTime"
                                       ref={register({
                                           required: "Required",
                                       })}
-                                      defaultValue={1}/>
+                                      defaultValue={config.reservCancleTime}/>
                                   </div>
                                   <div className="col-xl-2 col-lg-4">
                                       <select className="form-control form-control-lg form-control-solid" 
-                                          name="group"
+                                          name="reservCancleUnit"
                                           ref={register({
                                               required: "Required",
                                           })}>
-                                          <option value='minute'>분</option>
-                                          <option value='hour'>시간</option>
-                                          <option value='day'>일</option>
+                                          <option selected={config.reservCancleUnit == 'minute'} value='minute'>분</option>
+                                          <option selected={config.reservCancleUnit == 'hour'} value='hour'>시간</option>
+                                          <option selected={config.reservCancleUnit == 'day'} value='day'>일</option>
                                       </select>
                                   </div>
                                 </div>
@@ -215,21 +190,21 @@ export const ConfigComponent = (props) => {
                                 <div className="form-group row">
                                   <div className="col-xl-3 col-lg-4">
                                     <input type="number" className="form-control form-control-lg form-control-solid" 
-                                      name="password"
+                                      name="attendancePublicTime"
                                       ref={register({
                                           required: "Required",
                                       })}
-                                      defaultValue={1}/>
+                                      defaultValue={config.attendancePublicTime}/>
                                   </div>
                                   <div className="col-xl-2 col-lg-4">
                                      <select className="form-control form-control-lg form-control-solid" 
-                                          name="group"
+                                          name="attendancePublicUnit"
                                           ref={register({
                                               required: "Required",
                                           })}>
-                                          <option value='minute'>분</option>
-                                          <option value='hour'>시간</option>
-                                          <option value='day'>일</option>
+                                          <option selected={config.attendancePublicUnit == 'minute'} value='minute'>분</option>
+                                          <option selected={config.attendancePublicUnit == 'hour'} value='hour'>시간</option>
+                                          <option selected={config.attendancePublicUnit == 'day'} value='day'>일</option>
                                       </select>
                                   </div>
                                 </div>
@@ -239,21 +214,21 @@ export const ConfigComponent = (props) => {
                                 <div className="form-group row">
                                   <div className="col-xl-3 col-lg-4">                                    
                                     <input type="number" className="form-control form-control-lg form-control-solid" 
-                                      name="password"
+                                      name="tardyAfterTime"
                                       ref={register({
                                           required: "Required",
                                       })}
-                                      defaultValue={1}/>
+                                      defaultValue={config.tardyAfterTime}/>
                                   </div>
                                   <div className="col-xl-2 col-lg-4">
                                     <select className="form-control form-control-lg form-control-solid" 
-                                          name="group"
+                                          name="tardyAfterUnit"
                                           ref={register({
                                               required: "Required",
                                           })}>
-                                          <option value='minute'>분</option>
-                                          <option value='hour'>시간</option>
-                                          <option value='day'>일</option>
+                                          <option selected={config.tardyAfterUnit == 'minute'} value='minute'>분</option>
+                                          <option selected={config.tardyAfterUnit == 'hour'} value='hour'>시간</option>
+                                          <option selected={config.tardyAfterUnit == 'day'} value='day'>일</option>
                                       </select>
                                   </div>
                                 </div>
@@ -263,21 +238,21 @@ export const ConfigComponent = (props) => {
                                 <div className="form-group row">
                                   <div className="col-xl-3 col-lg-4">
                                     <input type="number" className="form-control form-control-lg form-control-solid" 
-                                      name="password"
+                                      name="maturityTime"
                                       ref={register({
                                           required: "Required",
                                       })}
-                                      defaultValue={1}/>
+                                      defaultValue={config.maturityTime}/>
                                   </div>
                                   <div className="col-xl-2 col-lg-4">
                                     <select className="form-control form-control-lg form-control-solid" 
-                                          name="group"
+                                          name="maturityUnit"
                                           ref={register({
                                               required: "Required",
                                           })}>
-                                          <option value='minute'>분</option>
-                                          <option value='hour'>시간</option>
-                                          <option value='day'>일</option>
+                                          <option selected={config.maturityUnit == 'minute'} value='minute'>분</option>
+                                          <option selected={config.maturityUnit == 'hour'} value='hour'>시간</option>
+                                          <option selected={config.maturityUnit == 'day'} value='day'>일</option>
                                       </select>
                                   </div>
                                 </div>
@@ -291,8 +266,8 @@ export const ConfigComponent = (props) => {
                                 <label className="font-size-h6 font-weight-bolder text-dark">등록</label>
                                 <div className="d-flex align-items-center">
                                     <div className="d-flex flex-column font-weight-bold">
-                                    {/* <span className="text-dark mb-1 font-size-lg">{group.createder}</span> */}
-                                    {/* <span className="text-muted">{group.createdAt}</span> */}
+                                        <span className="text-dark mb-1 font-size-lg">{config.createder}</span>
+                                        <span className="text-muted">{config.createdAt}</span>
                                     </div>
                                 </div>
                             </Col>
@@ -300,8 +275,8 @@ export const ConfigComponent = (props) => {
                                 <label className="font-size-h6 font-weight-bolder text-dark">수정</label>
                                 <div className="d-flex align-items-center">
                                     <div className="d-flex flex-column font-weight-bold">
-                                    {/* <span className="text-dark mb-1 font-size-lg">{group.createder}</span> */}
-                                    {/* <span className="text-muted">{group.createdAt}</span> */}
+                                        <span className="text-dark mb-1 font-size-lg">{config.createder}</span>
+                                        <span className="text-muted">{config.createdAt}</span>
                                     </div>
                                 </div>
                             </Col>
