@@ -207,7 +207,7 @@ class MembershipListComponent extends Component {
                 <div className="row">
 									<div className="col-xl-12">
                   <div className="card card-custom card-stretch gutter-b">
-											<div className="card-header border-0 py-5">
+											<div className="card-header border-0 py-3">
 												<h3 className="card-title align-items-start flex-column">
 													<span className="card-label font-weight-bolder text-dark">카테고리</span>
 													<span className="text-muted mt-3 font-weight-bold font-size-sm"></span>
@@ -218,7 +218,7 @@ class MembershipListComponent extends Component {
                           </button>
 												</div>
 											</div>
-											<div className="card-body pt-0 pb-10">
+											<div className="card-body pt-10 pb-10" style={{backgroundColor: "#F3F6F9"}}>
                         <Slider {...this.settings}>       
                           {this.props.membership.categoryData ? this.props.membership.categoryData.map((category=>{
                             return <>
@@ -259,7 +259,7 @@ class MembershipListComponent extends Component {
 									<div className="col-xl-12">
 
                   <div className="card card-custom card-stretch gutter-b">
-											<div className="card-header border-0 py-5">
+											<div className="card-header border-0 py-3">
 												<h3 className="card-title align-items-start flex-column">
 													<span className="card-label font-weight-bolder text-dark">수업1 회원권 목록</span>
 													<span className="text-muted mt-3 font-weight-bold font-size-sm"></span>
