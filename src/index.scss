@@ -155,3 +155,34 @@
   transition-delay: 0s !important;
   cursor: pointer;
 }
+
+
+.category-center {
+  text-align: -webkit-center;
+}
+
+.category-container {
+  background-color: #ffff;
+  padding: 10px 5px;
+  width: 220px;
+  display: flex;
+  border-radius: 5px;
+  border: solid;
+  border-color: #C9F7F5;
+}
+
+.category-container:hover {
+  background-color: #E1F0FF;
+  cursor: pointer;
+}
+
+.category-container-title {
+  align-self: center;
+  width: 100%;
+}
+
+.category-container-action {
+  align-self: center;
+  width: 80px;
+  display: flex;
+}

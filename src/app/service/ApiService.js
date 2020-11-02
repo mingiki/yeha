@@ -406,7 +406,79 @@ class ApiService {
                 return reject(this.getError(error));
             })
         });
-   }
+    }
+
+    /**
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     *                                     [ Setting - Category ]
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    */
+   
+    /**
+     *  카테고리 추가
+     */
+    async settingCategoryAdd(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            const newId = this.autoId();
+            firebase.firestore().collection('category').doc(newId).set({
+                ...param,
+                id: newId
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  카테고리 수정
+     */
+    async settingCategoryEdit(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            const newId = this.autoId();
+            firebase.firestore().collection('category').doc(param.id).update({
+                ...param
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     * 카테고리 삭제
+     * @param {*} param 
+     */
+    async settingCategoryDelete(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('category').doc(param.id).delete()
+            .then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  카테고리 목록 (회원권)
+     */
+    async settingMembershipCategoryList(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('category').where('centerId', '==', param.centerId).where('type', '==','membership').get().then((querySnapshot)=>{
+                let categoryList = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(categoryList));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
 
     /**
      * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
