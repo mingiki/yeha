@@ -137,6 +137,12 @@ export const MembershipViewComponent = (props) => {
                                 </div>
                             </div>
                             <div className="form-group row my-2">
+                                <label className="col-4 col-form-label">유효기간:</label>
+                                <div className="col-8">
+                                    <span className="form-control-plaintext font-weight-bolder">{membership.validityDate} {membership.validityDateUnit}</span>
+                                </div>
+                            </div>
+                            <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">가격:</label>
                                 <div className="col-8">
                                     <span className="form-control-plaintext font-weight-bolder">{membership.price}</span>
