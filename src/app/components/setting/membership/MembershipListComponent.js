@@ -70,7 +70,6 @@ class MembershipListComponent extends Component {
           ]
         };
         
-        this.test = [1,2,3,4,5,6,7,8,9];
         this.state = {
             redirectPath : null,
             showAddCategory : false,
@@ -88,13 +87,13 @@ class MembershipListComponent extends Component {
       }
       let result = await this.api.settingMembershipCategoryList(param);
 
-      console.log(result);
-
       if (result.resultCode == "200") {
         const categoryList = result.resultData;
+        const selectCategory = this.props.membership.selectCategoryData;
+
         this.props.MembershipActions.SetCategoryData(categoryList);
-        this.props.MembershipActions.SetSelectCategoryData(categoryList[0]);
-        this.initMembership(categoryList[0]);
+        this.props.MembershipActions.SetSelectCategoryData(selectCategory ? selectCategory : categoryList[0]);
+        this.initMembership(selectCategory ? selectCategory : categoryList[0]);
       }
     }
 
@@ -142,41 +141,47 @@ class MembershipListComponent extends Component {
 
     deleteCategory = async (id) => {
       Swal.fire({
-          title: '삭제하시겠습니까?',
-          text: '삭제 시 원복할 수 없습니다.',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: '삭제',
-          cancelButtonText: '취소'
-        }).then(async (result) => {
-          if (result.value) {
-              let param = {
-                  id : id
-              }
-              let result = await this.api.settingCategoryDelete(param);
-      
-              if (result.resultCode == "200") {
-                  toast.info("카테고리가 삭제되었습니다.", {
-                      position: "top-right",
-                      autoClose: 5000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                  })
-                
-                this.initCategory();
-              }
-          } 
-        })
-  }
+        title: '삭제하시겠습니까?',
+        text: '삭제 시 원복할 수 없습니다.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소'
+      }).then(async (result) => {
+        if (result.value) {
+            let param = {
+                id : id
+            }
+            let result = await this.api.settingCategoryDelete(param);
+    
+            if (result.resultCode == "200") {
+                toast.info("카테고리가 삭제되었습니다.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                })
+              
+              this.initCategory();
+            }
+        } 
+      })
+    }
 
     selectCategory  = (category) => {
       this.props.MembershipActions.SetSelectCategoryData(category);
       this.initMembership(category);
     }
 
+    redirect = (path , data) => {
+      this.props.MembershipActions.SetSelectData(data);
+      this.setState({
+        redirectPath : path
+      })
+    }
 
     render() {
         const membershipList = this.props.membership.mainData;
@@ -230,7 +235,7 @@ class MembershipListComponent extends Component {
                         <Slider {...this.settings}>       
                           {this.props.membership.categoryData ? this.props.membership.categoryData.map((category=>{
                             return <>
-                              <div className="category-container">
+                              <div className={category.id == selectCategory.id ? "category-container select" : "category-container"}>
                                 <div className="category-container-title" onClick={()=> this.selectCategory(category)}>
                                     <div 
                                       className="text-dark-75 font-weight-bold font-size-lg">
@@ -298,7 +303,7 @@ class MembershipListComponent extends Component {
 														<tbody>
                               { membershipList ? membershipList.map( membership =>{
                                 return <>
-                                  <tr>
+                                  <tr onClick={()=> this.redirect(`/setting/membership/view/${membership.id}`, membership)}>
                                     <td>
                                       <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{membership.type}</span>
                                       <span className="text-muted font-weight-bold">Paid</span>
@@ -330,7 +335,9 @@ class MembershipListComponent extends Component {
                                       <span className="label label-lg label-light-success label-inline">Success</span>
                                     </td>
                                     <td className="text-right pr-0">
-                                      <button className="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
+                                      {/* <button 
+                                        onClick={()=> this.redirect(`/setting/membership/edit/${membership.id}`, membership)}
+                                        className="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
                                         <span className="svg-icon svg-icon-md svg-icon-primary">
                                           <i className="flaticon-edit"></i>
                                         </span>
@@ -339,7 +346,7 @@ class MembershipListComponent extends Component {
                                         <span className="svg-icon svg-icon-md svg-icon-primary">
                                           <i className="flaticon2-trash"></i>
                                         </span>
-                                      </button>
+                                      </button> */}
                                     </td>
                                   </tr>
                                 </>
