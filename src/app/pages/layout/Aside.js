@@ -12,9 +12,9 @@ class Aside extends Component {
             {title : "대쉬보드" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/Design/Layers.svg")} /> , 
             link : "/" , permissions: ["center", "instructor"], sub : null},
             {title : "수업" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/Code/Time-schedule.svg")} /> , 
-            link : "/class" , permissions: ["center", "instructor"], sub : [
-              {title : "스케줄", link : "/class/schedule" , permissions: ["center", "instructor"] },
-              {title : "시간표", link : "/class/timetable" , permissions: ["center", "instructor"] },
+            link : "/lesson" , permissions: ["center", "instructor"], sub : [
+              {title : "스케줄", link : "/lesson/schedule" , permissions: ["center", "instructor"] },
+              {title : "시간표", link : "/lesson/timetable" , permissions: ["center", "instructor"] },
             ]},
             {title : "회원" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/General/User.svg")} /> , 
             link : "/user" , permissions: ["center", "instructor"], sub : [

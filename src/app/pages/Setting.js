@@ -19,15 +19,16 @@ export default function Auth(props) {
             /* Redirect from root URL to /dashboard. */
             <Redirect exact from="/setting" to="/setting/membership" />
           }
-          <Route path={"/setting/membership"} render={() =><MembershipComponent {...param} />}  exact/>
+          
+          <Route path={"/setting/membership"} render={() =><MembershipComponent {...param} />} />
+       
           <Route path={"/setting/config"} render={() =><ConfigComponent {...param} />}  />
           <Route path={"/setting/instructor"} render={() =><InstructorComponent {...param} />}  />
-
           <Route path={"/setting/group"} render={() =><GroupComponent {...param} />}  />
 
           <Route path={"/setting/history"} render={() =><HistoryComponent {...param} />}  />
 
-          <Redirect from="*" to="/setting/membership" />
+          {/* <Redirect from="*" to="/setting/membership" /> */}
         </Switch>
       </Suspense>
     </>

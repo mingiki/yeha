@@ -91,22 +91,29 @@ class MembershipListComponent extends Component {
       console.log(result);
 
       if (result.resultCode == "200") {
-        this.props.MembershipActions.SetCategoryData(result.resultData);
+        const categoryList = result.resultData;
+        this.props.MembershipActions.SetCategoryData(categoryList);
+        this.props.MembershipActions.SetSelectCategoryData(categoryList[0]);
+        this.initMembership(categoryList[0]);
       }
     }
 
 
-    initMembership = async () => {
-      // let param = {
-      //   centerId : this.props.auth.loginUser.centerId
-      // }
-      // let result = await this.api.settingMembershipList(param);
+    initMembership = async (category) => {
+      let param = {
+        centerId : this.props.auth.loginUser.centerId,
+        category : {
+          id : category.id,
+          name : category.name
+        }
+      }
+      let result = await this.api.settingMembershipList(param);
 
-      // console.log(result);
-
-      // if (result.resultCode == "200") {
-      //   this.props.MembershipActions.SetMainData(result.resultData);
-      // }
+      if (result.resultCode == "200") {
+        this.props.MembershipActions.SetMainData(result.resultData.length > 0 ? result.resultData : null);
+      } else {
+        this.props.MembershipActions.SetMainData(null);
+      }
     }
 
     redirect = (path , data) => {
@@ -166,14 +173,15 @@ class MembershipListComponent extends Component {
   }
 
     selectCategory  = (category) => {
-      console.log("카테고리 선택");
+      this.props.MembershipActions.SetSelectCategoryData(category);
+      this.initMembership(category);
     }
 
 
     render() {
-        const entities = this.props.membership.mainData;
-        const numberOfRows = entities ? Math.ceil(entities.length / 4) : 0
-        
+        const membershipList = this.props.membership.mainData;
+        const selectCategory = this.props.membership.selectCategoryData;
+
         return (
           
             <>  
@@ -246,8 +254,8 @@ class MembershipListComponent extends Component {
                             </>
                           }))
                           : <>
-                            <span>카테고리가 없습니다.</span>
-                          </>
+                              <span>카테고리가 없습니다.</span>
+                            </>
                           }
                         </Slider>
                       </div>
@@ -261,13 +269,13 @@ class MembershipListComponent extends Component {
                   <div className="card card-custom card-stretch gutter-b">
 											<div className="card-header border-0 py-3">
 												<h3 className="card-title align-items-start flex-column">
-													<span className="card-label font-weight-bolder text-dark">수업1 회원권 목록</span>
+													<span className="card-label font-weight-bolder text-dark">{selectCategory ? selectCategory.name : ''} 회원권 목록</span>
 													<span className="text-muted mt-3 font-weight-bold font-size-sm"></span>
 												</h3>
 												<div className="card-toolbar">
-													<a href="#" className="btn btn-primary font-weight-bolder font-size-sm">
+													<button onClick={()=> { this.setState({redirectPath : "/setting/membership/add"}) } } className="btn btn-primary font-weight-bolder font-size-sm">
                               등록
-                          </a>
+                          </button>
 												</div>
 											</div>
 											<div className="card-body pt-0 pb-3">
@@ -288,26 +296,26 @@ class MembershipListComponent extends Component {
 															</tr>
 														</thead>
 														<tbody>
-                              {this.test.map(item=>{
+                              { membershipList ? membershipList.map( membership =>{
                                 return <>
                                   <tr>
                                     <td>
-                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">$23,800</span>
+                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{membership.type}</span>
                                       <span className="text-muted font-weight-bold">Paid</span>
                                     </td>
                                     <td>
-                                      <span className="label label-lg label-light-success label-inline">Success</span>
+                                      <span className="label label-lg label-light-success label-inline">{membership.status}</span>
                                     </td>
                                     <td className="pl-0 py-8">
                                       <div className="d-flex align-items-center">
                                         <div>
-                                          <a href="#" className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Payroll Application</a>
-                                          <span className="text-muted font-weight-bold d-block">PHP, Laravel, VueJS</span>
+                                          <a href="#" className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{membership.name}</a>
+                                          <span className="text-muted font-weight-bold d-block">{membership.name}</span>
                                         </div>
                                       </div>
                                     </td>
                                     <td>
-                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">$23,800</span>
+                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{membership.price}</span>
                                       <span className="text-muted font-weight-bold">Paid</span>
                                     </td>
                                     <td>
@@ -322,31 +330,29 @@ class MembershipListComponent extends Component {
                                       <span className="label label-lg label-light-success label-inline">Success</span>
                                     </td>
                                     <td className="text-right pr-0">
-                                      <a href="#" className="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
+                                      <button className="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
                                         <span className="svg-icon svg-icon-md svg-icon-primary">
-                                          {/* <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                              <rect x="0" y="0" width="24" height="24"></rect>
-                                              <path d="M8,4 L16,4 C17.1045695,4 18,4.8954305 18,6 L18,17.726765 C18,18.2790497 17.5522847,18.726765 17,18.726765 C16.7498083,18.726765 16.5087052,18.6329798 16.3242754,18.4639191 L12.6757246,15.1194142 C12.2934034,14.7689531 11.7065966,14.7689531 11.3242754,15.1194142 L7.67572463,18.4639191 C7.26860564,18.8371115 6.63603827,18.8096086 6.26284586,18.4024896 C6.09378519,18.2180598 6,17.9769566 6,17.726765 L6,6 C6,4.8954305 6.8954305,4 8,4 Z" fill="#000000"></path>
-                                            </g>
-                                          </svg> */}
+                                          <i className="flaticon-edit"></i>
                                         </span>
-                                      </a>
-                                      <a href="#" className="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                      </button>
+                                      <button className="btn btn-icon btn-light btn-hover-primary btn-sm">
                                         <span className="svg-icon svg-icon-md svg-icon-primary">
-                                          {/* <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                              <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                                              <rect fill="#000000" opacity="0.3" transform="translate(12.000000, 12.000000) rotate(-90.000000) translate(-12.000000, -12.000000)" x="11" y="5" width="2" height="14" rx="1"></rect>
-                                              <path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997)"></path>
-                                            </g>
-                                          </svg> */}
+                                          <i className="flaticon2-trash"></i>
                                         </span>
-                                      </a>
+                                      </button>
                                     </td>
                                   </tr>
                                 </>
-                              })}
+                              })
+                              :
+                                <>
+                                  <tr>
+                                    <td>
+                                      회원권이 없습니다.
+                                    </td>
+                                  </tr>
+                                </>
+                              }
 															
 														</tbody>
 													</table>

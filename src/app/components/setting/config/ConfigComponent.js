@@ -112,7 +112,7 @@ export const ConfigComponent = (props) => {
                     <div className="card-body">
                         <Row>
                             <Col lg={6}>
-                            <label className="font-size-h6 font-weight-bolder text-dark">예약 가능 시간</label>
+                                <label className="font-size-h6 font-weight-bolder text-dark">예약 가능 시간</label>
                                 <span className="form-text text-muted">로그인 아이디로 사용됩니다.</span>
                                 <div className="form-group row">
                                   <div className="col-xl-3 col-lg-3 col-md-8 col-sm-6">

@@ -480,6 +480,77 @@ class ApiService {
         });
     }
 
+     /**
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     *                                     [ Setting - Membership ]
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    */
+
+     /**
+     *  회원권 추가
+     */
+    async settingMembershipAdd(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            const newId = this.autoId();
+            firebase.firestore().collection('membership').doc(newId).set({
+                ...param,
+                id : newId,
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  회원권 수정
+     */
+    async settingMembershipEdit(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('membership').doc(param.id).update({
+                ...param
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     * 회원권 삭제
+     * @param {*} param 
+     */
+    async settingMembershipDelete(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('membership').doc(param.id).delete()
+            .then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  회원권 목록
+     */
+    async settingMembershipList(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('membership').where('centerId', '==', param.centerId).where('category.id', '==', param.category.id).get().then((querySnapshot)=>{
+                let membershipList = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(membershipList));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
     /**
      * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      *                                     [ COMMON ]

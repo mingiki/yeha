@@ -6,6 +6,9 @@ import { bindActionCreators } from "redux";
 import * as MembershipModules from "../../../store/modules/membership";
 
 import MembershipListComponent from "./MembershipListComponent";
+import MembershipViewComponent from "./MembershipViewComponent";
+import MembershipEditComponent from "./MembershipEditComponent";
+import MembershipAddComponent from "./MembershipAddComponent";
 
 class MembershipComponent extends Component {
   constructor(props) {
@@ -26,6 +29,9 @@ class MembershipComponent extends Component {
       <Suspense>
         <Switch>
           <Route exact path={`${this.props.match.url}`} render={(props) => <MembershipListComponent {...props} {...param}/>} />
+          <Route path={`${this.props.match.url}/view/:id`} render={(props) => <MembershipViewComponent {...props} {...param} />}  />
+          <Route path={`${this.props.match.url}/edit/:id`} render={(props) => <MembershipEditComponent {...props} {...param}/>}  />
+          <Route path={`${this.props.match.url}/add`} render={(props) => <MembershipAddComponent {...props}  {...param} />}  />
 
           <Redirect from="*" to={`${this.props.match.url}`} />
         </Switch>
@@ -35,7 +41,7 @@ class MembershipComponent extends Component {
 }
 
 export default connect((state) => ({
-  membership: state.membership,
+    membership: state.membership,
 }),
   (dispatch) => ({
       MembershipActions: bindActionCreators(MembershipModules.actions, dispatch),
