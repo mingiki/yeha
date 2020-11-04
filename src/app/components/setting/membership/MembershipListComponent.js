@@ -232,9 +232,9 @@ class MembershipListComponent extends Component {
                                       className="text-dark-75 font-weight-bold font-size-lg">
                                       {category.name}
                                     </div>
-                                    <div className="text-muted font-weight-bold font-size-sm">
+                                    {/* <div className="text-muted font-weight-bold font-size-sm">
                                       {category.createder} {category.createdAt}
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="category-container-action" >
                                   <span className="btn btn-icon btn-light-success btn-sm mr-2" 
