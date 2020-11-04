@@ -1,38 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Modal } from "react-bootstrap";
-import { useForm , Controller } from "react-hook-form";
+import { useForm} from "react-hook-form";
 
 import { toast } from 'react-toastify';
-import { registerLocale } from "react-datepicker";
 
 import moment from 'moment';
 import ApiService from "../../../../service/ApiService";
 
-export const MembershipCategoryEditModal = (props) => {
+export const LessonCategoryAddModal = (props) => {
 
     const api = new ApiService();
-    const category = props.membership.selectCategoryData;
     const { handleSubmit, register, errors , control } = useForm();
 
     /**
-     * 카테고리 회원권 수정
+     * 강사 저장
      * @param {*} values 
      */
     const onSubmit = async (values) => {
-       
+      
         let param = {
             ...values,
-            id : category.id,
-            type : "membership",
-            updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
-            updatedId : props.auth.loginUser.id,
-            updateder : props.auth.loginUser.userName
+            type : "lesson",
+            centerId : props.auth.loginUser.centerId,
+            createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
+            createdId : props.auth.loginUser.id,
+            createder : props.auth.loginUser.userName
         }
         
-        let result = await api.settingCategoryEdit(param);
+        let result = await api.settingCategoryAdd(param);
 
         if (result.resultCode == "200") {
-            toast.info("카테고리수정이 완료되었습니다.", {
+            toast.info("카테고리등록이 완료되었습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -46,7 +44,7 @@ export const MembershipCategoryEditModal = (props) => {
             props.onHide();
 
         } else {
-            toast.error("카테고리수정이 실패하였습니다.", {
+            toast.error("카테고리등록이 실패하였습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -70,7 +68,7 @@ export const MembershipCategoryEditModal = (props) => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title-vcenter">
-                        카테고리 수정
+                        카테고리 등록
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -79,7 +77,7 @@ export const MembershipCategoryEditModal = (props) => {
                                 <label className="font-size-h6 font-weight-bolder text-dark">카테고리명</label>
                                 <input className="form-control form-control-lg form-control-solid" type="text" 
                                     name="name"
-                                    defaultValue={category ? category.name : null}
+                                    defaultValue={""}
                                     ref={register({
                                         required: "Required",
                                     })}
@@ -105,4 +103,4 @@ export const MembershipCategoryEditModal = (props) => {
 };
 
 
-export default MembershipCategoryEditModal;
+export default LessonCategoryAddModal;

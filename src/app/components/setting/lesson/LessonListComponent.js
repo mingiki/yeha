@@ -6,8 +6,19 @@ import Slider from "react-slick";
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify';
 
-import MembershipCategoryAddModal from './modal/MembershipCategoryAddModal';
-import MembershipCategoryEditModal from './modal/MembershipCategoryEditModal';
+import {
+  Row,
+  Col
+} from "reactstrap"
+
+import {
+    toAbsoluteUrl
+} from "../../../helpers";
+
+import LessonCategoryAddModal from './modal/LessonCategoryAddModal';
+import LessonCategoryEditModal from './modal/LessonCategoryEditModal';
+
+
 
 import {
     Card,
@@ -18,7 +29,7 @@ import {
 
 import ApiService from "../../../service/ApiService";
 
-class MembershipListComponent extends Component {
+class LessonListComponent extends Component {
     constructor(props) {
         super(props);
         this.api = new ApiService();
@@ -74,22 +85,22 @@ class MembershipListComponent extends Component {
       let param = {
         centerId : this.props.auth.loginUser.centerId
       }
-      let result = await this.api.settingMembershipCategoryList(param);
+      let result = await this.api.settingLessonCategoryList(param);
 
       if (result.resultCode == "200") {
         const categoryList = result.resultData;
-        const selectCategory = this.props.membership.selectCategoryData;
-
+        const selectCategory = this.props.lesson.selectCategoryData;
+        
         if (categoryList.length > 0) {
-          this.props.MembershipActions.SetCategoryData(categoryList);
-          this.props.MembershipActions.SetSelectCategoryData(selectCategory ? selectCategory : categoryList[0]);
-          this.initMembership(selectCategory ? selectCategory : categoryList[0]);
+          this.props.LessonActions.SetCategoryData(categoryList);
+          this.props.LessonActions.SetSelectCategoryData(selectCategory ? selectCategory : categoryList[0]);
+          this.initLesson(selectCategory ? selectCategory : categoryList[0]);
         }
       }
     }
 
 
-    initMembership = async (category) => {
+    initLesson = async (category) => {
       let param = {
         centerId : this.props.auth.loginUser.centerId,
         category : {
@@ -97,17 +108,17 @@ class MembershipListComponent extends Component {
           name : category.name
         }
       }
-      let result = await this.api.settingMembershipList(param);
+      let result = await this.api.settingLessonList(param);
 
       if (result.resultCode == "200") {
-        this.props.MembershipActions.SetMainData(result.resultData.length > 0 ? result.resultData : null);
+        this.props.LessonActions.SetMainData(result.resultData.length > 0 ? result.resultData : null);
       } else {
-        this.props.MembershipActions.SetMainData(null);
+        this.props.LessonActions.SetMainData(null);
       }
     }
 
     redirect = (path , data) => {
-      this.props.MembershipActions.SetSelectData(data);
+      this.props.LessonActions.SetSelectData(data);
       this.setState({
         redirectPath : path
       })
@@ -122,7 +133,7 @@ class MembershipListComponent extends Component {
     }
 
     modalOpenEditCategory = (category) => {
-      this.props.MembershipActions.SetSelectCategoryData(category);
+      this.props.LessonActions.SetSelectCategoryData(category);
       this.setState({showEditCategory : true})
     }
 
@@ -163,20 +174,20 @@ class MembershipListComponent extends Component {
     }
 
     selectCategory  = (category) => {
-      this.props.MembershipActions.SetSelectCategoryData(category);
-      this.initMembership(category);
+      this.props.LessonActions.SetSelectCategoryData(category);
+      this.initLesson(category);
     }
 
     redirect = (path , data) => {
-      this.props.MembershipActions.SetSelectData(data);
+      this.props.LessonActions.SetSelectData(data);
       this.setState({
         redirectPath : path
       })
     }
 
     render() {
-        const membershipList = this.props.membership.mainData;
-        const selectCategory = this.props.membership.selectCategoryData;
+        const lessonList = this.props.lesson.mainData;
+        const selectCategory = this.props.lesson.selectCategoryData;
 
         return (
           
@@ -192,16 +203,16 @@ class MembershipListComponent extends Component {
                   </> : <></>
               }
 
-                <MembershipCategoryAddModal 
+                <LessonCategoryAddModal 
                   auth={this.props.auth}
                   initCategory={this.initCategory}
                   show={this.state.showAddCategory}
                   onHide={this.modalCloseAddCategory}
                 />
 
-                <MembershipCategoryEditModal 
+                <LessonCategoryEditModal 
                   auth={this.props.auth}
-                  membership={this.props.membership}
+                  lesson={this.props.lesson}
                   initCategory={this.initCategory}
                   show={this.state.showEditCategory}
                   onHide={this.modalCloseEditCategory}
@@ -224,7 +235,7 @@ class MembershipListComponent extends Component {
 											</div>
 											<div className="card-body pt-10 pb-10" style={{backgroundColor: "#F3F6F9"}}>
                         <Slider {...this.settings}>       
-                          {this.props.membership.categoryData ? this.props.membership.categoryData.map((category=>{
+                          {this.props.lesson.categoryData ? this.props.lesson.categoryData.map((category=>{
                             return <>
                               <div className={category.id == selectCategory?.id ? "category-container select" : "category-container"}>
                                 <div className="category-container-title" onClick={()=> this.selectCategory(category)}>
@@ -265,11 +276,11 @@ class MembershipListComponent extends Component {
                   <div className="card card-custom card-stretch gutter-b">
 											<div className="card-header border-0 py-3">
 												<h3 className="card-title align-items-start flex-column">
-													<span className="card-label font-weight-bolder text-dark">{selectCategory ? selectCategory.name : ''} 회원권 목록</span>
+													<span className="card-label font-weight-bolder text-dark">{selectCategory ? selectCategory.name : ''} 수업 목록</span>
 													<span className="text-muted mt-3 font-weight-bold font-size-sm"></span>
 												</h3>
 												<div className="card-toolbar">
-													<button onClick={()=> { this.setState({redirectPath : "/setting/membership/add"}) } } className="btn btn-primary font-weight-bolder font-size-sm">
+													<button onClick={()=> { this.setState({redirectPath : "/setting/lesson/add"}) } } className="btn btn-primary font-weight-bolder font-size-sm">
                               등록
                           </button>
 												</div>
@@ -292,26 +303,26 @@ class MembershipListComponent extends Component {
 															</tr>
 														</thead>
 														<tbody>
-                              { membershipList ? membershipList.map( membership =>{
+                              { lessonList ? lessonList.map( lesson =>{
                                 return <>
-                                  <tr onClick={()=> this.redirect(`/setting/membership/view/${membership.id}`, membership)}>
+                                  <tr onClick={()=> this.redirect(`/setting/lesson/view/${lesson.id}`, lesson)}>
                                     <td>
-                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{membership.type}</span>
+                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{lesson.type}</span>
                                       <span className="text-muted font-weight-bold">Paid</span>
                                     </td>
                                     <td>
-                                      <span className="label label-lg label-light-success label-inline">{membership.status}</span>
+                                      <span className="label label-lg label-light-success label-inline">{lesson.status}</span>
                                     </td>
                                     <td className="pl-0 py-8">
                                       <div className="d-flex align-items-center">
                                         <div>
-                                          <a href="#" className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{membership.name}</a>
-                                          <span className="text-muted font-weight-bold d-block">{membership.name}</span>
+                                          <a href="#" className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{lesson.name}</a>
+                                          <span className="text-muted font-weight-bold d-block">{lesson.name}</span>
                                         </div>
                                       </div>
                                     </td>
                                     <td>
-                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{membership.price}</span>
+                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{lesson.price}</span>
                                       <span className="text-muted font-weight-bold">Paid</span>
                                     </td>
                                     <td>
@@ -327,7 +338,7 @@ class MembershipListComponent extends Component {
                                     </td>
                                     <td className="text-right pr-0">
                                       {/* <button 
-                                        onClick={()=> this.redirect(`/setting/membership/edit/${membership.id}`, membership)}
+                                        onClick={()=> this.redirect(`/setting/Lesson/edit/${Lesson.id}`, Lesson)}
                                         className="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
                                         <span className="svg-icon svg-icon-md svg-icon-primary">
                                           <i className="flaticon-edit"></i>
@@ -368,5 +379,5 @@ class MembershipListComponent extends Component {
 
 }
 
-export default MembershipListComponent;
+export default LessonListComponent;
 

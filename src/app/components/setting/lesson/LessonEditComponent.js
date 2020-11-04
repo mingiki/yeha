@@ -14,11 +14,11 @@ import ApiService from "../../../service/ApiService";
 
 registerLocale('ko', ko);
 
-export const MembershipEditComponent = (props) => {
+export const LessonEditComponent = (props) => {
     
     const api = new ApiService();
-    const membership = props.membership.selectData;
-    const category = props.membership.selectCategoryData;
+    const Lesson = props.Lesson.selectData;
+    const category = props.Lesson.selectCategoryData;
 
     const { handleSubmit, register, errors , control } = useForm();
     const [redirectPath, setRedirectPath] = useState(null);
@@ -30,13 +30,13 @@ export const MembershipEditComponent = (props) => {
     const onSubmit = async (values) => {
         let param = {
             ...values,
-            id: membership.id,
+            id: Lesson.id,
             updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
             updatedId : props.auth.loginUser.id,
             updateder : props.auth.loginUser.userName
         }
         
-        let result = await api.settingMembershipEdit(param);
+        let result = await api.settingLessonEdit(param);
 
         if (result.resultCode == "200") {
             toast.info("회원권 수정이 완료되었습니다.", {
@@ -49,7 +49,7 @@ export const MembershipEditComponent = (props) => {
                 progress: undefined,
             })
 
-            setRedirectPath("setting/membership");
+            setRedirectPath("setting/lesson");
 
         } else {
             toast.error("회원권 수정이 실패하였습니다.", {
@@ -92,7 +92,7 @@ export const MembershipEditComponent = (props) => {
                         <div className="card-toolbar">
                             <button
                                 type="button"
-                                onClick={()=> {setRedirectPath("/setting/membership")}}
+                                onClick={()=> {setRedirectPath("/setting/lesson")}}
                                 className="btn btn-light"
                             >
                                 <i className="flaticon2-cross"></i>
@@ -122,7 +122,7 @@ export const MembershipEditComponent = (props) => {
                                     ref={register({
                                         required: "Required",
                                     })}
-                                    defaultValue={membership.name}
+                                    defaultValue={Lesson.name}
                                     placeholder="회원권명을 입력해주세요."/>
                             </div>
                             <div className="col-xl-3 col-lg-4 col-md-6">
@@ -132,7 +132,7 @@ export const MembershipEditComponent = (props) => {
                                     ref={register({
                                         required: "Required",
                                     })}
-                                    defaultValue={membership.price}
+                                    defaultValue={Lesson.price}
                                     placeholder="가격을 입력해주세요."/>
                             </div>
                         </div>
@@ -143,7 +143,7 @@ export const MembershipEditComponent = (props) => {
                                     <div className="col-xl-3 col-lg-3 col-md-8 col-sm-6">
                                         <input type="number" className="form-control form-control-lg form-control-solid" 
                                             name="validityDate"
-                                            defaultValue={membership.validityDate}
+                                            defaultValue={Lesson.validityDate}
                                             placeholder="유효기간을 입력해주세요."
                                             ref={register({
                                                 required: "Required",
@@ -153,12 +153,12 @@ export const MembershipEditComponent = (props) => {
                                     <div className="col-xl-2 col-lg-2 col-md-4 col-sm-6">
                                         <select className="form-control form-control-lg form-control-solid" 
                                             name="validityDateUnit"
-                                            defaultValue={membership.validityDateUnit}
+                                            defaultValue={Lesson.validityDateUnit}
                                             ref={register({
                                                 required: "Required",
                                             })}>
-                                            <option selected={membership.validityDateUnit == 'month'} value='month'>월</option>
-                                            <option  selected={membership.validityDateUnit == 'year'} value='year'>년</option>
+                                            <option selected={Lesson.validityDateUnit == 'month'} value='month'>월</option>
+                                            <option  selected={Lesson.validityDateUnit == 'year'} value='year'>년</option>
                                         </select>
                                     </div>
                                 </div>
@@ -169,19 +169,19 @@ export const MembershipEditComponent = (props) => {
                                 <label className="font-size-h6 font-weight-bolder text-dark">세션분류</label>
                                 <select className="form-control form-control-lg form-control-solid" 
                                     name="type"
-                                    defaultValue={membership.type}
+                                    defaultValue={Lesson.type}
                                     ref={register({
                                         required: "Required",
                                     })}>
-                                    <option selected={membership.type == 'session'} value='session'>세션제</option>
-                                    <option selected={membership.type == 'period'} value='period'>기간제</option>
+                                    <option selected={Lesson.type == 'session'} value='session'>세션제</option>
+                                    <option selected={Lesson.type == 'period'} value='period'>기간제</option>
                                 </select>
                             </div>
                             <div className="col-xl-3 col-lg-4 col-md-6">
                                 <label className="font-size-h6 font-weight-bolder text-dark">세션수</label>
                                 <input className="form-control form-control-lg form-control-solid" type="number" 
                                     name="sessionCnt"
-                                    defaultValue={membership.sessionCnt}
+                                    defaultValue={Lesson.sessionCnt}
                                     ref={register({
                                         required: "Required",
                                     })}
@@ -193,7 +193,7 @@ export const MembershipEditComponent = (props) => {
                                 <label className="font-size-h6 font-weight-bolder text-dark">최대 예약 횟수</label>
                                 <input className="form-control form-control-lg form-control-solid" type="number" 
                                     name="totalMaxCnt"
-                                    defaultValue={membership.totalMaxCnt}
+                                    defaultValue={Lesson.totalMaxCnt}
                                     ref={register({
                                         required: "Required",
                                     })}
@@ -203,7 +203,7 @@ export const MembershipEditComponent = (props) => {
                                 <label className="font-size-h6 font-weight-bolder text-dark">최대 일 예약 횟수</label>
                                 <input className="form-control form-control-lg form-control-solid" type="number" 
                                     name="dayMaxCnt"
-                                    defaultValue={membership.dayMaxCnt}
+                                    defaultValue={Lesson.dayMaxCnt}
                                     ref={register({
                                         required: "Required",
                                     })}
@@ -213,7 +213,7 @@ export const MembershipEditComponent = (props) => {
                                 <label className="font-size-h6 font-weight-bolder text-dark">최대 주간 예약 횟수</label>
                                 <input className="form-control form-control-lg form-control-solid" type="number" 
                                     name="weekMaxCnt"
-                                    defaultValue={membership.weekMaxCnt}
+                                    defaultValue={Lesson.weekMaxCnt}
                                     ref={register({
                                         required: "Required",
                                     })}
@@ -223,7 +223,7 @@ export const MembershipEditComponent = (props) => {
                                 <label className="font-size-h6 font-weight-bolder text-dark">최대 월 예약 횟수</label>
                                 <input className="form-control form-control-lg form-control-solid" type="number" 
                                     name="monthMaxCnt"
-                                    defaultValue={membership.monthMaxCnt}
+                                    defaultValue={Lesson.monthMaxCnt}
                                     ref={register({
                                         required: "Required",
                                     })}
@@ -240,4 +240,4 @@ export const MembershipEditComponent = (props) => {
 };
 
 
-export default MembershipEditComponent;
+export default LessonEditComponent;

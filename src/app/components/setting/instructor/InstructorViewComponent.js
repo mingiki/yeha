@@ -70,6 +70,12 @@ export const InstructorViewComponent = (props) => {
                         </span> 
                         <h3 className="card-label">
                             {instructor.name}
+                            <span className="d-block text-muted pt-2 font-size-sm">
+                            등록 : {instructor.createder ? instructor.createder + ` (${instructor.createdAt})` : '없음'}
+                            </span>
+                            <span className="d-block text-muted pt-2 font-size-sm">
+                            수정 : {instructor.updateder ? instructor.updateder + ` (${instructor.updatedAt})` : '없음'} 
+                            </span>
                         </h3>
                     </div>
                     <div className="card-toolbar">
@@ -240,29 +246,6 @@ export const InstructorViewComponent = (props) => {
                                 <span>선택한 그룹이 없습니다.</span>
                             </>}
                                 
-                        </Col>
-                    </Row>
-
-                    <div className="separator separator-dashed my-8" />
-
-                    <Row>
-                        <Col lg={6}>
-                            <label className="font-size-h6 font-weight-bolder text-dark">등록</label>
-                            <div className="d-flex align-items-center">
-                                <div className="d-flex flex-column font-weight-bold">
-                                    <span className="text-dark mb-1 font-size-lg">{instructor.createder}</span>
-                                    <span className="text-muted">{instructor.createdAt}</span>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col lg={6}>
-                            <label className="font-size-h6 font-weight-bolder text-dark">수정</label>
-                            <div className="d-flex align-items-center">
-                                <div className="d-flex flex-column font-weight-bold">
-                                <span className="text-dark mb-1 font-size-lg">{instructor.updateder}</span>
-                                <span className="text-muted">{instructor.updatedAt}</span>
-                                </div>
-                            </div>
                         </Col>
                     </Row>
 

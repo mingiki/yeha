@@ -8,16 +8,16 @@ import { CustomInput, Row, Col } from "reactstrap"
 
 import ApiService from "../../../service/ApiService";
 
-export const MembershipViewComponent = (props) => {
+export const LessonViewComponent = (props) => {
     const api = new ApiService();
     const [redirectPath, setRedirectPath] = useState(null);
-    const membership = props.membership.selectData;
+    const lesson = props.lesson.selectData;
 
     /**
      * 강사 삭제
      * @param {*} values 
      */
-    const deleteMembership = async (id) => {
+    const deleteLesson = async (id) => {
         Swal.fire({
             title: '삭제하시겠습니까?',
             text: '삭제 시 원복할 수 없습니다.',
@@ -30,7 +30,7 @@ export const MembershipViewComponent = (props) => {
                 let param = {
                     id : id
                 }
-                let result = await api.settingMembershipDelete(param);
+                let result = await api.settingLessonDelete(param);
         
                 if (result.resultCode == "200") {
                     toast.info("직원이 삭제되었습니다.", {
@@ -43,7 +43,7 @@ export const MembershipViewComponent = (props) => {
                         progress: undefined,
                     })
         
-                    setRedirectPath("/setting/Membership")
+                    setRedirectPath("/setting/lesson")
                 }
             } 
           })
@@ -71,19 +71,19 @@ export const MembershipViewComponent = (props) => {
                                     <i className="flaticon2-group text-primary"></i>
                                 </span> 
                                 <h3 className="card-label">
-                                    {membership.name}
+                                    {lesson.name}
                                     <span className="d-block text-muted pt-2 font-size-sm">
-                                    등록 : {membership.createder ? membership.createder + ` (${membership.createdAt})` : '없음'}
+                                    등록 : {lesson.createder ? lesson.createder + ` (${lesson.createdAt})` : '없음'}
                                     </span>
                                     <span className="d-block text-muted pt-2 font-size-sm">
-                                    수정 : {membership.updateder ? membership.updateder + ` (${membership.updatedAt})` : '없음'} 
+                                    수정 : {lesson.updateder ? lesson.updateder + ` (${lesson.updatedAt})` : '없음'} 
                                     </span>
                                 </h3>
                             </div>
                             <div className="card-toolbar">
                                 <button
                                     type="button"
-                                    onClick={()=> {setRedirectPath("/setting/membership")}}
+                                    onClick={()=> {setRedirectPath("/setting/lesson")}}
                                     className="btn btn-light"
                                 >
                                     <i className="fa fa-arrow-left"></i>
@@ -93,7 +93,7 @@ export const MembershipViewComponent = (props) => {
                                 <button 
                                     type="button"
                                     className="btn btn-light ml-2"
-                                    onClick={()=> {setRedirectPath(`/setting/membership/edit/${membership.id}`)}}
+                                    onClick={()=> {setRedirectPath(`/setting/lesson/edit/${lesson.id}`)}}
                                 >
                                     <i className="fa fa-redo"></i>
                                     수정
@@ -102,7 +102,7 @@ export const MembershipViewComponent = (props) => {
                                 <button
                                     type="button"
                                     className="btn btn-primary ml-2"
-                                    onClick={()=> {deleteMembership(membership.id)}}
+                                    onClick={()=> {deleteLesson(lesson.id)}}
                                 >
                                     <i className="fa fa-trash"></i>
                                     삭제
@@ -127,31 +127,31 @@ export const MembershipViewComponent = (props) => {
                             <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">카테고리:</label>
                                 <div className="col-8">
-                                    <span className="form-control-plaintext font-weight-bolder">{membership.category.name}</span>
+                                    <span className="form-control-plaintext font-weight-bolder">{lesson.category.name}</span>
                                 </div>
                             </div>
                             <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">분류:</label>
                                 <div className="col-8">
-                                    <span className="form-control-plaintext font-weight-bolder">{membership.type}</span>
+                                    <span className="form-control-plaintext font-weight-bolder">{lesson.type}</span>
                                 </div>
                             </div>
                             <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">세션수:</label>
                                 <div className="col-8">
-                                    <span className="form-control-plaintext font-weight-bolder">{membership.sessionCnt}</span>
+                                    <span className="form-control-plaintext font-weight-bolder">{lesson.sessionCnt}</span>
                                 </div>
                             </div>
                             <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">유효기간:</label>
                                 <div className="col-8">
-                                    <span className="form-control-plaintext font-weight-bolder">{membership.validityDate} {membership.validityDateUnit}</span>
+                                    <span className="form-control-plaintext font-weight-bolder">{lesson.validityDate} {lesson.validityDateUnit}</span>
                                 </div>
                             </div>
                             <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">가격:</label>
                                 <div className="col-8">
-                                    <span className="form-control-plaintext font-weight-bolder">{membership.price}</span>
+                                    <span className="form-control-plaintext font-weight-bolder">{lesson.price}</span>
                                 </div>
                             </div>
                         </div>
@@ -170,25 +170,25 @@ export const MembershipViewComponent = (props) => {
                             <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">최대 예약 횟수:</label>
                                 <div className="col-8">
-                                    <span className="form-control-plaintext font-weight-bolder">{membership.totalMaxCnt}</span>
+                                    <span className="form-control-plaintext font-weight-bolder">{lesson.totalMaxCnt}</span>
                                 </div>
                             </div>
                             <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">최대 일 예약 횟수:</label>
                                 <div className="col-8">
-                                    <span className="form-control-plaintext font-weight-bolder">{membership.dayMaxCnt}</span>
+                                    <span className="form-control-plaintext font-weight-bolder">{lesson.dayMaxCnt}</span>
                                 </div>
                             </div>
                             <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">최대 주간 예약 횟수:</label>
                                 <div className="col-8">
-                                    <span className="form-control-plaintext font-weight-bolder">{membership.weekMaxCnt}</span>
+                                    <span className="form-control-plaintext font-weight-bolder">{lesson.weekMaxCnt}</span>
                                 </div>
                             </div>
                             <div className="form-group row my-2">
                                 <label className="col-4 col-form-label">최대 월 예약 횟수:</label>
                                 <div className="col-8">
-                                    <span className="form-control-plaintext font-weight-bolder">{membership.monthMaxCnt}</span>
+                                    <span className="form-control-plaintext font-weight-bolder">{lesson.monthMaxCnt}</span>
                                 </div>
                             </div>
                         </div>
@@ -201,4 +201,4 @@ export const MembershipViewComponent = (props) => {
 };
 
 
-export default MembershipViewComponent;
+export default LessonViewComponent;

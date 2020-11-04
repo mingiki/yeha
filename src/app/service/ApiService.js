@@ -442,6 +442,54 @@ class ApiService {
             firebase.firestore().collection('category').doc(param.id).update({
                 ...param
             }).then(()=>{
+
+                //회원권 카테고리 일괄수정
+                if (param.type == "membership") {
+                    console.log(param);
+                    firebase.firestore().collection('membership').where('category.id', '==', param.id).get().then((querySnapshot)=>{
+                        let membershipList = querySnapshot.docs.map(doc => doc.data());
+
+                        console.log(membershipList);
+
+                        membershipList.map((membership)=>{
+                            let subParam = {
+                                id : membership.id,
+                                category : {
+                                    id : param.id,
+                                    name : param.name
+                                }
+                            }
+                            this.settingMembershipEdit(subParam);
+                        })
+
+                        return resolve(this.getSuccess());
+                    }).catch((error)=>{
+                        return reject(this.getError(error));
+                    })
+                
+                //수업 카테고리 일괄 수정
+                } else if (param.type == "lesson") {
+                    firebase.firestore().collection('lesson').where('category.id', '==', param.id).get().then((querySnapshot)=>{
+                        let lessonList = querySnapshot.docs.map(doc => doc.data());
+
+                        lessonList.map((lesson)=>{
+                            let subParam = {
+                                id : lesson.id,
+                                category : {
+                                    id : param.id,
+                                    name : param.name
+                                }
+                            }
+                            this.settingLessonEdit(subParam);
+                        })
+
+                        return resolve(this.getSuccess());
+
+                    }).catch((error)=>{
+                        return reject(this.getError(error));
+                    })
+                }
+
                 return resolve(this.getSuccess());
             }).catch((error)=>{
                 return reject(this.getError(error));
@@ -480,13 +528,28 @@ class ApiService {
         });
     }
 
-     /**
+    /**
+     *  카테고리 목록 (수업)
+     */
+    async settingLessonCategoryList(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('category').where('centerId', '==', param.centerId).where('type', '==','lesson').get().then((querySnapshot)=>{
+                let categoryList = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(categoryList));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
      * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      *                                     [ Setting - Membership ]
      * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     */
 
-     /**
+    /**
      *  회원권 추가
      */
     async settingMembershipAdd(param){
@@ -545,6 +608,78 @@ class ApiService {
             firebase.firestore().collection('membership').where('centerId', '==', param.centerId).where('category.id', '==', param.category.id).get().then((querySnapshot)=>{
                 let membershipList = querySnapshot.docs.map(doc => doc.data());
                 return resolve(this.getSuccess(membershipList));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+
+    /**
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     *                                     [ Setting - Lesson ]
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    */
+
+    /**
+     *  수업 추가
+     */
+    async settingLessonAdd(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            const newId = this.autoId();
+            firebase.firestore().collection('lesson').doc(newId).set({
+                ...param,
+                id : newId,
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  수업 수정
+     */
+    async settingLessonEdit(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('lesson').doc(param.id).update({
+                ...param
+            }).then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     * 수업 삭제
+     * @param {*} param 
+     */
+    async settingLessonDelete(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('lesson').doc(param.id).delete()
+            .then(()=>{
+                return resolve(this.getSuccess());
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
+
+    /**
+     *  수업 목록
+     */
+    async settingLessonList(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('lesson').where('centerId', '==', param.centerId).where('category.id', '==', param.category.id).get().then((querySnapshot)=>{
+                let lessonList = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(lessonList));
             }).catch((error)=>{
                 return reject(this.getError(error));
             })

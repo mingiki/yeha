@@ -8,14 +8,14 @@ import { registerLocale } from "react-datepicker";
 import moment from 'moment';
 import ApiService from "../../../../service/ApiService";
 
-export const MembershipCategoryEditModal = (props) => {
+export const LessonCategoryEditModal = (props) => {
 
     const api = new ApiService();
-    const category = props.membership.selectCategoryData;
+    const category = props.lesson.selectCategoryData;
     const { handleSubmit, register, errors , control } = useForm();
 
     /**
-     * 카테고리 회원권 수정
+     * 수업 카테고리 수정
      * @param {*} values 
      */
     const onSubmit = async (values) => {
@@ -23,7 +23,7 @@ export const MembershipCategoryEditModal = (props) => {
         let param = {
             ...values,
             id : category.id,
-            type : "membership",
+            type : "lesson",
             updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
             updatedId : props.auth.loginUser.id,
             updateder : props.auth.loginUser.userName
@@ -105,4 +105,4 @@ export const MembershipCategoryEditModal = (props) => {
 };
 
 
-export default MembershipCategoryEditModal;
+export default LessonCategoryEditModal;

@@ -94,6 +94,12 @@ class GroupViewComponent extends Component {
                             </span> 
                             <h3 className="card-label">
                                 {group.name}
+                                <span className="d-block text-muted pt-2 font-size-sm">
+                                등록 : {group.createder + ` (${group.createdAt})`}
+                                </span>
+                                <span className="d-block text-muted pt-2 font-size-sm">
+                                수정 : {group.updateder ? group.updateder + `(${group.updatedAt})` : '없음'} 
+                                </span>
                             </h3>
                         </div>
                         <div className="card-toolbar">
@@ -205,28 +211,6 @@ class GroupViewComponent extends Component {
                             </Col>
                         </Row>
 
-                        <div className="separator separator-dashed my-8" />
-
-                        <Row>
-                            <Col lg={6}>
-                                <label className="font-size-h6 font-weight-bolder text-dark">등록</label>
-                                <div className="d-flex align-items-center">
-                                    <div className="d-flex flex-column font-weight-bold">
-                                    <span className="text-dark mb-1 font-size-lg">{group.createder}</span>
-                                    <span className="text-muted">{group.createdAt}</span>
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col lg={6}>
-                                <label className="font-size-h6 font-weight-bolder text-dark">수정</label>
-                                <div className="d-flex align-items-center">
-                                    <div className="d-flex flex-column font-weight-bold">
-                                    <span className="text-dark mb-1 font-size-lg">{group.createder}</span>
-                                    <span className="text-muted">{group.createdAt}</span>
-                                    </div>
-                                </div>
-                            </Col>
-                        </Row>
                     </div>
                 </div>
                 

@@ -97,6 +97,12 @@ export const ConfigComponent = (props) => {
                             </span> 
                             <h3 className="card-label">
                                 운영 관리
+                                <span className="d-block text-muted pt-2 font-size-sm">
+                                등록 : {config.createder ? config.createder + ` (${config.createdAt})` : '없음'}
+                                </span>
+                                <span className="d-block text-muted pt-2 font-size-sm">
+                                수정 : {config.updateder ? config.updateder + ` (${config.updatedAt})` : '없음'} 
+                                </span>
                             </h3>
                         </div>
                         <div className="card-toolbar">
@@ -255,29 +261,6 @@ export const ConfigComponent = (props) => {
                                           <option selected={config.maturityUnit == 'day'} value='day'>일</option>
                                       </select>
                                   </div>
-                                </div>
-                            </Col>
-                        </Row>
-                        
-                        <div className="separator separator-dashed my-8" />
-
-                        <Row>
-                            <Col lg={6}>
-                                <label className="font-size-h6 font-weight-bolder text-dark">등록</label>
-                                <div className="d-flex align-items-center">
-                                    <div className="d-flex flex-column font-weight-bold">
-                                        <span className="text-dark mb-1 font-size-lg">{config.createder}</span>
-                                        <span className="text-muted">{config.createdAt}</span>
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col lg={6}>
-                                <label className="font-size-h6 font-weight-bolder text-dark">수정</label>
-                                <div className="d-flex align-items-center">
-                                    <div className="d-flex flex-column font-weight-bold">
-                                        <span className="text-dark mb-1 font-size-lg">{config.createder}</span>
-                                        <span className="text-muted">{config.createdAt}</span>
-                                    </div>
                                 </div>
                             </Col>
                         </Row>
