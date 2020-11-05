@@ -22,42 +22,40 @@ export const LessonAddComponent = (props) => {
     const { handleSubmit, register, errors , control } = useForm();
 
     const [redirectPath, setRedirectPath] = useState(null);
-    const [groups, setGroups] = useState([]);
-    const [selectGroup, setSelectGroups] = useState(null);
+    const [instructorList, setInstructorList] = useState([]);
 
-    // useEffect(() => {
-    //     const settingGroupList = async () => {
-    //         const result = await api.settingGroupList({centerId : props.auth.loginUser.centerId});
-    //         setGroups(result.resultData);
-    //     }
+    useEffect(() => {
+        const settingInstructorList = async () => {
+            const result = await api.settingInstructorList({centerId : props.auth.loginUser.centerId});
+            setInstructorList(result.resultData);
+        }
 
-    //     settingGroupList();
-    // }, []);
-        
-    const onChangeGroup = (e) =>{
-        const groupId = e.target.value;
-        let selectGroup = null;
-
-        groups.map((group) => {
-            if (group.id == groupId) {
-                selectGroup = group;
-            }
-        })
-
-        setSelectGroups(selectGroup);
-    }
+        settingInstructorList();
+    }, []);
 
     /**
-     * 회원권 저장
+     * 수업 저장
      * @param {*} values 
      */
     const onSubmit = async (values) => {
+
+        const selectInstructor = null;
+        instructorList.map ((instructor) => {
+            if (instructor.id == values.instructor) {
+                selectInstructor = instructor;
+            }
+        }) 
+
         let param = {
             ...values,
             status : "active",
             category : {
                 name : category.name,
                 id : category.id
+            },
+            instruction : {
+                name : selectInstructor.name,
+                id : selectInstructor.id
             },
             centerId : props.auth.loginUser.centerId,
             createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
@@ -168,7 +166,7 @@ export const LessonAddComponent = (props) => {
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">수업명</label>
                                         <input className="form-control form-control-lg form-control-solid" type="text" 
-                                            name="price"
+                                            name="name"
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -177,7 +175,7 @@ export const LessonAddComponent = (props) => {
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">수업시간</label>
                                         <input className="form-control form-control-lg form-control-solid" type="number" 
-                                            name="price"
+                                            name="lessonTime"
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -190,18 +188,21 @@ export const LessonAddComponent = (props) => {
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">담당강사</label>
                                         <select className="form-control form-control-lg form-control-solid" 
-                                            name="type"
+                                            name="instructor"
                                             ref={register({
                                                 required: "Required",
                                             })}>
-                                            <option value='session'>세션제</option>
-                                            <option value='period'>기간제</option>
+                                            {
+                                                instructorList.map((instructor)=>{
+                                                    return  <option value={instructor.id}>{instructor.name}</option>
+                                                })
+                                            }
                                         </select>
                                     </div>
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">수업정원</label>
                                         <input className="form-control form-control-lg form-control-solid" type="number" 
-                                            name="price"
+                                            name="maxCnt"
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -226,7 +227,7 @@ export const LessonAddComponent = (props) => {
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">차감횟수</label>
                                         <input className="form-control form-control-lg form-control-solid" type="number" 
-                                            name="price"
+                                            name="deductionCnt"
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -255,7 +256,7 @@ export const LessonAddComponent = (props) => {
                                 <div className="form-group row">
                                     <div className="col-xl-4 col-lg-4">
                                         <input type="number" className="form-control form-control-lg form-control-solid" 
-                                        name="attendancePublicTime"
+                                        name="openTime"
                                         defaultValue={1}
                                         ref={register({
                                             required: "Required",
@@ -263,13 +264,13 @@ export const LessonAddComponent = (props) => {
                                     </div>
                                     <div className="col-xl-3 col-lg-4">
                                         <select className="form-control form-control-lg form-control-solid" 
-                                            name="attendancePublicUnit"
+                                            name="openTimeUnit"
                                             ref={register({
                                                 required: "Required",
                                             })}>
                                             <option value='hour'>시간</option>
                                             <option value='day'>일</option>
-                                            <option value='day'>주</option>
+                                            <option value='week'>주</option>
                                         </select>
                                     </div>
                                 </div>
@@ -279,7 +280,7 @@ export const LessonAddComponent = (props) => {
                                         <input className="form-control form-control-lg form-control-solid" 
                                             style={{width: "80px"}}
                                             type="color" 
-                                            name="price"
+                                            name="color"
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -291,10 +292,9 @@ export const LessonAddComponent = (props) => {
                                             <label>
                                                 <input 
                                                     type="checkbox" 
-                                                    name="select"
-                                                    ref={register({
-                                                        required: "Required",
-                                                    })}/>
+                                                    name="isShowUserCnt"
+                                                    defaultValue={true}
+                                                    ref={register({})}/>
                                                 <span></span>
                                             </label>
                                         </span>

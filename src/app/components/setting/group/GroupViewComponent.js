@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Redirect, Link} from "react-router-dom";
 
-import Swal from 'sweetalert2'
+import swal from 'sweetalert';
 import { toast } from 'react-toastify';
 import {
     CustomInput,
@@ -38,15 +38,17 @@ class GroupViewComponent extends Component {
     // }
 
     deleteGroup = async (id) => {
-        Swal.fire({
+        swal({
             title: '삭제하시겠습니까?',
             text: '삭제 시 원복할 수 없습니다.',
             icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: '삭제',
-            cancelButtonText: '취소'
-          }).then(async (result) => {
-            if (result.value) {
+            buttons: {
+                confirm: '삭제',
+                cancel: '취소',
+            },
+          })
+          .then( async (willDelete) => {
+            if (willDelete) {
                 let param = {
                     id : id
                 }
@@ -68,7 +70,7 @@ class GroupViewComponent extends Component {
                     })
                 }
             } 
-        })
+          });
     }
 
     render() {  

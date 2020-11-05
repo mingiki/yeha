@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from "@fullcalendar/interaction";
+import timeGridPlugin from '@fullcalendar/timegrid'
 import bootstrapPlugin from "@fullcalendar/bootstrap";
 import listPlugin from "@fullcalendar/list";
 import timelinePlugin from "@fullcalendar/timeline";
@@ -38,16 +39,17 @@ class ScheduleComponent extends Component {
                     </CardHeader>
                     <CardBody>
                         <FullCalendar 
-                        defaultView="dayGridMonth" 
-                        themeSystem="bootstrap"
-                        editable={true}
-                        navLinks={true}
-                        views={{
-                            dayGridMonth: { buttonText: 'month' },
-                            timeGridWeek: { buttonText: 'week' },
-                            timeGridDay: { buttonText: 'day' }
-                        }}
-                        plugins={[ dayGridPlugin , interactionPlugin , bootstrapPlugin , listPlugin , timelinePlugin , resourceTimelinePlugin]} />
+                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                            headerToolbar={{
+                              left: 'prev,next today',
+                              center: 'title',
+                              right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                            }}
+                            initialView='dayGridMonth'
+                            editable={true}
+                            selectable={true}
+                            selectMirror={true}
+                            dayMaxEvents={true} />
                     </CardBody>
                 </Card>
             </>         

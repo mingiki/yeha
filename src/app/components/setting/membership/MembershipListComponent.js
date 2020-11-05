@@ -5,6 +5,7 @@ import SVG from "react-inlinesvg";
 import Slider from "react-slick";
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 import MembershipCategoryAddModal from './modal/MembershipCategoryAddModal';
 import MembershipCategoryEditModal from './modal/MembershipCategoryEditModal';
@@ -24,6 +25,8 @@ class MembershipListComponent extends Component {
         this.api = new ApiService();
         this.settings = {
           className: "category-center",
+          membershipLoading: true,
+          categoryLoading: true,
           dots: true,
           infinite: false,
           draggable: false,
@@ -83,6 +86,7 @@ class MembershipListComponent extends Component {
         if (categoryList.length > 0) {
           this.props.MembershipActions.SetCategoryData(categoryList);
           this.props.MembershipActions.SetSelectCategoryData(selectCategory ? selectCategory : categoryList[0]);
+          this.setState({categoryLoading: false});
           this.initMembership(selectCategory ? selectCategory : categoryList[0]);
         }
       }
@@ -104,6 +108,8 @@ class MembershipListComponent extends Component {
       } else {
         this.props.MembershipActions.SetMainData(null);
       }
+
+      this.setState({membershipLoading : false});
     }
 
     redirect = (path , data) => {
@@ -163,6 +169,7 @@ class MembershipListComponent extends Component {
     }
 
     selectCategory  = (category) => {
+      this.setState({membershipLoading: true});
       this.props.MembershipActions.SetSelectCategoryData(category);
       this.initMembership(category);
     }
@@ -228,23 +235,36 @@ class MembershipListComponent extends Component {
                             return <>
                               <div className={category.id == selectCategory?.id ? "category-container select" : "category-container"}>
                                 <div className="category-container-title" onClick={()=> this.selectCategory(category)}>
-                                    <div 
-                                      className="text-dark-75 font-weight-bold font-size-lg">
-                                      {category.name}
-                                    </div>
-                                    {/* <div className="text-muted font-weight-bold font-size-sm">
-                                      {category.createder} {category.createdAt}
-                                    </div> */}
+                                    {
+                                      this.state.categoryLoading ? <>
+                                        <Skeleton />
+                                      </>
+                                      :
+                                      <>
+                                        <div 
+                                          className="text-dark-75 font-weight-bold font-size-lg">
+                                          {category.name}
+                                        </div>
+                                      </>
+                                    }
                                 </div>
                                 <div className="category-container-action" >
-                                  <span className="btn btn-icon btn-light-success btn-sm mr-2" 
-                                    onClick={()=>this.modalOpenEditCategory(category)}>
-                                    <i className="flaticon-edit"></i>
-                                  </span>
-                                  <span className="btn btn-icon btn-light-success btn-sm mr-2"
-                                    onClick={()=>this.deleteCategory(category.id)}>
-                                    <i className="flaticon2-trash"></i>
-                                  </span>
+                                    {
+                                      this.state.categoryLoading ? <>
+                                        <Skeleton />
+                                      </>
+                                      :
+                                      <>
+                                        <span className="btn btn-icon btn-light-success btn-sm mr-2" 
+                                          onClick={()=>this.modalOpenEditCategory(category)}>
+                                          <i className="flaticon-edit"></i>
+                                        </span>
+                                        <span className="btn btn-icon btn-light-success btn-sm mr-2"
+                                          onClick={()=>this.deleteCategory(category.id)}>
+                                          <i className="flaticon2-trash"></i>
+                                        </span>
+                                      </>
+                                    }
                                 </div>
                               </div>
                             </>
@@ -292,66 +312,78 @@ class MembershipListComponent extends Component {
 															</tr>
 														</thead>
 														<tbody>
-                              { membershipList ? membershipList.map( membership =>{
-                                return <>
-                                  <tr onClick={()=> this.redirect(`/setting/membership/view/${membership.id}`, membership)}>
-                                    <td>
-                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{membership.type}</span>
-                                      <span className="text-muted font-weight-bold">Paid</span>
-                                    </td>
-                                    <td>
-                                      <span className="label label-lg label-light-success label-inline">{membership.status}</span>
-                                    </td>
-                                    <td className="pl-0 py-8">
-                                      <div className="d-flex align-items-center">
-                                        <div>
-                                          <a href="#" className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{membership.name}</a>
-                                          <span className="text-muted font-weight-bold d-block">{membership.name}</span>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td>
-                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{membership.price}</span>
-                                      <span className="text-muted font-weight-bold">Paid</span>
-                                    </td>
-                                    <td>
-                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">$6,700</span>
-                                      <span className="text-muted font-weight-bold">Paid</span>
-                                    </td>
-                                    <td>
-                                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">Zoey McGee</span>
-                                      <span className="text-muted font-weight-bold">Ruby Developer</span>
-                                    </td>
-                                    <td>
-                                      <span className="label label-lg label-light-success label-inline">Success</span>
-                                    </td>
-                                    <td className="text-right pr-0">
-                                      {/* <button 
-                                        onClick={()=> this.redirect(`/setting/membership/edit/${membership.id}`, membership)}
-                                        className="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
-                                        <span className="svg-icon svg-icon-md svg-icon-primary">
-                                          <i className="flaticon-edit"></i>
-                                        </span>
-                                      </button>
-                                      <button className="btn btn-icon btn-light btn-hover-primary btn-sm">
-                                        <span className="svg-icon svg-icon-md svg-icon-primary">
-                                          <i className="flaticon2-trash"></i>
-                                        </span>
-                                      </button> */}
-                                    </td>
-                                  </tr>
-                                </>
-                              })
-                              :
+                              {
+                                this.state.membershipLoading ?
                                 <>
                                   <tr>
-                                    <td>
-                                      회원권이 없습니다.
+                                    <td colSpan={8}>
+                                      <div className="spinner spinner-primary mr-15"></div>
                                     </td>
                                   </tr>
                                 </>
+                                :
+                                <>
+                                  { membershipList ? membershipList.map( membership =>{
+                                    return <>
+                                      <tr onClick={()=> this.redirect(`/setting/membership/view/${membership.id}`, membership)}>
+                                        <td>
+                                          <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{membership.type}</span>
+                                          <span className="text-muted font-weight-bold">Paid</span>
+                                        </td>
+                                        <td>
+                                          <span className="label label-lg label-light-success label-inline">{membership.status}</span>
+                                        </td>
+                                        <td className="pl-0 py-8">
+                                          <div className="d-flex align-items-center">
+                                            <div>
+                                              <a href="#" className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{membership.name}</a>
+                                              <span className="text-muted font-weight-bold d-block">{membership.name}</span>
+                                            </div>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <span className="text-dark-75 font-weight-bolder d-block font-size-lg">{membership.price}</span>
+                                          <span className="text-muted font-weight-bold">Paid</span>
+                                        </td>
+                                        <td>
+                                          <span className="text-dark-75 font-weight-bolder d-block font-size-lg">$6,700</span>
+                                          <span className="text-muted font-weight-bold">Paid</span>
+                                        </td>
+                                        <td>
+                                          <span className="text-dark-75 font-weight-bolder d-block font-size-lg">Zoey McGee</span>
+                                          <span className="text-muted font-weight-bold">Ruby Developer</span>
+                                        </td>
+                                        <td>
+                                          <span className="label label-lg label-light-success label-inline">Success</span>
+                                        </td>
+                                        <td className="text-right pr-0">
+                                          {/* <button 
+                                            onClick={()=> this.redirect(`/setting/membership/edit/${membership.id}`, membership)}
+                                            className="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
+                                            <span className="svg-icon svg-icon-md svg-icon-primary">
+                                              <i className="flaticon-edit"></i>
+                                            </span>
+                                          </button>
+                                          <button className="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                            <span className="svg-icon svg-icon-md svg-icon-primary">
+                                              <i className="flaticon2-trash"></i>
+                                            </span>
+                                          </button> */}
+                                        </td>
+                                      </tr>
+                                    </>
+                                  })
+                                  :
+                                    <>
+                                      <tr>
+                                        <td>
+                                          회원권이 없습니다.
+                                        </td>
+                                      </tr>
+                                    </>
+                                  }
+                                </>
                               }
-															
 														</tbody>
 													</table>
 												</div>

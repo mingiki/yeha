@@ -17,12 +17,22 @@ registerLocale('ko', ko);
 export const LessonEditComponent = (props) => {
     
     const api = new ApiService();
-    const Lesson = props.Lesson.selectData;
-    const category = props.Lesson.selectCategoryData;
+    const lesson = props.lesson.selectData;
+    const category = props.lesson.selectCategoryData;
 
     const { handleSubmit, register, errors , control } = useForm();
     const [redirectPath, setRedirectPath] = useState(null);
-        
+    const [instructorList, setInstructorList] = useState([]);
+
+    useEffect(() => {
+        const settingInstructorList = async () => {
+            const result = await api.settingInstructorList({centerId : props.auth.loginUser.centerId});
+            setInstructorList(result.resultData);
+        }
+
+        settingInstructorList();
+    }, []);
+
     /**
      * 회원권 수정
      * @param {*} values 
@@ -30,7 +40,7 @@ export const LessonEditComponent = (props) => {
     const onSubmit = async (values) => {
         let param = {
             ...values,
-            id: Lesson.id,
+            id: lesson.id,
             updatedAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
             updatedId : props.auth.loginUser.id,
             updateder : props.auth.loginUser.userName
@@ -79,160 +89,210 @@ export const LessonEditComponent = (props) => {
             }
 
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="card card-custom">
-                    <div className="card-header">
-                        <div className="card-title">
-                            <span className="card-icon">
-                                <i className="flaticon2-group text-primary"></i>
-                            </span> 
-                            <h3 className="card-label">
-                                {category.name} 회원권 등록
-                            </h3>
-                        </div>
-                        <div className="card-toolbar">
-                            <button
-                                type="button"
-                                onClick={()=> {setRedirectPath("/setting/lesson")}}
-                                className="btn btn-light"
-                            >
-                                <i className="flaticon2-cross"></i>
-                                취소
-                            </button>
-                            {`  `}
-                            <button className="btn btn-light ml-2">
-                                <i className="flaticon2-refresh-button"></i>
-                                초기화
-                            </button>
-                            {`  `}
-                            <button
-                                type="submit"
-                                className="btn btn-primary ml-2"
-                            >
-                                <i className="far fa-save"></i>
-                                저장
-                            </button>
-                        </div>
-                    </div>
-                    <div className="card-body">
-                        <div className="form-group row">
-                            <div className="col-xl-3 col-lg-4 col-md-6">
-                                <label className="font-size-h6 font-weight-bolder text-dark">회원권 명</label>
-                                <input className="form-control form-control-lg form-control-solid" type="text" 
-                                    name="name"
-                                    ref={register({
-                                        required: "Required",
-                                    })}
-                                    defaultValue={Lesson.name}
-                                    placeholder="회원권명을 입력해주세요."/>
+
+            <Row>
+                <Col lg={12}>
+                    <div className="card card-custom gutter-b">
+                        <div className="card-header">
+                            <div className="card-title">
+                                <span className="card-icon">
+                                    <i className="flaticon2-group text-primary"></i>
+                                </span> 
+                                <h3 className="card-label">
+                                    {lesson.category.name} 수업 수정
+                                </h3>
                             </div>
-                            <div className="col-xl-3 col-lg-4 col-md-6">
-                                <label className="font-size-h6 font-weight-bolder text-dark">가격</label>
-                                <input className="form-control form-control-lg form-control-solid" type="number" 
-                                    name="price"
-                                    ref={register({
-                                        required: "Required",
-                                    })}
-                                    defaultValue={Lesson.price}
-                                    placeholder="가격을 입력해주세요."/>
+                            <div className="card-toolbar">
+                                <button
+                                    type="button"
+                                    onClick={()=> {setRedirectPath(`/setting/lesson/view/${lesson.id}`)}}
+                                    className="btn btn-light"
+                                >
+                                    <i className="flaticon2-cross"></i>
+                                    취소
+                                </button>
+                                {`  `}
+                                <button className="btn btn-light ml-2">
+                                    <i className="flaticon2-refresh-button"></i>
+                                    초기화
+                                </button>
+                                {`  `}
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary ml-2"
+                                >
+                                    <i className="far fa-save"></i>
+                                    저장
+                                </button>
                             </div>
                         </div>
-                        <div className="form-group row">
-                            <div className="col-xl-6 col-lg-4 col-md-6">
-                                <label className="font-size-h6 font-weight-bolder text-dark">유효기간</label>
-                                <div className="form-group row">
-                                    <div className="col-xl-3 col-lg-3 col-md-8 col-sm-6">
-                                        <input type="number" className="form-control form-control-lg form-control-solid" 
-                                            name="validityDate"
-                                            defaultValue={Lesson.validityDate}
-                                            placeholder="유효기간을 입력해주세요."
-                                            ref={register({
-                                                required: "Required",
-                                            })}
-                                            />
-                                    </div>
-                                    <div className="col-xl-2 col-lg-2 col-md-4 col-sm-6">
-                                        <select className="form-control form-control-lg form-control-solid" 
-                                            name="validityDateUnit"
-                                            defaultValue={Lesson.validityDateUnit}
-                                            ref={register({
-                                                required: "Required",
-                                            })}>
-                                            <option selected={Lesson.validityDateUnit == 'month'} value='month'>월</option>
-                                            <option  selected={Lesson.validityDateUnit == 'year'} value='year'>년</option>
-                                        </select>
-                                    </div>
+                    </div> 
+                </Col>
+            </Row>
+
+            <Row>
+                <Col lg={6}>
+                    <div className="card card-custom gutter-b">
+                        <div className="card-header h-auto py-4">
+                            <div className="card-title">
+                                <h3 className="card-label">기본 정보 
+                                    <span className="d-block text-muted pt-2 font-size-sm">
+                                        예약에 필요한 수업 기본정보입니다.
+                                    </span>
+                                </h3>
+                            </div>
+                        </div>
+                        <div className="card-body py-4">
+                            <div className="form-group row">
+                            
+                                <div className="col-6">
+                                    <label className="font-size-h6 font-weight-bolder text-dark">수업명</label>
+                                    <input className="form-control form-control-lg form-control-solid" type="text" 
+                                        name="name"
+                                        ref={register({
+                                            required: "Required",
+                                        })}
+                                        defaultValue={lesson.name}
+                                        placeholder="수업명을 입력해주세요."/>
+                                </div>
+                                <div className="col-6">
+                                    <label className="font-size-h6 font-weight-bolder text-dark">수업시간</label>
+                                    <input className="form-control form-control-lg form-control-solid" type="number" 
+                                        name="lessonTime"
+                                        ref={register({
+                                            required: "Required",
+                                        })}
+                                        defaultValue={lesson.lessonTime}
+                                        placeholder="수업시간을 입력해주세요."/>
+                                </div>
+                            </div>
+                                        
+                            <div className="form-group row">     
+                                <div className="col-6">
+                                    <label className="font-size-h6 font-weight-bolder text-dark">담당강사</label>
+                                    <select className="form-control form-control-lg form-control-solid" 
+                                        name="instructor"
+                                        ref={register({
+                                            required: "Required",
+                                        })}>
+                                        {
+                                            instructorList.map((instructor)=>{
+                                                return  <option 
+                                                    selected={lesson.instructor.id == instructor.id} 
+                                                    value={instructor.id}>{instructor.name}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                                <div className="col-6">
+                                    <label className="font-size-h6 font-weight-bolder text-dark">수업정원</label>
+                                    <input className="form-control form-control-lg form-control-solid" type="number" 
+                                        name="maxCnt"
+                                        ref={register({
+                                            required: "Required",
+                                        })}
+                                        defaultValue={lesson.maxCnt}
+                                        placeholder="수업정원을 입력해주세요."/>
+                                </div>
+                            </div>       
+
+
+                            <div className="form-group row">
+                                <div className="col-6">
+                                    <label className="font-size-h6 font-weight-bolder text-dark">분류</label>
+                                    <select className="form-control form-control-lg form-control-solid" 
+                                        name="type"
+                                        ref={register({
+                                            required: "Required",
+                                        })}>
+                                        <option selected={lesson.type == 'session'}  value='session'>세션제</option>
+                                        <option selected={lesson.type == 'period'}  value='period'>기간제</option>
+                                    </select>
+                                </div>  
+                                <div className="col-6">
+                                    <label className="font-size-h6 font-weight-bolder text-dark">차감횟수</label>
+                                    <input className="form-control form-control-lg form-control-solid" type="number" 
+                                        name="deductionCnt"
+                                        ref={register({
+                                            required: "Required",
+                                        })}
+                                        defaultValue={lesson.deductionCnt}
+                                        placeholder="차감횟수를 입력해주세요."/>
                                 </div>
                             </div>
                         </div>
-                        <div className="form-group row">
-                            <div className="col-xl-3 col-lg-4 col-md-6">
-                                <label className="font-size-h6 font-weight-bolder text-dark">세션분류</label>
-                                <select className="form-control form-control-lg form-control-solid" 
-                                    name="type"
-                                    defaultValue={Lesson.type}
-                                    ref={register({
-                                        required: "Required",
-                                    })}>
-                                    <option selected={Lesson.type == 'session'} value='session'>세션제</option>
-                                    <option selected={Lesson.type == 'period'} value='period'>기간제</option>
-                                </select>
-                            </div>
-                            <div className="col-xl-3 col-lg-4 col-md-6">
-                                <label className="font-size-h6 font-weight-bolder text-dark">세션수</label>
-                                <input className="form-control form-control-lg form-control-solid" type="number" 
-                                    name="sessionCnt"
-                                    defaultValue={Lesson.sessionCnt}
-                                    ref={register({
-                                        required: "Required",
-                                    })}
-                                    placeholder="세션수를 입력해주세요."/>
-                            </div>
-                        </div>        
-                        <div className="form-group row">
-                            <div className="col-xl-3 col-lg-4 col-md-6">
-                                <label className="font-size-h6 font-weight-bolder text-dark">최대 예약 횟수</label>
-                                <input className="form-control form-control-lg form-control-solid" type="number" 
-                                    name="totalMaxCnt"
-                                    defaultValue={Lesson.totalMaxCnt}
-                                    ref={register({
-                                        required: "Required",
-                                    })}
-                                    placeholder="최대 예약횟수를 입력해주세요."/>
-                            </div>
-                            <div className="col-xl-3 col-lg-4 col-md-6">
-                                <label className="font-size-h6 font-weight-bolder text-dark">최대 일 예약 횟수</label>
-                                <input className="form-control form-control-lg form-control-solid" type="number" 
-                                    name="dayMaxCnt"
-                                    defaultValue={Lesson.dayMaxCnt}
-                                    ref={register({
-                                        required: "Required",
-                                    })}
-                                    placeholder="최대 일 예약횟수를 입력해주세요."/>
-                            </div>
-                            <div className="col-xl-3 col-lg-4 col-md-6">
-                                <label className="font-size-h6 font-weight-bolder text-dark">최대 주간 예약 횟수</label>
-                                <input className="form-control form-control-lg form-control-solid" type="number" 
-                                    name="weekMaxCnt"
-                                    defaultValue={Lesson.weekMaxCnt}
-                                    ref={register({
-                                        required: "Required",
-                                    })}
-                                    placeholder="최대 주간 예약횟수를 입력해주세요."/>
-                            </div>
-                            <div className="col-xl-3 col-lg-4 col-md-6">
-                                <label className="font-size-h6 font-weight-bolder text-dark">최대 월 예약 횟수</label>
-                                <input className="form-control form-control-lg form-control-solid" type="number" 
-                                    name="monthMaxCnt"
-                                    defaultValue={Lesson.monthMaxCnt}
-                                    ref={register({
-                                        required: "Required",
-                                    })}
-                                    placeholder="최대 월 예약 횟수를 입력해주세요."/>
-                            </div>        
-                        </div>      
                     </div>
+                </Col>
+                <Col lg={6}>
+                    <div className="card card-custom gutter-b">
+                        <div className="card-header h-auto py-4">
+                            <div className="card-title">
+                                <h3 className="card-label">스케줄 정보
+                                    <span className="d-block text-muted pt-2 font-size-sm">예약 스케줄에 관련된 정보입니다.</span>
+                                </h3>
+                            </div>
+                        </div>
+                        <div className="card-body py-4">
+                            <label className="font-size-h6 font-weight-bolder text-dark">
+                                스케줄 오픈시점
+                                <span className="d-block text-muted pt-2 font-size-sm">수업을 등록하고 회원에게 수업이 보여지는 시점입니다.</span>
+                            </label>
                         
-                </div> 
+                            <div className="form-group row">
+                                <div className="col-xl-4 col-lg-4">
+                                    <input type="number" className="form-control form-control-lg form-control-solid" 
+                                    name="openTime"
+                                    defaultValue={lesson.openTime}
+                                    ref={register({
+                                        required: "Required",
+                                    })}/>
+                                </div>
+                                <div className="col-xl-3 col-lg-4">
+                                    <select className="form-control form-control-lg form-control-solid" 
+                                        name="openTimeUnit"
+                                        ref={register({
+                                            required: "Required",
+                                        })}>
+                                        <option selected={lesson.type == 'hour'} value='hour'>시간</option>
+                                        <option selected={lesson.type == 'day'} value='day'>일</option>
+                                        <option selected={lesson.type == 'week'} value='week'>주</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="form-group row">
+                                <div className="col-6">
+                                    <label className="font-size-h6 font-weight-bolder text-dark">스케줄 색상</label>
+                                    <input className="form-control form-control-lg form-control-solid" 
+                                        style={{width: "80px"}}
+                                        type="color" 
+                                        name="color"
+                                        ref={register({
+                                            required: "Required",
+                                        })}
+                                        defaultValue={lesson.color}
+                                        placeholder="가격을 입력해주세요."/>
+                                </div>
+                                <div className="col-6">
+                                    <label className="font-size-h6 font-weight-bolder text-dark">잔여인원 노출</label>
+                                    <span class="switch switch-outline switch-icon switch-success">
+                                        <label>
+                                            <input 
+                                                type="checkbox" 
+                                                name="isShowUserCnt"
+                                                defaultValue={lesson.isShowUserCnt}
+                                                ref={register({})}/>
+                                            <span></span>
+                                        </label>
+                                    </span>
+                                </div>  
+                            </div>
+
+                        </div>
+                    </div>
+
+                </Col>
+            </Row>
+
             </form>
 
         </>
