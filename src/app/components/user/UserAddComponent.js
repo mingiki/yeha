@@ -10,28 +10,28 @@ import { CustomInput, Row, Col } from "reactstrap"
 import ko from 'date-fns/locale/ko';
 import moment from 'moment';
 
-import ApiService from "../../../service/ApiService";
+import ApiService from "../../service/ApiService";
 
 registerLocale('ko', ko);
 
-export const LessonAddComponent = (props) => {
+export const UserAddComponent = (props) => {
     
     const api = new ApiService();
-    const category = props.lesson.selectCategoryData;
+    // const category = props.user.selectCategoryData;
 
     const { handleSubmit, register, errors , control } = useForm();
 
     const [redirectPath, setRedirectPath] = useState(null);
-    const [instructorList, setInstructorList] = useState([]);
+    // const [instructorList, setInstructorList] = useState([]);
 
-    useEffect(() => {
-        const settingInstructorList = async () => {
-            const result = await api.settingInstructorList({centerId : props.auth.loginUser.centerId});
-            setInstructorList(result.resultData);
-        }
+    // useEffect(() => {
+    //     const settingInstructorList = async () => {
+    //         const result = await api.settingInstructorList({centerId : props.auth.loginUser.centerId});
+    //         setInstructorList(result.resultData);
+    //     }
 
-        settingInstructorList();
-    }, []);
+    //     settingInstructorList();
+    // }, []);
 
     /**
      * 수업 저장
@@ -40,30 +40,30 @@ export const LessonAddComponent = (props) => {
     const onSubmit = async (values) => {
 
         const selectInstructor = null;
-        instructorList.map ((instructor) => {
-            if (instructor.id == values.instructor) {
-                selectInstructor = instructor;
-            }
-        }) 
+        // instructorList.map ((instructor) => {
+        //     if (instructor.id == values.instructor) {
+        //         selectInstructor = instructor;
+        //     }
+        // }) 
 
         let param = {
             ...values,
             status : "active",
-            category : {
-                name : category.name,
-                id : category.id
-            },
-            instruct : {
-                name : selectInstructor.name,
-                id : selectInstructor.id
-            },
+            // category : {
+            //     name : category.name,
+            //     id : category.id
+            // },
+            // instruct : {
+            //     name : selectInstructor.name,
+            //     id : selectInstructor.id
+            // },
             centerId : props.auth.loginUser.centerId,
             createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
             createdId : props.auth.loginUser.id,
             createder : props.auth.loginUser.userName
         }
         
-        let result = await api.settingLessonAdd(param);
+        let result = await api.settingUserAdd(param);
 
         if (result.resultCode == "200") {
             toast.info("회원권 등록이 완료되었습니다.", {
@@ -76,7 +76,7 @@ export const LessonAddComponent = (props) => {
                 progress: undefined,
             })
 
-            setRedirectPath("setting/lesson");
+            setRedirectPath("setting/User");
 
         } else {
             toast.error("회원권 등록이 실패하였습니다.", {
@@ -117,13 +117,13 @@ export const LessonAddComponent = (props) => {
                                         <i className="flaticon2-group text-primary"></i>
                                     </span> 
                                     <h3 className="card-label">
-                                        {category.name} 수업 등록
+                                        회원 등록
                                     </h3>
                                 </div>
                                 <div className="card-toolbar">
                                     <button
                                         type="button"
-                                        onClick={()=> {setRedirectPath("/setting/lesson")}}
+                                        onClick={()=> {setRedirectPath("/setting/User")}}
                                         className="btn btn-light"
                                     >
                                         <i className="flaticon2-cross"></i>
@@ -175,7 +175,7 @@ export const LessonAddComponent = (props) => {
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">수업시간</label>
                                         <input className="form-control form-control-lg form-control-solid" type="number" 
-                                            name="lessonTime"
+                                            name="UserTime"
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -187,7 +187,7 @@ export const LessonAddComponent = (props) => {
                                 <div className="form-group row">     
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">담당강사</label>
-                                        <select className="form-control form-control-lg form-control-solid" 
+                                        {/* <select className="form-control form-control-lg form-control-solid" 
                                             name="instructor"
                                             ref={register({
                                                 required: "Required",
@@ -197,7 +197,7 @@ export const LessonAddComponent = (props) => {
                                                     return  <option value={instructor.id}>{instructor.name}</option>
                                                 })
                                             }
-                                        </select>
+                                        </select> */}
                                     </div>
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">수업정원</label>
@@ -314,4 +314,4 @@ export const LessonAddComponent = (props) => {
 };
 
 
-export default LessonAddComponent;
+export default UserAddComponent;

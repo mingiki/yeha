@@ -18,8 +18,8 @@ class Aside extends Component {
             ]},
             {title : "회원" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/General/User.svg")} /> , 
             link : "/user" , permissions: ["center", "instructor"], sub : [
-              {title : "목록", link : "/user/list" , permissions: ["center", "instructor"] },
-              {title : "등록", link : "/user/register" , permissions: ["center", "instructor"] },
+              {title : "현황", link : "/user" , permissions: ["center", "instructor"] },
+              {title : "등록", link : "/user/add" , permissions: ["center", "instructor"] },
             ]},
             {title : "정산" , icon: <SVG src={toAbsoluteUrl("/media/svg/icons/Shopping/Dollar.svg")} /> ,
             link : "" , permissions: ["center", "instructor"], sub : [
