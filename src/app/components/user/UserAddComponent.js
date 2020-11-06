@@ -63,10 +63,10 @@ export const UserAddComponent = (props) => {
             createder : props.auth.loginUser.userName
         }
         
-        let result = await api.settingUserAdd(param);
+        let result = await api.userAdd(param);
 
         if (result.resultCode == "200") {
-            toast.info("회원권 등록이 완료되었습니다.", {
+            toast.info("회원 등록이 완료되었습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -79,7 +79,7 @@ export const UserAddComponent = (props) => {
             setRedirectPath("setting/User");
 
         } else {
-            toast.error("회원권 등록이 실패하였습니다.", {
+            toast.error("회원 등록이 실패하였습니다.", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -161,10 +161,10 @@ export const UserAddComponent = (props) => {
                                 </div>
                             </div>
                             <div className="card-body py-4">
-                                <div className="form-group row">
                                 
+                                <div className="form-group row">
                                     <div className="col-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">수업명</label>
+                                        <label className="font-size-h6 font-weight-bolder text-dark">이름</label>
                                         <input className="form-control form-control-lg form-control-solid" type="text" 
                                             name="name"
                                             ref={register({
@@ -173,7 +173,7 @@ export const UserAddComponent = (props) => {
                                             placeholder="수업명을 입력해주세요."/>
                                     </div>
                                     <div className="col-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">수업시간</label>
+                                        <label className="font-size-h6 font-weight-bolder text-dark">연락처</label>
                                         <input className="form-control form-control-lg form-control-solid" type="number" 
                                             name="UserTime"
                                             ref={register({
@@ -186,21 +186,7 @@ export const UserAddComponent = (props) => {
                                             
                                 <div className="form-group row">     
                                     <div className="col-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">담당강사</label>
-                                        {/* <select className="form-control form-control-lg form-control-solid" 
-                                            name="instructor"
-                                            ref={register({
-                                                required: "Required",
-                                            })}>
-                                            {
-                                                instructorList.map((instructor)=>{
-                                                    return  <option value={instructor.id}>{instructor.name}</option>
-                                                })
-                                            }
-                                        </select> */}
-                                    </div>
-                                    <div className="col-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">수업정원</label>
+                                        <label className="font-size-h6 font-weight-bolder text-dark">성별</label>
                                         <input className="form-control form-control-lg form-control-solid" type="number" 
                                             name="maxCnt"
                                             ref={register({
@@ -209,32 +195,49 @@ export const UserAddComponent = (props) => {
                                             defaultValue={1}
                                             placeholder="수업정원을 입력해주세요."/>
                                     </div>
-                                </div>       
-
+                                    <div className="col-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">생년월일</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <Controller
+                                                control={control}
+                                                name="enterDate"
+                                                defaultValue={new Date()}
+                                                render={({ onChange, onBlur, value}) => (
+                                                    <TextField
+                                                        type="date"
+                                                        defaultValue={moment(value).format('YYYY-MM-DD')}
+                                                        InputProps={{ disableUnderline: true }}
+                                                        className="form-control form-control-lg form-control-solid"
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div className="form-group row">
                                     <div className="col-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">분류</label>
-                                        <select className="form-control form-control-lg form-control-solid" 
-                                            name="type"
-                                            ref={register({
-                                                required: "Required",
-                                            })}>
-                                            <option value='session'>세션제</option>
-                                            <option value='period'>기간제</option>
-                                        </select>
-                                    </div>  
-                                    <div className="col-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">차감횟수</label>
-                                        <input className="form-control form-control-lg form-control-solid" type="number" 
-                                            name="deductionCnt"
+                                        <label className="font-size-h6 font-weight-bolder text-dark">이메일</label>
+                                        <input className="form-control form-control-lg form-control-solid" type="text" 
+                                            name="name"
                                             ref={register({
                                                 required: "Required",
                                             })}
-                                            defaultValue={1}
-                                            placeholder="차감횟수를 입력해주세요."/>
+                                            placeholder="수업명을 입력해주세요."/>
                                     </div>
-                                </div>
+                                    <div className="col-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">비밀번호</label>
+                                        <input className="form-control form-control-lg form-control-solid" type="number" 
+                                            name="UserTime"
+                                            ref={register({
+                                                required: "Required",
+                                            })}
+                                            defaultValue={50}
+                                            placeholder="수업시간을 입력해주세요."/>
+                                    </div>
+                                </div>       
+
+
                             </div>
                         </div>
                     </Col>
@@ -242,65 +245,134 @@ export const UserAddComponent = (props) => {
                         <div className="card card-custom gutter-b">
                             <div className="card-header h-auto py-4">
                                 <div className="card-title">
-                                    <h3 className="card-label">스케줄 정보
+                                    <h3 className="card-label">회원권 정보
                                         <span className="d-block text-muted pt-2 font-size-sm">예약 스케줄에 관련된 정보입니다.</span>
                                     </h3>
                                 </div>
                             </div>
                             <div className="card-body py-4">
-                                <label className="font-size-h6 font-weight-bolder text-dark">
-                                    스케줄 오픈시점
-                                    <span className="d-block text-muted pt-2 font-size-sm">수업을 등록하고 회원에게 수업이 보여지는 시점입니다.</span>
-                                </label>
-                               
                                 <div className="form-group row">
-                                    <div className="col-xl-4 col-lg-4">
-                                        <input type="number" className="form-control form-control-lg form-control-solid" 
-                                        name="openTime"
-                                        defaultValue={1}
-                                        ref={register({
-                                            required: "Required",
-                                        })}/>
-                                    </div>
-                                    <div className="col-xl-3 col-lg-4">
-                                        <select className="form-control form-control-lg form-control-solid" 
-                                            name="openTimeUnit"
+                                    <div className="col-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">회원권</label>
+                                        {/* <select className="form-control form-control-lg form-control-solid" 
+                                            name="instructor"
                                             ref={register({
                                                 required: "Required",
                                             })}>
-                                            <option value='hour'>시간</option>
-                                            <option value='day'>일</option>
-                                            <option value='week'>주</option>
-                                        </select>
+                                            {
+                                                instructorList.map((instructor)=>{
+                                                    return  <option 
+                                                        selected={User.instructor.id == instructor.id} 
+                                                        value={instructor.id}>{instructor.name}</option>
+                                                })
+                                            }
+                                        </select>     */}
                                     </div>
                                 </div>
                                 <div className="form-group row">
                                     <div className="col-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">스케줄 색상</label>
+                                        <label className="font-size-h6 font-weight-bolder text-dark">시작일</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <Controller
+                                                control={control}
+                                                name="enterDate"
+                                                defaultValue={new Date()}
+                                                render={({ onChange, onBlur, value}) => (
+                                                    <TextField
+                                                        type="date"
+                                                        defaultValue={moment(value).format('YYYY-MM-DD')}
+                                                        InputProps={{ disableUnderline: true }}
+                                                        className="form-control form-control-lg form-control-solid"
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">종료일</label>
+                                    </div>
+                                </div>
+
+                                <div className="separator separator-solid" style={{margin: "20px 0px" , borderColor: "#EBEDF3"}} />
+
+                                <div className="form-group row">
+                                    <div className="col-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">회원권금액</label>
                                         <input className="form-control form-control-lg form-control-solid" 
-                                            style={{width: "80px"}}
-                                            type="color" 
-                                            name="color"
+                                            type="number" 
+                                            name="name"
+                                            readOnly={true}
                                             ref={register({
                                                 required: "Required",
                                             })}
-                                            placeholder="가격을 입력해주세요."/>
+                                            placeholder="회원권을 선택해주세요."/>
                                     </div>
                                     <div className="col-6">
-                                        <label className="font-size-h6 font-weight-bolder text-dark">잔여인원 노출</label>
-                                        <span class="switch switch-outline switch-icon switch-success">
-                                            <label>
-                                                <input 
-                                                    type="checkbox" 
-                                                    name="isShowUserCnt"
-                                                    defaultValue={true}
-                                                    ref={register({})}/>
-                                                <span></span>
-                                            </label>
-                                        </span>
-                                    </div>  
-                                </div>
+                                        <label className="font-size-h6 font-weight-bolder text-dark">할인율</label>
+                                        <input className="form-control form-control-lg form-control-solid" 
+                                            type="number" 
+                                            name="name"
+                                            ref={register({
+                                                required: "Required",
+                                            })}
+                                            placeholder="할인율을 입력해주세요."/>
+                                    </div>
+                                </div>     
 
+                                <div className="form-group row">
+                                    <div className="col-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">카드</label>
+                                        <input className="form-control form-control-lg form-control-solid" 
+                                            type="number" 
+                                            name="name"
+                                            ref={register({
+                                                required: "Required",
+                                            })}
+                                            placeholder="카드결제금액을 입력해주세요."/>
+                                    </div>
+                                    <div className="col-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">현금</label>
+                                        <input className="form-control form-control-lg form-control-solid" 
+                                            type="number" 
+                                            name="name"
+                                            ref={register({
+                                                required: "Required",
+                                            })}
+                                            placeholder="현금결제금액 입력해주세요."/>
+                                    </div>
+                                </div>     
+
+                                <div className="form-group row">
+                                    <div className="col-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">총 결제금액</label>
+                                        <input className="form-control form-control-lg form-control-solid" 
+                                            type="number" 
+                                            name="name"
+                                            ref={register({
+                                                required: "Required",
+                                            })}
+                                            placeholder="총 결제금액을 입력해주세요."/>
+                                    </div>
+                                    <div className="col-6">
+                                        <label className="font-size-h6 font-weight-bolder text-dark">결제일</label>
+                                        <div className="input-group input-group-lg input-group-solid">
+                                            <Controller
+                                                control={control}
+                                                name="enterDate"
+                                                defaultValue={new Date()}
+                                                render={({ onChange, onBlur, value}) => (
+                                                    <TextField
+                                                        type="date"
+                                                        defaultValue={moment(value).format('YYYY-MM-DD')}
+                                                        InputProps={{ disableUnderline: true }}
+                                                        className="form-control form-control-lg form-control-solid"
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>           
+                                                    
                             </div>
                         </div>
 
