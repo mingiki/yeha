@@ -189,6 +189,29 @@ class ApiService {
         })
     }
 
+    /**
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     *                                     [ User ]
+     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     */ 
+
+    /**
+     *  사용자 추가
+     */
+    async userAdd(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            const newId = this.autoId();
+            firebase.firestore().collection('user').doc(newId).set({
+                ...param,
+                id : newId,
+            }).then(()=>{
+                return resolve(this.getSuccess(newId));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
 
     /**
      * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -614,6 +637,20 @@ class ApiService {
         });
     }
 
+    /**
+     *  회원권 전체 목록
+     */
+    async settingMembershipAllList(param){
+        console.log("호출합니다.");
+        return new Promise((resolve, reject) => {
+            firebase.firestore().collection('membership').where('centerId', '==', param.centerId).get().then((querySnapshot)=>{
+                let membershipList = querySnapshot.docs.map(doc => doc.data());
+                return resolve(this.getSuccess(membershipList));
+            }).catch((error)=>{
+                return reject(this.getError(error));
+            })
+        });
+    }
 
     /**
      * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

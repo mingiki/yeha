@@ -22,16 +22,30 @@ export const UserAddComponent = (props) => {
     const { handleSubmit, register, errors , control } = useForm();
 
     const [redirectPath, setRedirectPath] = useState(null);
-    // const [instructorList, setInstructorList] = useState([]);
+    const [membershipList, setMembershipList] = useState([]);
+    const [selectMembership, setSelectMembership] = useState(null);
 
-    // useEffect(() => {
-    //     const settingInstructorList = async () => {
-    //         const result = await api.settingInstructorList({centerId : props.auth.loginUser.centerId});
-    //         setInstructorList(result.resultData);
-    //     }
+    useEffect(() => {
+        const settingMembershipAllList = async () => {
+            const result = await api.settingMembershipAllList({centerId : props.auth.loginUser.centerId});
+            setMembershipList(result.resultData);
+        }
 
-    //     settingInstructorList();
-    // }, []);
+        settingMembershipAllList();
+    }, []);
+
+    const onChangeMembership = (e) =>{
+        const mbmershipId = e.target.value;
+        let selectMembership = null;
+
+        membershipList.map((membership) => {
+            if (membership.id == mbmershipId) {
+                selectMembership = membership;
+            }
+        })
+
+        setSelectMembership(selectMembership);
+    }
 
     /**
      * 수업 저장
@@ -47,16 +61,12 @@ export const UserAddComponent = (props) => {
         // }) 
 
         let param = {
-            ...values,
-            status : "active",
-            // category : {
-            //     name : category.name,
-            //     id : category.id
-            // },
-            // instruct : {
-            //     name : selectInstructor.name,
-            //     id : selectInstructor.id
-            // },
+            name : values.name,
+            email : values.email,
+            password : values.password,
+            sex : values.sex,
+            tel : values.tel,
+            status : "ready",
             centerId : props.auth.loginUser.centerId,
             createdAt : moment(new Date()).format('YYYY-MM-DD hh:mm'),
             createdId : props.auth.loginUser.id,
@@ -64,6 +74,10 @@ export const UserAddComponent = (props) => {
         }
         
         let result = await api.userAdd(param);
+
+        if (values.membership) {
+
+        }
 
         if (result.resultCode == "200") {
             toast.info("회원 등록이 완료되었습니다.", {
@@ -170,17 +184,17 @@ export const UserAddComponent = (props) => {
                                             ref={register({
                                                 required: "Required",
                                             })}
-                                            placeholder="수업명을 입력해주세요."/>
+                                            placeholder="회원명 입력해주세요."/>
                                     </div>
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">연락처</label>
-                                        <input className="form-control form-control-lg form-control-solid" type="number" 
-                                            name="UserTime"
+                                        <input className="form-control form-control-lg form-control-solid" type="text" 
+                                            name="tel"
                                             ref={register({
                                                 required: "Required",
                                             })}
                                             defaultValue={50}
-                                            placeholder="수업시간을 입력해주세요."/>
+                                            placeholder="연락처를 입력해주세요."/>
                                     </div>
                                 </div>
                                             
@@ -188,7 +202,7 @@ export const UserAddComponent = (props) => {
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">성별</label>
                                         <input className="form-control form-control-lg form-control-solid" type="number" 
-                                            name="maxCnt"
+                                            name="sex"
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -200,7 +214,7 @@ export const UserAddComponent = (props) => {
                                         <div className="input-group input-group-lg input-group-solid">
                                             <Controller
                                                 control={control}
-                                                name="enterDate"
+                                                name="birthDay"
                                                 defaultValue={new Date()}
                                                 render={({ onChange, onBlur, value}) => (
                                                     <TextField
@@ -219,7 +233,7 @@ export const UserAddComponent = (props) => {
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">이메일</label>
                                         <input className="form-control form-control-lg form-control-solid" type="text" 
-                                            name="name"
+                                            name="email"
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -227,8 +241,8 @@ export const UserAddComponent = (props) => {
                                     </div>
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">비밀번호</label>
-                                        <input className="form-control form-control-lg form-control-solid" type="number" 
-                                            name="UserTime"
+                                        <input className="form-control form-control-lg form-control-solid" type="password" 
+                                            name="password"
                                             ref={register({
                                                 required: "Required",
                                             })}
@@ -254,19 +268,19 @@ export const UserAddComponent = (props) => {
                                 <div className="form-group row">
                                     <div className="col-6">
                                         <label className="font-size-h6 font-weight-bolder text-dark">회원권</label>
-                                        {/* <select className="form-control form-control-lg form-control-solid" 
-                                            name="instructor"
+                                        <select className="form-control form-control-lg form-control-solid" 
+                                            name="membrship"
+                                            onChange={onChangeMembership}    
                                             ref={register({
                                                 required: "Required",
                                             })}>
+                                                <option value=''>회원권을 선택해주세요.</option>
                                             {
-                                                instructorList.map((instructor)=>{
-                                                    return  <option 
-                                                        selected={User.instructor.id == instructor.id} 
-                                                        value={instructor.id}>{instructor.name}</option>
+                                                membershipList.map((membership)=>{
+                                                    return  <option key={membership.id} value={membership.id}>{membership.name}</option>
                                                 })
                                             }
-                                        </select>     */}
+                                        </select>    
                                     </div>
                                 </div>
                                 <div className="form-group row">
@@ -300,11 +314,12 @@ export const UserAddComponent = (props) => {
                                         <label className="font-size-h6 font-weight-bolder text-dark">회원권금액</label>
                                         <input className="form-control form-control-lg form-control-solid" 
                                             type="number" 
-                                            name="name"
+                                            name="price"
                                             readOnly={true}
                                             ref={register({
                                                 required: "Required",
                                             })}
+                                            defaultValue={selectMembership?.price}
                                             placeholder="회원권을 선택해주세요."/>
                                     </div>
                                     <div className="col-6">
